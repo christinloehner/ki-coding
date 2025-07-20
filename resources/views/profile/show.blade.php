@@ -251,7 +251,7 @@
             @endif
 
             <!-- User Roles (for admins/moderators) -->
-            @if(auth()->check() && (auth()->user()->hasRole(['admin', 'moderator']) || auth()->id() === $user->id))
+            @if(auth()->check() && (auth()->user()->can('view users') || auth()->id() === $user->id))
                 <div class="bg-white shadow-sm rounded-lg border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h2 class="text-xl font-semibold text-gray-900">Rollen & Berechtigungen</h2>
@@ -275,7 +275,7 @@
                                 </div>
                             </div>
 
-                            @if(auth()->user()->hasRole('admin') && auth()->id() !== $user->id)
+                            @if(auth()->user()->can('manage users') && auth()->id() !== $user->id)
                                 <div class="pt-4 border-t">
                                     <a href="{{ route('admin.users.show', $user) }}" 
                                        class="inline-flex items-center px-4 py-2 btn-ki-primary text-sm">

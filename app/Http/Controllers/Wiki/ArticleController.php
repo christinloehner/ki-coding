@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -79,7 +80,7 @@ class ArticleController extends Controller
     {
         Gate::authorize('create', Article::class);
 
-        $categories = Category::active()->get();
+        $categories = Category::active()->orderBy('name')->get();
         $tags = Tag::all();
 
         return view('wiki.articles.create', compact('categories', 'tags'));
@@ -97,8 +98,7 @@ class ArticleController extends Controller
             'content' => 'required|string',
             'excerpt' => 'nullable|string|max:500',
             'category_id' => 'required|exists:categories,id',
-            'tags' => 'array',
-            'tags.*' => 'exists:tags,id',
+            'tags' => 'nullable|string',
             'status' => 'required|in:draft,pending_review,published',
             'is_featured' => 'boolean',
             'meta_title' => 'nullable|string|max:255',
@@ -121,9 +121,21 @@ class ArticleController extends Controller
                 'published_at' => $validated['status'] === 'published' ? now() : null,
             ]);
 
-            // Attach tags
-            if (isset($validated['tags'])) {
-                $article->tags()->attach($validated['tags']);
+            // Process and attach tags
+            if (!empty($validated['tags'])) {
+                $tagNames = array_filter(array_map('trim', explode(',', $validated['tags'])));
+                $tagIds = [];
+                
+                foreach ($tagNames as $tagName) {
+                    // Find or create tag
+                    $tag = Tag::firstOrCreate(
+                        ['name' => strtolower($tagName)],
+                        ['description' => '', 'color' => '#3B82F6']
+                    );
+                    $tagIds[] = $tag->id;
+                }
+                
+                $article->tags()->attach($tagIds);
             }
 
             // Create initial revision
@@ -180,7 +192,7 @@ class ArticleController extends Controller
     {
         Gate::authorize('update', $article);
 
-        $categories = Category::active()->get();
+        $categories = Category::active()->orderBy('name')->get();
         $tags = Tag::all();
         $selectedTags = $article->tags->pluck('id')->toArray();
 
@@ -199,8 +211,7 @@ class ArticleController extends Controller
             'content' => 'required|string',
             'excerpt' => 'nullable|string|max:500',
             'category_id' => 'required|exists:categories,id',
-            'tags' => 'array',
-            'tags.*' => 'exists:tags,id',
+            'tags' => 'nullable|string',
             'status' => 'required|in:draft,pending_review,published',
             'is_featured' => 'boolean',
             'meta_title' => 'nullable|string|max:255',
@@ -226,8 +237,21 @@ class ArticleController extends Controller
             ]);
 
             // Sync tags
-            if (isset($validated['tags'])) {
-                $article->tags()->sync($validated['tags']);
+            // Process and sync tags
+            if (!empty($validated['tags'])) {
+                $tagNames = array_filter(array_map('trim', explode(',', $validated['tags'])));
+                $tagIds = [];
+                
+                foreach ($tagNames as $tagName) {
+                    // Find or create tag
+                    $tag = Tag::firstOrCreate(
+                        ['name' => strtolower($tagName)],
+                        ['description' => '', 'color' => '#3B82F6']
+                    );
+                    $tagIds[] = $tag->id;
+                }
+                
+                $article->tags()->sync($tagIds);
             } else {
                 $article->tags()->detach();
             }
@@ -441,5 +465,214 @@ class ArticleController extends Controller
         ]);
 
         return back()->with('success', 'Deletion request has been denied.');
+    }
+
+    /**
+     * Toggle like for an article
+     */
+    public function toggleLike(Article $article): JsonResponse
+    {
+        $userId = Auth::id();
+
+        // Check if user has already liked this article
+        $existingLike = DB::table('article_likes')
+            ->where('article_id', $article->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($existingLike) {
+            // Remove like
+            DB::table('article_likes')
+                ->where('article_id', $article->id)
+                ->where('user_id', $userId)
+                ->delete();
+
+            $article->decrement('likes_count');
+            $liked = false;
+        } else {
+            // Add like
+            DB::table('article_likes')->insert([
+                'article_id' => $article->id,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            $article->increment('likes_count');
+            $liked = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'liked' => $liked,
+            'likes_count' => $article->likes_count
+        ]);
+    }
+
+    /**
+     * Toggle bookmark for an article
+     */
+    public function toggleBookmark(Article $article): JsonResponse
+    {
+        $userId = Auth::id();
+
+        // Check if user has already bookmarked this article
+        $existingBookmark = DB::table('article_bookmarks')
+            ->where('article_id', $article->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($existingBookmark) {
+            // Remove bookmark
+            DB::table('article_bookmarks')
+                ->where('article_id', $article->id)
+                ->where('user_id', $userId)
+                ->delete();
+
+            $bookmarked = false;
+        } else {
+            // Add bookmark
+            DB::table('article_bookmarks')->insert([
+                'article_id' => $article->id,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            $bookmarked = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'bookmarked' => $bookmarked
+        ]);
+    }
+
+    /**
+     * Vote on article helpfulness
+     */
+    public function vote(Request $request, Article $article): JsonResponse
+    {
+        $validated = $request->validate([
+            'helpful' => 'required|boolean',
+        ]);
+
+        $userId = Auth::id();
+        $isHelpful = $validated['helpful'];
+
+        // Check if user has already voted
+        $existingVote = DB::table('article_votes')
+            ->where('article_id', $article->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($existingVote) {
+            // Update existing vote
+            if (($existingVote->is_helpful && $isHelpful) || (!$existingVote->is_helpful && !$isHelpful)) {
+                // Same vote - remove it
+                DB::table('article_votes')
+                    ->where('article_id', $article->id)
+                    ->where('user_id', $userId)
+                    ->delete();
+                
+                // Update counters
+                if ($isHelpful) {
+                    $article->decrement('helpful_votes');
+                } else {
+                    $article->decrement('not_helpful_votes');
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'vote' => null,
+                    'message' => 'Vote removed'
+                ]);
+            } else {
+                // Different vote - update it
+                DB::table('article_votes')
+                    ->where('article_id', $article->id)
+                    ->where('user_id', $userId)
+                    ->update([
+                        'is_helpful' => $isHelpful,
+                        'updated_at' => now()
+                    ]);
+
+                // Update counters
+                if ($isHelpful) {
+                    $article->increment('helpful_votes');
+                    $article->decrement('not_helpful_votes');
+                } else {
+                    $article->increment('not_helpful_votes');
+                    $article->decrement('helpful_votes');
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'vote' => $isHelpful ? 'helpful' : 'not_helpful',
+                    'message' => 'Vote updated'
+                ]);
+            }
+        } else {
+            // Create new vote
+            DB::table('article_votes')->insert([
+                'article_id' => $article->id,
+                'user_id' => $userId,
+                'is_helpful' => $isHelpful,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            // Update counters
+            if ($isHelpful) {
+                $article->increment('helpful_votes');
+            } else {
+                $article->increment('not_helpful_votes');
+            }
+
+            return response()->json([
+                'success' => true,
+                'vote' => $isHelpful ? 'helpful' : 'not_helpful',
+                'message' => 'Vote recorded'
+            ]);
+        }
+    }
+
+    /**
+     * Report an article
+     */
+    public function report(Request $request, Article $article): JsonResponse
+    {
+        $validated = $request->validate([
+            'reason' => 'required|string|max:500',
+        ]);
+
+        $userId = Auth::id();
+
+        // Check if user has already reported this article
+        $existingReport = DB::table('article_reports')
+            ->where('article_id', $article->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($existingReport) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Du hast diesen Artikel bereits gemeldet.'
+            ], 400);
+        }
+
+        // Create report
+        DB::table('article_reports')->insert([
+            'article_id' => $article->id,
+            'user_id' => $userId,
+            'reason' => $validated['reason'],
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Artikel wurde gemeldet. Danke für dein Feedback!'
+        ]);
     }
 }

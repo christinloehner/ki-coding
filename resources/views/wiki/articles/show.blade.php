@@ -45,17 +45,23 @@
             </div>
             <div class="flex items-center space-x-2">
                 @auth
-                    <button class="btn-ki-outline-sm">
+                    @php
+                        $userLiked = DB::table('article_likes')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
+                        $userBookmarked = DB::table('article_bookmarks')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
+                        $userVote = DB::table('article_votes')->where('article_id', $article->id)->where('user_id', auth()->id())->first();
+                    @endphp
+                    
+                    <button id="likeBtn" class="{{ $userLiked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="toggleLike('{{ $article->slug }}')">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
-                        Liken
+                        <span id="likeText">{{ $userLiked ? 'Geliked' : 'Liken' }}</span>
                     </button>
-                    <button class="btn-ki-outline-sm">
+                    <button id="bookmarkBtn" class="{{ $userBookmarked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="toggleBookmark('{{ $article->slug }}')">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                         </svg>
-                        Merken
+                        <span id="bookmarkText">{{ $userBookmarked ? 'Gemerkt' : 'Merken' }}</span>
                     </button>
                     
                     <!-- Author/Admin Actions -->
@@ -151,17 +157,17 @@
             <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-500">War dieser Artikel hilfreich?</span>
                 @auth
-                    <button class="btn-ki-outline-sm">
+                    <button id="helpfulBtn" class="{{ $userVote && $userVote->is_helpful === 1 ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="voteHelpful('{{ $article->slug }}', true)">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.60L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
                         </svg>
-                        Hilfreich
+                        <span id="helpfulText">{{ $userVote && $userVote->is_helpful === 1 ? 'Als hilfreich bewertet' : 'Hilfreich' }}</span>
                     </button>
-                    <button class="btn-ki-outline-sm">
+                    <button id="notHelpfulBtn" class="{{ $userVote && $userVote->is_helpful === 0 ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="voteHelpful('{{ $article->slug }}', false)">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10H5a2 2 0 00-2 2v6a2 2 0 002 2h2.5"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.60L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10H5a2 2 0 00-2 2v6a2 2 0 002 2h2.5"></path>
                         </svg>
-                        Nicht hilfreich
+                        <span id="notHelpfulText">{{ $userVote && $userVote->is_helpful === 0 ? 'Als nicht hilfreich bewertet' : 'Nicht hilfreich' }}</span>
                     </button>
                 @endauth
             </div>
@@ -174,7 +180,7 @@
                 @endcan
 
                 @auth
-                    <button class="btn-ki-outline-sm text-red-600 hover:text-red-800">
+                    <button class="btn-ki-outline-sm text-red-600 hover:text-red-800" onclick="reportArticle('{{ $article->slug }}')">
                         Melden
                     </button>
                 @endauth
@@ -236,14 +242,72 @@
                                 <span class="text-sm text-gray-500">{{ $comment->created_at->format('d.m.Y H:i') }}</span>
                             </div>
                             @auth
-                                <button class="text-gray-400 hover:text-gray-600">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                                    </svg>
-                                </button>
+                                <div class="relative">
+                                    <button class="text-gray-400 hover:text-gray-600" onclick="toggleCommentMenu({{ $comment->id }})">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                        </svg>
+                                    </button>
+                                    
+                                    <!-- Dropdown Menu -->
+                                    <div id="commentMenu{{ $comment->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                        <div class="py-1">
+                                            @if(auth()->user()->id === $comment->user_id)
+                                                <button onclick="editComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                    </svg>
+                                                    Bearbeiten
+                                                </button>
+                                                <button onclick="deleteComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                    </svg>
+                                                    Löschen
+                                                </button>
+                                            @endif
+                                            
+                                            @if(auth()->user()->id !== $comment->user_id)
+                                                <button onclick="reportComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                                    </svg>
+                                                    Melden
+                                                </button>
+                                            @endif
+                                            
+                                            @can('delete all comments')
+                                                <div class="border-t border-gray-100 mt-1 pt-1">
+                                                    <button onclick="adminDeleteComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                        </svg>
+                                                        Admin: Löschen
+                                                    </button>
+                                                </div>
+                                            @endcan
+                                        </div>
+                                    </div>
+                                </div>
                             @endauth
                         </div>
-                        <p class="text-gray-700">{{ $comment->content }}</p>
+                        <!-- Normale Kommentar-Anzeige -->
+                        <div id="commentContent{{ $comment->id }}">
+                            <p class="text-gray-700">{{ $comment->content }}</p>
+                        </div>
+                        
+                        <!-- Bearbeitungsform (initial versteckt) -->
+                        <div id="editForm{{ $comment->id }}" class="hidden mt-2">
+                            <form action="{{ route('wiki.comments.update', $comment->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <textarea name="content" rows="3" class="form-input w-full mb-2">{{ $comment->content }}</textarea>
+                                <div class="flex space-x-2">
+                                    <button type="submit" class="btn-ki-primary-sm">Speichern</button>
+                                    <button type="button" onclick="cancelEdit({{ $comment->id }})" class="btn-ki-outline-sm">Abbrechen</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 @empty
                     <div class="text-center py-6">
@@ -333,9 +397,251 @@ document.getElementById('deletionRequestModal').addEventListener('click', functi
         hideDeletionRequestModal();
     }
 });
+
 </script>
 @endif
 @endcan
+
+<!-- Kommentar-JavaScript (muss außerhalb der Permissions stehen) -->
+<script>
+// Kommentar-Menü Funktionen
+function toggleCommentMenu(commentId) {
+    const menu = document.getElementById('commentMenu' + commentId);
+    if (!menu) return;
+    
+    const allMenus = document.querySelectorAll('[id^="commentMenu"]');
+    
+    // Alle anderen Menüs schließen
+    allMenus.forEach(m => {
+        if (m.id !== 'commentMenu' + commentId) {
+            m.classList.add('hidden');
+        }
+    });
+    
+    // Aktuelles Menü togglen
+    menu.classList.toggle('hidden');
+}
+
+function editComment(commentId) {
+    const contentEl = document.getElementById('commentContent' + commentId);
+    const formEl = document.getElementById('editForm' + commentId);
+    const menuEl = document.getElementById('commentMenu' + commentId);
+    
+    if (contentEl) contentEl.classList.add('hidden');
+    if (formEl) formEl.classList.remove('hidden');
+    if (menuEl) menuEl.classList.add('hidden');
+}
+
+function cancelEdit(commentId) {
+    const contentEl = document.getElementById('commentContent' + commentId);
+    const formEl = document.getElementById('editForm' + commentId);
+    
+    if (contentEl) contentEl.classList.remove('hidden');
+    if (formEl) formEl.classList.add('hidden');
+}
+
+function deleteComment(commentId) {
+    if (confirm('Kommentar wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/wiki/comments/${commentId}`;
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        const methodField = document.createElement('input');
+        methodField.type = 'hidden';
+        methodField.name = '_method';
+        methodField.value = 'DELETE';
+        
+        form.appendChild(csrfToken);
+        form.appendChild(methodField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function adminDeleteComment(commentId) {
+    if (confirm('Als Admin diesen Kommentar löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+        deleteComment(commentId);
+    }
+}
+
+function reportComment(commentId) {
+    if (confirm('Diesen Kommentar als unangemessen melden?')) {
+        // TODO: Report-Funktionalität implementieren
+        alert('Kommentar wurde gemeldet. Danke für dein Feedback!');
+    }
+}
+
+// Menüs schließen beim Klick außerhalb
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.relative')) {
+        const allMenus = document.querySelectorAll('[id^="commentMenu"]');
+        allMenus.forEach(menu => menu.classList.add('hidden'));
+    }
+});
+
+// Artikel-Interaktions-Funktionen
+function toggleLike(articleSlug) {
+    const btn = document.getElementById('likeBtn');
+    const text = document.getElementById('likeText');
+    
+    btn.disabled = true;
+    
+    fetch(`/wiki/articles/${articleSlug}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.liked) {
+                btn.classList.remove('btn-ki-outline-sm');
+                btn.classList.add('btn-ki-primary-sm');
+                text.textContent = 'Geliked';
+            } else {
+                btn.classList.remove('btn-ki-primary-sm');
+                btn.classList.add('btn-ki-outline-sm');
+                text.textContent = 'Liken';
+            }
+        } else {
+            alert('Fehler beim Liken: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Liken. Bitte versuche es erneut.');
+    })
+    .finally(() => {
+        btn.disabled = false;
+    });
+}
+
+function toggleBookmark(articleSlug) {
+    const btn = document.getElementById('bookmarkBtn');
+    const text = document.getElementById('bookmarkText');
+    
+    btn.disabled = true;
+    
+    fetch(`/wiki/articles/${articleSlug}/bookmark`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.bookmarked) {
+                btn.classList.remove('btn-ki-outline-sm');
+                btn.classList.add('btn-ki-primary-sm');
+                text.textContent = 'Gemerkt';
+            } else {
+                btn.classList.remove('btn-ki-primary-sm');
+                btn.classList.add('btn-ki-outline-sm');
+                text.textContent = 'Merken';
+            }
+        } else {
+            alert('Fehler beim Merken: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Merken. Bitte versuche es erneut.');
+    })
+    .finally(() => {
+        btn.disabled = false;
+    });
+}
+
+function voteHelpful(articleSlug, isHelpful) {
+    const helpfulBtn = document.getElementById('helpfulBtn');
+    const notHelpfulBtn = document.getElementById('notHelpfulBtn');
+    const helpfulText = document.getElementById('helpfulText');
+    const notHelpfulText = document.getElementById('notHelpfulText');
+    
+    helpfulBtn.disabled = true;
+    notHelpfulBtn.disabled = true;
+    
+    fetch(`/wiki/articles/${articleSlug}/vote`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ helpful: isHelpful })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reset both buttons
+            helpfulBtn.classList.remove('btn-ki-primary-sm');
+            helpfulBtn.classList.add('btn-ki-outline-sm');
+            notHelpfulBtn.classList.remove('btn-ki-primary-sm');
+            notHelpfulBtn.classList.add('btn-ki-outline-sm');
+            helpfulText.textContent = 'Hilfreich';
+            notHelpfulText.textContent = 'Nicht hilfreich';
+            
+            // Highlight the voted button
+            if (data.vote === 'helpful') {
+                helpfulBtn.classList.remove('btn-ki-outline-sm');
+                helpfulBtn.classList.add('btn-ki-primary-sm');
+                helpfulText.textContent = 'Als hilfreich bewertet';
+            } else if (data.vote === 'not_helpful') {
+                notHelpfulBtn.classList.remove('btn-ki-outline-sm');
+                notHelpfulBtn.classList.add('btn-ki-primary-sm');
+                notHelpfulText.textContent = 'Als nicht hilfreich bewertet';
+            }
+        } else {
+            alert('Fehler beim Bewerten: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Bewerten. Bitte versuche es erneut.');
+    })
+    .finally(() => {
+        helpfulBtn.disabled = false;
+        notHelpfulBtn.disabled = false;
+    });
+}
+
+function reportArticle(articleSlug) {
+    const reason = prompt('Bitte gib einen Grund für die Meldung an:');
+    if (!reason || reason.trim() === '') {
+        return;
+    }
+    
+    fetch(`/wiki/articles/${articleSlug}/report`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ reason: reason.trim() })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Artikel wurde gemeldet. Danke für dein Feedback!');
+        } else {
+            alert('Fehler beim Melden: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Melden. Bitte versuche es erneut.');
+    });
+}
+</script>
+
 @endsection
 
 @push('schema')

@@ -121,8 +121,8 @@
                     @foreach($availableUsers as $availableUser)
                     <option value="{{ $availableUser->id }}">
                         {{ $availableUser->name }} ({{ $availableUser->email }})
-                        @if($availableUser->hasRole('admin')) - Admin @endif
-                        @if($availableUser->hasRole('moderator')) - Moderator @endif
+                        @if($availableUser->can('admin access')) - Admin @endif
+                        @if($availableUser->can('moderate content')) - Moderator @endif
                     </option>
                     @endforeach
                 </select>

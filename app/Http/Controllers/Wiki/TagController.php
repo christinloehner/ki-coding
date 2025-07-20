@@ -50,6 +50,25 @@ class TagController extends Controller
     }
 
     /**
+     * Tag-Suche für Autocomplete
+     */
+    public function search(Request $request)
+    {
+        $query = $request->get('q', '');
+        
+        if (strlen($query) < 1) {
+            return response()->json([]);
+        }
+        
+        $tags = Tag::where('name', 'like', $query . '%')
+            ->orderBy('name')
+            ->limit(10)
+            ->get(['id', 'name']);
+            
+        return response()->json($tags);
+    }
+
+    /**
      * Formular zum Erstellen eines neuen Tags
      */
     public function create()
@@ -120,23 +139,6 @@ class TagController extends Controller
             ->with('success', 'Tag erfolgreich gelöscht.');
     }
 
-    /**
-     * API: Tag-Suche für Autocomplete
-     */
-    public function search(Request $request)
-    {
-        $query = $request->get('q');
-        
-        if (!$query) {
-            return response()->json([]);
-        }
-
-        $tags = Tag::where('name', 'like', '%' . $query . '%')
-            ->limit(10)
-            ->get(['id', 'name', 'slug', 'color']);
-
-        return response()->json($tags);
-    }
 
     /**
      * API: Beliebte Tags

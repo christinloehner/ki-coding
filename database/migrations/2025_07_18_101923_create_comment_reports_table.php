@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comment_reports', function (Blueprint $table) {
+        // Only create table if it doesn't exist yet
+        if (!Schema::hasTable('comment_reports')) {
+            Schema::create('comment_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('comment_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -23,7 +25,8 @@ return new class extends Migration
             
             $table->unique(['comment_id', 'user_id']);
             $table->index(['status', 'created_at']);
-        });
+            });
+        }
     }
 
     /**

@@ -89,6 +89,122 @@
         </div>
     </div>
 
+    <!-- Reports Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Article Reports -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">Artikel-Meldungen</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="badge badge-red">{{ $pendingArticleReports ?? 0 }}</span>
+                    <span class="text-sm text-gray-500">neu</span>
+                </div>
+            </div>
+            <div class="space-y-4">
+                @forelse($recentArticleReports ?? [] as $report)
+                    <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">
+                                    <a href="{{ route('wiki.articles.show', $report->article->slug) }}" class="hover:text-indigo-600">
+                                        {{ $report->article->title }}
+                                    </a>
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Gemeldet von {{ $report->user->name }} • {{ $report->created_at->format('d.m.Y H:i') }}
+                                </p>
+                            </div>
+                            <span class="badge badge-red">{{ ucfirst($report->status) }}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">
+                            <strong>Grund:</strong> {{ $report->reason }}
+                        </p>
+                        <div class="flex items-center space-x-2">
+                            <button class="btn-ki-outline-sm text-green-600 hover:text-green-800" onclick="resolveReport({{ $report->id }}, 'reviewed')">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Bearbeitet
+                            </button>
+                            <button class="btn-ki-outline-sm text-gray-600 hover:text-gray-800" onclick="resolveReport({{ $report->id }}, 'dismissed')">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Ignorieren
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">Keine Artikel-Meldungen</h3>
+                        <p class="mt-1 text-sm text-gray-500">Alle Meldungen wurden bearbeitet.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Comment Reports -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">Kommentar-Meldungen</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="badge badge-red">{{ $pendingCommentReports ?? 0 }}</span>
+                    <span class="text-sm text-gray-500">neu</span>
+                </div>
+            </div>
+            <div class="space-y-4">
+                @forelse($recentCommentReports ?? [] as $report)
+                    <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">
+                                    Kommentar in: <a href="{{ route('wiki.articles.show', $report->comment->article->slug) }}" class="hover:text-indigo-600">
+                                        {{ $report->comment->article->title }}
+                                    </a>
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Gemeldet von {{ $report->user->name }} • {{ $report->created_at->format('d.m.Y H:i') }}
+                                </p>
+                            </div>
+                            <span class="badge badge-red">{{ ucfirst($report->status) }}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">
+                            <strong>Kommentar:</strong> {{ Str::limit($report->comment->content, 100) }}
+                        </p>
+                        <p class="text-sm text-gray-600 mb-3">
+                            <strong>Grund:</strong> {{ $report->reason }}
+                        </p>
+                        <div class="flex items-center space-x-2">
+                            <button class="btn-ki-outline-sm text-green-600 hover:text-green-800" onclick="resolveCommentReport({{ $report->id }}, 'reviewed')">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Bearbeitet
+                            </button>
+                            <button class="btn-ki-outline-sm text-gray-600 hover:text-gray-800" onclick="resolveCommentReport({{ $report->id }}, 'dismissed')">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Ignorieren
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">Keine Kommentar-Meldungen</h3>
+                        <p class="mt-1 text-sm text-gray-500">Alle Meldungen wurden bearbeitet.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Activity -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Recent Articles -->
@@ -237,31 +353,96 @@
     <div class="bg-white rounded-lg shadow-sm p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Schnellaktionen</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Neuen Artikel erstellen
-            </a>
-            <a href="{{ route('wiki.categories.create') }}" class="btn-ki-outline">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
-                </svg>
-                Neue Kategorie
-            </a>
-            <a href="{{ route('wiki.tags.create') }}" class="btn-ki-outline">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                </svg>
-                Neuen Tag
-            </a>
-            <a href="{{ route('wiki.users.index') }}" class="btn-ki-outline">
+            @can('create articles')
+                <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Neuen Artikel erstellen
+                </a>
+            @endcan
+            @can('create categories')
+                <a href="{{ route('wiki.categories.create') }}" class="btn-ki-outline">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    Neue Kategorie
+                </a>
+            @endcan
+            @can('create tags')
+                <a href="{{ route('wiki.tags.create') }}" class="btn-ki-outline">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                    Neuen Tag
+                </a>
+            @endcan
+            @can('view users')
+                <a href="{{ route('wiki.users.index') }}" class="btn-ki-outline">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                 </svg>
-                Benutzer verwalten
-            </a>
+                    Benutzer verwalten
+                </a>
+            @endcan
         </div>
     </div>
 </div>
+
+<script>
+function resolveReport(reportId, status) {
+    if (!confirm('Möchtest du diese Meldung als ' + (status === 'reviewed' ? 'bearbeitet' : 'ignoriert') + ' markieren?')) {
+        return;
+    }
+    
+    fetch(`{{ route('wiki.admin.reports.articles.resolve', '') }}/${reportId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Bearbeiten der Meldung.');
+    });
+}
+
+function resolveCommentReport(reportId, status) {
+    if (!confirm('Möchtest du diese Kommentar-Meldung als ' + (status === 'reviewed' ? 'bearbeitet' : 'ignoriert') + ' markieren?')) {
+        return;
+    }
+    
+    fetch(`{{ route('wiki.admin.reports.comments.resolve', '') }}/${reportId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Bearbeiten der Meldung.');
+    });
+}
+</script>
+
 @endsection

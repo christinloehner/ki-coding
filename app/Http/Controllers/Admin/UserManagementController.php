@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class UserManagementController extends Controller
 {
@@ -49,10 +50,8 @@ class UserManagementController extends Controller
      */
     public function assignRole(Request $request, User $user = null): RedirectResponse
     {
-        // CRITICAL SECURITY: Only admin can assign roles!
-        if (!Auth::user()->hasRole('admin')) {
-            abort(403, 'Nur Administratoren können Rollen zuweisen.');
-        }
+        // CRITICAL SECURITY: Only users with manage roles permission can assign roles!
+        Gate::authorize('manage roles');
         
         // Handle both route parameter and form data
         if (!$user && $request->has('user_id')) {
@@ -66,9 +65,9 @@ class UserManagementController extends Controller
         $roleName = $request->input('role_name');
         $role = Role::findByName($roleName);
         
-        // Prevent assigning admin role to non-admins without proper checks
-        if ($role->name === 'admin' && !Auth::user()->hasRole('admin')) {
-            return back()->with('error', 'Only administrators can assign admin role.');
+        // Prevent assigning admin role without proper permissions
+        if ($role->name === 'admin' && !Auth::user()->can('assign admin role')) {
+            return back()->with('error', 'You do not have permission to assign admin role.');
         }
 
         // Check if user already has this role
@@ -86,10 +85,8 @@ class UserManagementController extends Controller
      */
     public function removeRole(Request $request, User $user = null): RedirectResponse
     {
-        // CRITICAL SECURITY: Only admin can remove roles!
-        if (!Auth::user()->hasRole('admin')) {
-            abort(403, 'Nur Administratoren können Rollen entfernen.');
-        }
+        // CRITICAL SECURITY: Only users with manage roles permission can remove roles!
+        Gate::authorize('manage roles');
         
         // Handle both route parameter and form data
         if (!$user && $request->has('user_id')) {
@@ -108,9 +105,9 @@ class UserManagementController extends Controller
             return back()->with('error', 'You cannot remove admin role from yourself.');
         }
 
-        // Prevent non-admins from removing admin role
-        if ($role->name === 'admin' && !Auth::user()->hasRole('admin')) {
-            return back()->with('error', 'Only administrators can remove admin role.');
+        // Prevent removing admin role without proper permissions
+        if ($role->name === 'admin' && !Auth::user()->can('remove admin role')) {
+            return back()->with('error', 'You do not have permission to remove admin role.');
         }
 
         // Check if user has this role
@@ -130,9 +127,9 @@ class UserManagementController extends Controller
     {
         Gate::authorize('ban users');
         
-        // Prevent banning admins
-        if ($user->hasRole('admin')) {
-            return back()->withErrors(['user' => 'Cannot ban administrator users.']);
+        // Prevent banning users with admin permissions
+        if ($user->can('admin access')) {
+            return back()->withErrors(['user' => 'Cannot ban users with administrative permissions.']);
         }
         
         $user->update([
@@ -167,9 +164,9 @@ class UserManagementController extends Controller
     {
         Gate::authorize('delete users');
         
-        // Prevent deleting admins
-        if ($user->hasRole('admin')) {
-            abort(403, 'Cannot delete administrator users.');
+        // Prevent deleting users with admin permissions
+        if ($user->can('admin access')) {
+            abort(403, 'Cannot delete users with administrative permissions.');
         }
         
         // Get all users except the one being deleted for reassignment
@@ -192,9 +189,9 @@ class UserManagementController extends Controller
     {
         Gate::authorize('delete users');
         
-        // Prevent deleting admins
-        if ($user->hasRole('admin')) {
-            return back()->withErrors(['user' => 'Cannot delete administrator users.']);
+        // Prevent deleting users with admin permissions
+        if ($user->can('admin access')) {
+            return back()->withErrors(['user' => 'Cannot delete users with administrative permissions.']);
         }
         
         $request->validate([

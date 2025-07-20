@@ -39,26 +39,31 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // Super Admin Bypass: Admins automatically have all permissions
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('admin') ? true : null;
+        });
+
         // Define additional gates
         Gate::define('admin-access', function ($user) {
-            return $user->hasRole('admin');
+            return $user->hasPermissionTo('admin access');
         });
 
         Gate::define('moderator-access', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         Gate::define('editor-access', function ($user) {
-            return $user->hasRole(['editor', 'moderator', 'admin']);
+            return $user->hasPermissionTo('edit all articles');
         });
 
         Gate::define('contributor-access', function ($user) {
-            return $user->hasRole(['contributor', 'editor', 'moderator', 'admin']);
+            return $user->hasPermissionTo('create articles');
         });
 
         // Wiki-specific gates
         Gate::define('wiki-admin', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         Gate::define('can-publish', function ($user) {
@@ -86,50 +91,63 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('can-export-data', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('export data');
         });
 
         Gate::define('can-bulk-actions', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         // Content-specific gates
         Gate::define('can-feature-content', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         Gate::define('can-pin-content', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         Gate::define('can-archive-content', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         // User management gates
         Gate::define('can-ban-users', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         Gate::define('can-change-user-roles', function ($user) {
-            return $user->hasRole('admin');
+            return $user->hasPermissionTo('admin access');
         });
 
         Gate::define('can-manage-invitations', function ($user) {
-            return $user->hasRole(['moderator', 'admin']);
+            return $user->hasPermissionTo('moderate content');
         });
 
         // System gates
         Gate::define('can-access-system-settings', function ($user) {
-            return $user->hasRole('admin');
+            return $user->hasPermissionTo('admin access');
         });
 
         Gate::define('can-manage-permissions', function ($user) {
-            return $user->hasRole('admin');
+            return $user->hasPermissionTo('admin access');
         });
 
         Gate::define('can-view-system-logs', function ($user) {
-            return $user->hasRole('admin');
+            return $user->hasPermissionTo('admin access');
+        });
+
+        // Role and Permission Management Gates
+        Gate::define('manage roles', function ($user) {
+            return $user->hasRole('admin') || $user->hasPermissionTo('manage roles');
+        });
+
+        Gate::define('assign admin role', function ($user) {
+            return $user->hasRole('admin') || $user->hasPermissionTo('assign admin role');
+        });
+
+        Gate::define('remove admin role', function ($user) {
+            return $user->hasRole('admin') || $user->hasPermissionTo('remove admin role');
         });
     }
 }

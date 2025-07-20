@@ -166,7 +166,7 @@
 
     <!-- Ban Management -->
     @can('ban users')
-    @if(!$user->hasRole('admin'))
+    @if(!$user->can('admin access'))
     <div class="bg-white shadow-sm rounded-lg border border-gray-200 mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Ban Management</h3>
@@ -217,7 +217,7 @@
 
     <!-- Delete User -->
     @can('delete users')
-    @if(!$user->hasRole('admin'))
+    @if(!$user->can('admin access'))
     <div class="bg-white shadow-sm rounded-lg border border-red-200 mb-8">
         <div class="px-6 py-4 border-b border-red-200 bg-red-50">
             <h3 class="text-lg font-medium text-red-900">Danger Zone</h3>

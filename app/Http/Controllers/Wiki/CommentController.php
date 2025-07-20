@@ -107,7 +107,7 @@ class CommentController extends Controller
             'user_id' => Auth::id(),
             'content' => $validated['content'],
             'parent_id' => $validated['parent_id'] ?? null,
-            'status' => Auth::user()->hasRole(['admin', 'moderator']) ? 'approved' : 'pending',
+            'status' => Auth::user()->can('approve comments') ? 'approved' : 'pending',
         ]);
 
         if ($request->wantsJson()) {

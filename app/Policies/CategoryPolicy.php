@@ -27,7 +27,7 @@ class CategoryPolicy
         }
 
         // Only moderators and admins can view inactive categories
-        return $user && $user->hasRole(['moderator', 'admin']);
+        return $user && $user->can('moderate content');
     }
 
     /**
@@ -77,7 +77,7 @@ class CategoryPolicy
      */
     public function restore(User $user, Category $category): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -85,7 +85,7 @@ class CategoryPolicy
      */
     public function forceDelete(User $user, Category $category): bool
     {
-        return $user->hasRole('admin');
+        return $user->can('admin access');
     }
 
     /**
@@ -93,7 +93,7 @@ class CategoryPolicy
      */
     public function moderate(User $user): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -101,7 +101,7 @@ class CategoryPolicy
      */
     public function manageOrdering(User $user): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -109,7 +109,7 @@ class CategoryPolicy
      */
     public function toggleActive(User $user, Category $category): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -123,6 +123,6 @@ class CategoryPolicy
         }
 
         // Contributors and above can assign articles to categories
-        return $user->hasRole(['contributor', 'editor', 'moderator', 'admin']);
+        return $user->can('create articles');
     }
 }

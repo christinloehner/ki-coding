@@ -37,7 +37,7 @@ class ArticlePolicy
         }
 
         // Moderators and admins can view all articles
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -70,7 +70,7 @@ class ArticlePolicy
         }
 
         // Editors and above can edit any article
-        return $user->hasRole(['editor', 'moderator', 'admin']);
+        return $user->can('edit all articles');
     }
 
     /**
@@ -89,7 +89,7 @@ class ArticlePolicy
         }
 
         // Moderators and admins can delete any article
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -97,7 +97,7 @@ class ArticlePolicy
      */
     public function restore(User $user, Article $article): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -105,7 +105,7 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article): bool
     {
-        return $user->hasRole('admin');
+        return $user->can('admin access');
     }
 
     /**
@@ -113,7 +113,7 @@ class ArticlePolicy
      */
     public function moderate(User $user): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -156,7 +156,7 @@ class ArticlePolicy
         }
 
         // Editors and above can publish any article
-        return $user->hasRole(['editor', 'moderator', 'admin']);
+        return $user->can('edit all articles');
     }
 
     /**
@@ -164,7 +164,7 @@ class ArticlePolicy
      */
     public function feature(User $user, ?Article $article = null): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -172,7 +172,7 @@ class ArticlePolicy
      */
     public function changeStatus(User $user): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -186,7 +186,7 @@ class ArticlePolicy
         }
 
         // Editors and above can view any article revisions
-        return $user->hasRole(['editor', 'moderator', 'admin']);
+        return $user->can('edit all articles');
     }
 
     /**
@@ -205,6 +205,6 @@ class ArticlePolicy
         }
 
         // Editors and above can restore any article revision
-        return $user->hasRole(['editor', 'moderator', 'admin']);
+        return $user->can('edit all articles');
     }
 }

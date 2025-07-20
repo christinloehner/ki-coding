@@ -37,7 +37,7 @@ class CommentPolicy
         }
 
         // Moderators and admins can view all comments
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -78,7 +78,7 @@ class CommentPolicy
         }
 
         // Moderators and admins can edit any comment
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -97,7 +97,7 @@ class CommentPolicy
         }
 
         // Moderators and admins can delete any comment
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -105,7 +105,7 @@ class CommentPolicy
      */
     public function restore(User $user, Comment $comment): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -113,7 +113,7 @@ class CommentPolicy
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        return $user->hasRole('admin');
+        return $user->can('admin access');
     }
 
     /**
@@ -121,7 +121,7 @@ class CommentPolicy
      */
     public function moderate(User $user): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -129,7 +129,7 @@ class CommentPolicy
      */
     public function approve(User $user, Comment $comment): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -137,7 +137,7 @@ class CommentPolicy
      */
     public function reject(User $user, Comment $comment): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -145,7 +145,7 @@ class CommentPolicy
      */
     public function markAsSpam(User $user, Comment $comment): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 
     /**
@@ -205,6 +205,6 @@ class CommentPolicy
      */
     public function bulkModerate(User $user): bool
     {
-        return $user->hasRole(['moderator', 'admin']);
+        return $user->can('moderate content');
     }
 }

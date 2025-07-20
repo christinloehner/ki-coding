@@ -161,7 +161,7 @@
                                     @endcan
                                 @else
                                     @can('ban users')
-                                    @if(!$user->hasRole('admin'))
+                                    @if(!$user->can('admin access'))
                                     <form method="POST" action="{{ route('admin.users.ban', $user) }}" class="inline">
                                         @csrf
                                         <button type="submit" 
@@ -175,7 +175,7 @@
                                 @endif
                                 
                                 @can('delete users')
-                                @if(!$user->hasRole('admin'))
+                                @if(!$user->can('admin access'))
                                 <a href="{{ route('admin.users.confirm-delete', $user) }}" 
                                    class="text-red-600 hover:text-red-900" title="Delete User">
                                     <i class="fas fa-trash"></i>

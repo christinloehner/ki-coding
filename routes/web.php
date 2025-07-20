@@ -128,8 +128,8 @@ Route::prefix('wiki')->name('wiki.')->middleware(['auth', 'verified', 'wiki.secu
     
     // Article Management
     Route::prefix('articles')->name('articles.')->group(function () {
-        Route::get('/create', [ArticleController::class, 'create'])->name('create');
-        Route::post('/', [ArticleController::class, 'store'])->name('store');
+        Route::get('/create', [ArticleController::class, 'create'])->name('create')->middleware('can:create articles');
+        Route::post('/', [ArticleController::class, 'store'])->name('store')->middleware('can:create articles');
         Route::get('/{article:slug}/edit', [ArticleController::class, 'edit'])->name('edit');
         Route::put('/{article:slug}', [ArticleController::class, 'update'])->name('update');
         Route::delete('/{article:slug}', [ArticleController::class, 'destroy'])->name('destroy');
@@ -143,6 +143,8 @@ Route::prefix('wiki')->name('wiki.')->middleware(['auth', 'verified', 'wiki.secu
         // Article Actions
         Route::post('/{article:slug}/like', [ArticleController::class, 'toggleLike'])->name('like');
         Route::post('/{article:slug}/bookmark', [ArticleController::class, 'toggleBookmark'])->name('bookmark');
+        Route::post('/{article:slug}/vote', [ArticleController::class, 'vote'])->name('vote');
+        Route::post('/{article:slug}/report', [ArticleController::class, 'report'])->name('report');
         Route::post('/{article:slug}/subscribe', [ArticleController::class, 'toggleSubscription'])->name('subscribe');
         
         // Article Status Management (for authors and moderators)
@@ -154,6 +156,9 @@ Route::prefix('wiki')->name('wiki.')->middleware(['auth', 'verified', 'wiki.secu
         Route::get('/{article:slug}/revisions/{revision}', [ArticleController::class, 'showRevision'])->name('revisions.show');
         Route::post('/{article:slug}/revisions/{revision}/restore', [ArticleController::class, 'restoreRevision'])->name('revisions.restore');
     });
+    
+    // Tag Search API
+    Route::get('/tags/search', [\App\Http\Controllers\Wiki\TagController::class, 'search'])->name('tags.search');
     
     // Comment Management
     Route::prefix('comments')->name('comments.')->group(function () {
@@ -190,26 +195,26 @@ Route::prefix('wiki')->name('wiki.')->middleware(['auth', 'verified', 'wiki.secu
     });
 });
 
-// Category Management (Authors and above)
-Route::prefix('wiki/categories')->name('wiki.categories.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'role:author'])->group(function () {
-    Route::get('/create', [CategoryController::class, 'create'])->name('create');
-    Route::post('/', [CategoryController::class, 'store'])->name('store');
-    Route::get('/{category:slug}/edit', [CategoryController::class, 'edit'])->name('edit');
-    Route::put('/{category:slug}', [CategoryController::class, 'update'])->name('update');
-    Route::delete('/{category:slug}', [CategoryController::class, 'destroy'])->name('destroy');
+// Category Management (Permission-based)
+Route::prefix('wiki/categories')->name('wiki.categories.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban'])->group(function () {
+    Route::get('/create', [CategoryController::class, 'create'])->name('create')->middleware('can:create categories');
+    Route::post('/', [CategoryController::class, 'store'])->name('store')->middleware('can:create categories');
+    Route::get('/{category:slug}/edit', [CategoryController::class, 'edit'])->name('edit')->middleware('can:edit categories');
+    Route::put('/{category:slug}', [CategoryController::class, 'update'])->name('update')->middleware('can:edit categories');
+    Route::delete('/{category:slug}', [CategoryController::class, 'destroy'])->name('destroy')->middleware('can:delete categories');
 });
 
-// Tag Management (Authors and above)
-Route::prefix('wiki/tags')->name('wiki.tags.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'role:author'])->group(function () {
-    Route::get('/create', [TagController::class, 'create'])->name('create');
-    Route::post('/', [TagController::class, 'store'])->name('store');
-    Route::get('/{tag:slug}/edit', [TagController::class, 'edit'])->name('edit');
-    Route::put('/{tag:slug}', [TagController::class, 'update'])->name('update');
-    Route::delete('/{tag:slug}', [TagController::class, 'destroy'])->name('destroy');
+// Tag Management (Permission-based)
+Route::prefix('wiki/tags')->name('wiki.tags.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban'])->group(function () {
+    Route::get('/create', [TagController::class, 'create'])->name('create')->middleware('can:create tags');
+    Route::post('/', [TagController::class, 'store'])->name('store')->middleware('can:create tags');
+    Route::get('/{tag:slug}/edit', [TagController::class, 'edit'])->name('edit')->middleware('can:edit tags');
+    Route::put('/{tag:slug}', [TagController::class, 'update'])->name('update')->middleware('can:edit tags');
+    Route::delete('/{tag:slug}', [TagController::class, 'destroy'])->name('destroy')->middleware('can:delete tags');
 });
 
 // Moderation Routes (Moderators and above)
-Route::prefix('wiki/moderation')->name('wiki.moderation.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'role:moderator'])->group(function () {
+Route::prefix('wiki/moderation')->name('wiki.moderation.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'permission:moderate content'])->group(function () {
     
     // Moderation Dashboard
     Route::get('/', [ModerationController::class, 'dashboard'])->name('dashboard');
@@ -273,7 +278,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'wiki.se
     });
     
     // Role Management Routes (Admins only)
-    Route::middleware('role:admin')->group(function () {
+    Route::middleware('permission:admin access')->group(function () {
         Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
         Route::get('roles/{role}/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'permissions'])->name('roles.permissions');
         Route::post('roles/{role}/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'updatePermissions'])->name('roles.update-permissions');
@@ -281,10 +286,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'wiki.se
 });
 
 // Legacy Admin Routes (Admins only) - keeping for backwards compatibility
-Route::prefix('wiki/admin')->name('wiki.admin.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'role:admin'])->group(function () {
+Route::prefix('wiki/admin')->name('wiki.admin.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'permission:admin access'])->group(function () {
     
     // Admin Dashboard
     Route::get('/', [ModerationController::class, 'adminDashboard'])->name('dashboard');
+    
+    // Report Management
+    Route::post('/reports/articles/{report}/resolve', [ModerationController::class, 'resolveArticleReport'])->name('reports.articles.resolve');
+    Route::post('/reports/comments/{report}/resolve', [ModerationController::class, 'resolveCommentReport'])->name('reports.comments.resolve');
     
     // Legacy User Management (redirect to new routes)
     Route::get('/users', function () {

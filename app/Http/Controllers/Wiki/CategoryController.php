@@ -40,12 +40,12 @@ class CategoryController extends Controller
     {
         Gate::authorize('create', Category::class);
 
-        $parentCategories = Category::active()
+        $categories = Category::active()
             ->whereNull('parent_id')
             ->orderBy('name')
             ->get();
 
-        return view('wiki.categories.create', compact('parentCategories'));
+        return view('wiki.categories.create', compact('categories'));
     }
 
     /**
@@ -84,9 +84,9 @@ class CategoryController extends Controller
             'icon' => $validated['icon'] ?? 'folder',
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $validated['is_active'] ?? true,
-            'meta_title' => $validated['meta_title'],
-            'meta_description' => $validated['meta_description'],
-            'meta_keywords' => $validated['meta_keywords'],
+            'meta_title' => $validated['meta_title'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
+            'meta_keywords' => $validated['meta_keywords'] ?? null,
         ]);
 
         return redirect()->route('wiki.categories.show', $category->slug)
@@ -211,9 +211,9 @@ class CategoryController extends Controller
             'icon' => $validated['icon'] ?? $category->icon,
             'sort_order' => $validated['sort_order'] ?? $category->sort_order,
             'is_active' => $validated['is_active'] ?? $category->is_active,
-            'meta_title' => $validated['meta_title'],
-            'meta_description' => $validated['meta_description'],
-            'meta_keywords' => $validated['meta_keywords'],
+            'meta_title' => $validated['meta_title'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
+            'meta_keywords' => $validated['meta_keywords'] ?? null,
         ]);
 
         return redirect()->route('wiki.categories.show', $category->slug)

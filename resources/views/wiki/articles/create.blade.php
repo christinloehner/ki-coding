@@ -71,26 +71,26 @@
 
                 <!-- Tags -->
                 <div>
-                    <label for="tags" class="form-label">Tags</label>
+                    <label for="tag-input" class="form-label">Tags</label>
                     <div class="mt-2">
                         <div class="flex flex-wrap gap-2 mb-3" id="selected-tags">
                             <!-- Selected tags will appear here -->
                         </div>
-                        <select multiple
-                                id="tags"
-                                name="tags[]"
-                                class="form-input {{ $errors->has('tags') ? 'border-red-500' : '' }}"
-                                size="4">
-                            @foreach($tags as $tag)
-                                <option value="{{ $tag->id }}"
-                                        {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>
-                                    {{ $tag->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="relative">
+                            <input type="text"
+                                   id="tag-input"
+                                   class="form-input {{ $errors->has('tags') ? 'border-red-500' : '' }}"
+                                   placeholder="Tag eingeben... (Tab, Komma oder Enter zum Hinzufügen)"
+                                   autocomplete="off">
+                            <div id="tag-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto hidden">
+                                <!-- Suggestions will appear here -->
+                            </div>
+                        </div>
+                        <!-- Hidden input for form submission -->
+                        <input type="hidden" id="tags-data" name="tags" value="{{ old('tags', '') }}">
                     </div>
                     <p class="text-sm text-gray-500 mt-1">
-                        Wähle relevante Tags für deinen Artikel aus
+                        Gib Tags ein und bestätige mit Tab, Komma oder Enter. Bestehende Tags werden automatisch vorgeschlagen.
                     </p>
                     @error('tags')
                         <p class="form-error">{{ $message }}</p>
@@ -414,6 +414,228 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
     }
+});
+
+// Tag-Input-System mit Autocomplete
+class TagInput {
+    constructor() {
+        this.tagInput = document.getElementById('tag-input');
+        this.selectedTagsContainer = document.getElementById('selected-tags');
+        this.suggestionsContainer = document.getElementById('tag-suggestions');
+        this.tagsDataInput = document.getElementById('tags-data');
+        this.selectedTags = [];
+        this.currentSuggestions = [];
+        this.selectedSuggestionIndex = -1;
+        
+        this.initEventListeners();
+        this.loadExistingTags();
+    }
+    
+    initEventListeners() {
+        this.tagInput.addEventListener('input', (e) => this.handleInput(e));
+        this.tagInput.addEventListener('keydown', (e) => this.handleKeydown(e));
+        this.tagInput.addEventListener('blur', (e) => this.handleBlur(e));
+        
+        // Click outside to close suggestions
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#tag-input') && !e.target.closest('#tag-suggestions')) {
+                this.hideSuggestions();
+            }
+        });
+    }
+    
+    async handleInput(e) {
+        const value = e.target.value.trim();
+        
+        if (value.length > 0 && !value.includes(',')) {
+            await this.fetchSuggestions(value);
+        } else {
+            this.hideSuggestions();
+        }
+        
+        // Handle comma separation
+        if (value.includes(',')) {
+            const tags = value.split(',');
+            const lastTag = tags.pop().trim();
+            
+            // Add all complete tags
+            tags.forEach(tag => {
+                const trimmedTag = tag.trim();
+                if (trimmedTag) {
+                    this.addTag(trimmedTag);
+                }
+            });
+            
+            // Keep the last incomplete tag in input
+            this.tagInput.value = lastTag;
+            
+            if (lastTag.length > 0) {
+                await this.fetchSuggestions(lastTag);
+            } else {
+                this.hideSuggestions();
+            }
+        }
+    }
+    
+    handleKeydown(e) {
+        const value = this.tagInput.value.trim();
+        
+        if (e.key === 'Enter' || e.key === 'Tab') {
+            e.preventDefault();
+            
+            if (this.selectedSuggestionIndex >= 0 && this.currentSuggestions[this.selectedSuggestionIndex]) {
+                // Add selected suggestion
+                this.addTag(this.currentSuggestions[this.selectedSuggestionIndex].name);
+            } else if (value) {
+                // Add typed tag
+                this.addTag(value);
+            }
+            
+            this.tagInput.value = '';
+            this.hideSuggestions();
+        }
+        else if (e.key === 'Backspace' && value === '' && this.selectedTags.length > 0) {
+            // Remove last tag if input is empty
+            this.removeTag(this.selectedTags[this.selectedTags.length - 1]);
+        }
+        else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            this.selectedSuggestionIndex = Math.min(this.selectedSuggestionIndex + 1, this.currentSuggestions.length - 1);
+            this.updateSuggestionHighlight();
+        }
+        else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            this.selectedSuggestionIndex = Math.max(this.selectedSuggestionIndex - 1, -1);
+            this.updateSuggestionHighlight();
+        }
+        else if (e.key === 'Escape') {
+            this.hideSuggestions();
+        }
+    }
+    
+    handleBlur(e) {
+        // Delay to allow suggestion clicks
+        setTimeout(() => {
+            const value = this.tagInput.value.trim();
+            if (value) {
+                this.addTag(value);
+                this.tagInput.value = '';
+            }
+            this.hideSuggestions();
+        }, 150);
+    }
+    
+    async fetchSuggestions(query) {
+        try {
+            const response = await fetch(`{{ route('wiki.tags.search') }}?q=${encodeURIComponent(query)}`);
+            const suggestions = await response.json();
+            
+            // Filter out already selected tags
+            this.currentSuggestions = suggestions.filter(suggestion => 
+                !this.selectedTags.includes(suggestion.name.toLowerCase())
+            );
+            
+            this.showSuggestions();
+        } catch (error) {
+            console.error('Error fetching tag suggestions:', error);
+            this.hideSuggestions();
+        }
+    }
+    
+    showSuggestions() {
+        if (this.currentSuggestions.length === 0) {
+            this.hideSuggestions();
+            return;
+        }
+        
+        this.suggestionsContainer.innerHTML = '';
+        this.selectedSuggestionIndex = -1;
+        
+        this.currentSuggestions.forEach((suggestion, index) => {
+            const div = document.createElement('div');
+            div.className = 'px-3 py-2 cursor-pointer hover:bg-gray-100';
+            div.textContent = suggestion.name;
+            div.addEventListener('click', () => {
+                this.addTag(suggestion.name);
+                this.tagInput.value = '';
+                this.hideSuggestions();
+            });
+            
+            this.suggestionsContainer.appendChild(div);
+        });
+        
+        this.suggestionsContainer.classList.remove('hidden');
+    }
+    
+    hideSuggestions() {
+        this.suggestionsContainer.classList.add('hidden');
+        this.selectedSuggestionIndex = -1;
+    }
+    
+    updateSuggestionHighlight() {
+        const suggestions = this.suggestionsContainer.children;
+        
+        Array.from(suggestions).forEach((suggestion, index) => {
+            if (index === this.selectedSuggestionIndex) {
+                suggestion.classList.add('bg-indigo-100');
+            } else {
+                suggestion.classList.remove('bg-indigo-100');
+            }
+        });
+    }
+    
+    addTag(tagName) {
+        const normalizedTagName = tagName.toLowerCase().trim();
+        
+        if (normalizedTagName && !this.selectedTags.includes(normalizedTagName)) {
+            this.selectedTags.push(normalizedTagName);
+            this.renderSelectedTags();
+            this.updateHiddenInput();
+        }
+    }
+    
+    removeTag(tagName) {
+        const index = this.selectedTags.indexOf(tagName.toLowerCase());
+        if (index > -1) {
+            this.selectedTags.splice(index, 1);
+            this.renderSelectedTags();
+            this.updateHiddenInput();
+        }
+    }
+    
+    renderSelectedTags() {
+        this.selectedTagsContainer.innerHTML = '';
+        
+        this.selectedTags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800';
+            span.innerHTML = `
+                ${tag}
+                <button type="button" class="ml-1 text-indigo-600 hover:text-indigo-800" onclick="tagInput.removeTag('${tag}')">
+                    ×
+                </button>
+            `;
+            
+            this.selectedTagsContainer.appendChild(span);
+        });
+    }
+    
+    updateHiddenInput() {
+        this.tagsDataInput.value = this.selectedTags.join(',');
+    }
+    
+    loadExistingTags() {
+        const existingTags = this.tagsDataInput.value;
+        if (existingTags) {
+            const tags = existingTags.split(',').filter(tag => tag.trim());
+            tags.forEach(tag => this.addTag(tag.trim()));
+        }
+    }
+}
+
+// Initialize tag input system
+document.addEventListener('DOMContentLoaded', function() {
+    window.tagInput = new TagInput();
 });
 </script>
 @endpush
