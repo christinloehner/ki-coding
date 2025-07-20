@@ -8,14 +8,14 @@
 @section('og_title', 'Über KI-Coding: Kostenlose Open Source Community für KI-Programmierung')
 @section('og_description', 'Unsere Mission für kostenloses KI-Programmierung Wissen, Community-driven Open Source Approach. 100% gratis GitHub Copilot & ChatGPT Tutorials.')
 @section('og_type', 'website')
-@section('og_image', asset('images/about-social.jpg'))
+@section('og_image', asset('images/ki-coding-social.jpg'))
 @section('og_image_width', '1200')
 @section('og_image_height', '630')
 @section('og_image_alt', 'KI-Coding Team: Open Source Community für kostenlose KI-Programmierung')
 
 @section('twitter_title', 'Über KI-Coding: Kostenlose KI-Programmierung Community')
 @section('twitter_description', 'Mission für kostenloses KI-Wissen. Community-driven Open Source. 100% gratis GitHub Copilot & ChatGPT Tutorials.')
-@section('twitter_image', asset('images/about-social.jpg'))
+@section('twitter_image', asset('images/ki-coding-social.jpg'))
 @section('twitter_image_alt', 'KI-Coding Open Source Community')
 
 @section('content')
@@ -326,7 +326,7 @@
         "availableLanguage": "German"
     },
     "sameAs": [
-        "https://github.com/ki-coding"
+        "https://github.com/christinloehner/ki-coding"
     ],
     "makesOffer": [
         {

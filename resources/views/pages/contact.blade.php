@@ -8,14 +8,14 @@
 @section('og_title', 'Kontakt | KI-Coding - Kostenlose KI-Programmierung Community')
 @section('og_description', 'Kontaktiere die KI-Coding Community! Fragen zu GitHub Copilot, ChatGPT, Community-Beiträge oder kostenlose KI-Coding Hilfe.')
 @section('og_type', 'website')
-@section('og_image', asset('images/contact-social.jpg'))
+@section('og_image', asset('images/ki-coding-social.jpg'))
 @section('og_image_width', '1200')
 @section('og_image_height', '630')
 @section('og_image_alt', 'KI-Coding Kontakt - Kostenlose KI-Programmierung Community erreichen')
 
 @section('twitter_title', 'KI-Coding Kontakt: Kostenlose KI-Programmierung Hilfe')
 @section('twitter_description', 'Fragen zu GitHub Copilot, ChatGPT, Community-Beiträge oder kostenlose KI-Coding Hilfe? Kontaktiere uns!')
-@section('twitter_image', asset('images/contact-social.jpg'))
+@section('twitter_image', asset('images/ki-coding-social.jpg'))
 @section('twitter_image_alt', 'KI-Coding Community Kontakt')
 
 @section('content')
@@ -288,7 +288,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://github.com" 
+                        <a href="https://github.com/christinloehner/ki-coding" target="_blank" rel="noopener noreferrer" 
                            class="block bg-white p-4 rounded-lg hover:shadow-md transition-shadow">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-secondary-600 rounded-full flex items-center justify-center mr-3">

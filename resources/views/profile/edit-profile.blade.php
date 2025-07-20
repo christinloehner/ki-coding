@@ -195,17 +195,7 @@
                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
                                 </div>
 
-                                <div>
-                                    <label for="twitter_username" class="block text-sm font-medium text-gray-700">
-                                        <i class="fab fa-twitter mr-2"></i>Twitter Username
-                                    </label>
-                                    <input type="text" 
-                                           name="twitter_username" 
-                                           id="twitter_username" 
-                                           value="{{ e(old('twitter_username', $user->twitter_username)) }}"
-                                           placeholder="username"
-                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
-                                </div>
+                                <!-- Twitter/X Feld entfernt - wir nutzen diese Plattform nicht -->
 
                                 <div>
                                     <label for="linkedin_username" class="block text-sm font-medium text-gray-700">

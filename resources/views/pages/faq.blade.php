@@ -8,14 +8,14 @@
 @section('og_title', 'FAQ: Häufig gestellte Fragen | KI-Coding')
 @section('og_description', 'Häufig gestellte Fragen zur KI-Coding Knowledge Base. Alles über kostenlose Nutzung, Community-Beiträge und KI-Programmierung.')
 @section('og_type', 'website')
-@section('og_image', asset('images/faq-social.jpg'))
+@section('og_image', asset('images/ki-coding-social.jpg'))
 @section('og_image_width', '1200')
 @section('og_image_height', '630')
 @section('og_image_alt', 'KI-Coding FAQ - Häufig gestellte Fragen zur KI-Programmierung')
 
 @section('twitter_title', 'KI-Coding FAQ: Häufig gestellte Fragen')
 @section('twitter_description', 'Alles über kostenlose KI-Programmierung Tutorials, GitHub Copilot, ChatGPT, Community-Beiträge und mehr.')
-@section('twitter_image', asset('images/faq-social.jpg'))
+@section('twitter_image', asset('images/ki-coding-social.jpg'))
 @section('twitter_image_alt', 'KI-Coding FAQ Knowledge Base')
 
 @section('content')
