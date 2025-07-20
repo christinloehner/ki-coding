@@ -1,0 +1,24 @@
+stages:
+  - deploy
+
+live:
+  stage: deploy
+  image: dwdraju/ssh-client-alpine
+  environment:
+    name: KI-Coding LIVE Environment
+    url: https://www.ki-coding.de/
+  before_script:
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - echo -e "$SSH_PRIVATEKEY_MAIN" | tr -d '\r' | ssh-add - > /dev/null
+    - echo -e "HOST *\n\tStrictHostKeyChecking no\n\tSendEnv CI_*\n\tUser $SSH_USER_MAIN\n\tPort $SSH_PORT_MAIN" > ~/.ssh/config
+    - ssh-keyscan "$SSH_HOST_MAIN" >> ~/.ssh/known_hosts
+    - chmod 700 ~/.ssh
+    - chmod 644 ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/config
+  script:
+    - ssh -t -A -p $SSH_PORT_MAIN $SSH_USER_MAIN@$SSH_HOST_MAIN "cd $SSH_PATH_MAIN ; git checkout ."
+    - ssh -t -A -p $SSH_PORT_MAIN $SSH_USER_MAIN@$SSH_HOST_MAIN "cd $SSH_PATH_MAIN ; git pull"
+    - ssh -t -A -p $SSH_PORT_MAIN $SSH_USER_MAIN@$SSH_HOST_MAIN "cd $SSH_PATH_MAIN ; ./cache-build.sh"
+  only:
+    - main

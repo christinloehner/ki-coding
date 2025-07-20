@@ -1,0 +1,287 @@
+/**
+ * KI-Coding Moderne Farbpalette
+ * Basierend auf APB Logo-Farben
+ * 
+ * Hauptfarben: Grün, Orange/Braun, Blau, Weiß
+ * Moderne Ergänzungen: Lila, Grau-Töne, Akzentfarben
+ */
+
+:root {
+  /* === PRIMARY COLORS (Logo-basiert) === */
+  
+  /* Grün-Familie (Hauptfarbe) */
+  --color-primary-50: #eef7f1;
+  --color-primary-100: #d8f0de;
+  --color-primary-200: #b3e2c2;
+  --color-primary-300: #81d09e;
+  --color-primary-400: #45bf73;
+  --color-primary-500: #45a049;  /* Logo Grün - leicht intensiver */
+  --color-primary-600: #1fb854;
+  --color-primary-700: #159844;
+  --color-primary-800: #137a39;
+  --color-primary-900: #124f2a;
+  --color-primary-950: #052e16;
+
+  /* Orange-Familie (Sekundär) */
+  --color-secondary-50: #fdf6ed;
+  --color-secondary-100: #fcedd8;
+  --color-secondary-200: #f9d9b1;
+  --color-secondary-300: #f5c084;
+  --color-secondary-400: #f0a255;
+  --color-secondary-500: #d4721e;  /* Logo Orange - leicht intensiver */
+  --color-secondary-600: #e04e0a;
+  --color-secondary-700: #bb3a09;
+  --color-secondary-800: #942f10;
+  --color-secondary-900: #762910;
+  --color-secondary-950: #431407;
+
+  /* Blau-Familie (Akzent) */
+  --color-accent-50: #edf4ff;
+  --color-accent-100: #d6e7fe;
+  --color-accent-200: #b8d8fd;
+  --color-accent-300: #89c2fc;
+  --color-accent-400: #579df9;
+  --color-accent-500: #2e85c7;  /* Logo Blau - leicht intensiver */
+  --color-accent-600: #2259e1;
+  --color-accent-700: #1a47d4;
+  --color-accent-800: #1b3ca6;
+  --color-accent-900: #1c3582;
+  --color-accent-950: #172554;
+
+  /* === ERWEITERTE MODERNE FARBEN === */
+  
+  /* Lila-Familie (Modern Ergänzung) */
+  --color-purple-50: #f3f1ff;
+  --color-purple-100: #e9e5fe;
+  --color-purple-200: #d7d0fd;
+  --color-purple-300: #bba9fc;
+  --color-purple-400: #9d7ef9;
+  --color-purple-500: #8048f4;
+  --color-purple-600: #7230ea;
+  --color-purple-700: #6521d5;
+  --color-purple-800: #541cb1;
+  --color-purple-900: #451990;
+  --color-purple-950: #2e1065;
+
+  /* Rosa-Familie (Akzent) */
+  --color-pink-50: #fdf2f8;
+  --color-pink-100: #fce7f3;
+  --color-pink-200: #fbcfe8;
+  --color-pink-300: #f9a8d4;
+  --color-pink-400: #f472b6;
+  --color-pink-500: #ec4899;
+  --color-pink-600: #db2777;
+  --color-pink-700: #be185d;
+  --color-pink-800: #9d174d;
+  --color-pink-900: #831843;
+  --color-pink-950: #500724;
+
+  /* Türkis-Familie (Modern Ergänzung) */
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-200: #99f6e4;
+  --color-teal-300: #5eead4;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+  --color-teal-800: #115e59;
+  --color-teal-900: #134e4a;
+  --color-teal-950: #042f2e;
+
+  /* === NEUTRALE FARBEN === */
+  
+  /* Grau-Familie (Basis) */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  /* Warme Grau-Familie */
+  --color-stone-50: #fafaf9;
+  --color-stone-100: #f5f5f4;
+  --color-stone-200: #e7e5e4;
+  --color-stone-300: #d6d3d1;
+  --color-stone-400: #a8a29e;
+  --color-stone-500: #78716c;
+  --color-stone-600: #57534e;
+  --color-stone-700: #44403c;
+  --color-stone-800: #292524;
+  --color-stone-900: #1c1917;
+  --color-stone-950: #0c0a09;
+
+  /* === SPEZIELLE FARBEN === */
+  
+  /* Status-Farben */
+  --color-success: var(--color-primary-500);
+  --color-warning: var(--color-secondary-500);
+  --color-error: #ef4444;
+  --color-info: var(--color-accent-500);
+
+  /* Basis-Farben */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+
+  /* === MODERNE FARBVERLÄUFE === */
+  
+  /* Haupt-Verläufe */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-600) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--color-secondary-500) 0%, var(--color-secondary-600) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--color-accent-500) 0%, var(--color-accent-600) 100%);
+
+  /* Moderne Kombinationen */
+  --gradient-sunset: linear-gradient(135deg, var(--color-secondary-400) 0%, var(--color-pink-500) 50%, var(--color-purple-600) 100%);
+  --gradient-ocean: linear-gradient(135deg, var(--color-accent-400) 0%, var(--color-teal-500) 50%, var(--color-primary-600) 100%);
+  --gradient-forest: linear-gradient(135deg, var(--color-primary-400) 0%, var(--color-teal-600) 100%);
+  --gradient-dawn: linear-gradient(135deg, var(--color-secondary-300) 0%, var(--color-primary-400) 100%);
+  
+  /* Subtile Verläufe */
+  --gradient-subtle-primary: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+  --gradient-subtle-secondary: linear-gradient(135deg, var(--color-secondary-50) 0%, var(--color-secondary-100) 100%);
+  --gradient-subtle-accent: linear-gradient(135deg, var(--color-accent-50) 0%, var(--color-accent-100) 100%);
+  
+  /* Dunkle Verläufe */
+  --gradient-dark: linear-gradient(135deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
+  --gradient-night: linear-gradient(135deg, var(--color-purple-900) 0%, var(--color-gray-900) 100%);
+
+  /* === SCHATTEN UND EFFEKTE === */
+  
+  /* Moderne Schatten */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  
+  /* Farbige Schatten */
+  --shadow-primary: 0 4px 14px 0 rgba(76, 175, 80, 0.3);
+  --shadow-secondary: 0 4px 14px 0 rgba(230, 126, 34, 0.3);
+  --shadow-accent: 0 4px 14px 0 rgba(52, 152, 219, 0.3);
+  --shadow-purple: 0 4px 14px 0 rgba(139, 92, 246, 0.3);
+
+  /* === GLASSMORPHISM EFFEKTE === */
+  
+  --glass-backdrop: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --glass-backdrop-blur: blur(10px);
+
+  /* Dunkles Glass */
+  --glass-dark-backdrop: rgba(0, 0, 0, 0.25);
+  --glass-dark-border: rgba(255, 255, 255, 0.1);
+  --glass-dark-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* === ANIMATIONEN UND ÜBERGÄNGE === */
+  
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+  
+  --animation-fade-in: fadeIn 0.5s ease-in-out;
+  --animation-slide-up: slideUp 0.3s ease-out;
+  --animation-pulse: pulse 2s infinite;
+
+  /* === BORDER RADIUS === */
+  
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* === SPACING === */
+  
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+}
+
+/* === UTILITY CLASSES === */
+
+.bg-gradient-primary { background: var(--gradient-primary); }
+.bg-gradient-secondary { background: var(--gradient-secondary); }
+.bg-gradient-accent { background: var(--gradient-accent); }
+.bg-gradient-sunset { background: var(--gradient-sunset); }
+.bg-gradient-ocean { background: var(--gradient-ocean); }
+.bg-gradient-forest { background: var(--gradient-forest); }
+.bg-gradient-dawn { background: var(--gradient-dawn); }
+
+.text-gradient-primary {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-sunset {
+  background: var(--gradient-sunset);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-primary { box-shadow: var(--shadow-primary); }
+.shadow-secondary { box-shadow: var(--shadow-secondary); }
+.shadow-accent { box-shadow: var(--shadow-accent); }
+.shadow-purple { box-shadow: var(--shadow-purple); }
+
+.glass {
+  background: var(--glass-backdrop);
+  backdrop-filter: var(--glass-backdrop-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-dark {
+  background: var(--glass-dark-backdrop);
+  backdrop-filter: var(--glass-backdrop-blur);
+  border: 1px solid var(--glass-dark-border);
+  box-shadow: var(--glass-dark-shadow);
+}
+
+/* === ANIMATIONS === */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* === RESPONSIVE DESIGN === */
+
+.animate-fade-in { animation: var(--animation-fade-in); }
+.animate-slide-up { animation: var(--animation-slide-up); }
+.animate-pulse { animation: var(--animation-pulse); }
+
+.transition-fast { transition: var(--transition-fast); }
+.transition-normal { transition: var(--transition-normal); }
+.transition-slow { transition: var(--transition-slow); }

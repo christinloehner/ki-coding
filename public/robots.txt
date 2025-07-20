@@ -1,0 +1,21 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /api/
+Disallow: /livewire/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /bootstrap/
+Disallow: /config/
+Disallow: /database/
+Disallow: /resources/
+Disallow: /routes/
+Disallow: /tests/
+Disallow: /app/
+
+Allow: /
+
+Sitemap: https://www.ki-coding.de/sitemap.xml

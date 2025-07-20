@@ -1,0 +1,172 @@
+# Laravel specific
+.env
+.env.*
+!.env.example
+/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/app/public
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
+/storage/*.key
+/storage/pail
+/bootstrap/cache/*.php
+auth.json
+
+# IDE & Editor files
+/.idea
+/.vscode
+/.nova
+/.fleet
+/.zed
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+.phpactor.json
+
+# Testing & Coverage
+/.phpunit.cache
+.phpunit.result.cache
+/coverage
+phpunit.xml
+.pest
+/tests/coverage
+
+# Development Tools
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.npm
+.yarn-integrity
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+storage/logs/*.log
+laravel.log
+
+# Cache files
+.cache
+.parcel-cache
+.sass-cache
+.php_cs.cache
+.php-cs-fixer.cache
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.backup
+*.bak
+*.orig
+
+# Database files
+*.sqlite
+*.sqlite3
+database.sqlite
+database.sqlite3
+
+# Compiled assets
+# /public/css - needed for local DSGVO-compliant fonts
+# /public/js - needed for local DSGVO-compliant scripts
+/public/mix-manifest.json
+
+# Deployment
+deploy.php
+.deployer
+
+# Docker (if needed)
+docker-compose.override.yml
+
+# Package manager lock files (keep one, comment others)
+# yarn.lock
+# package-lock.json
+# composer.lock
+
+# Local configuration
+.local
+local.ini
+
+# Terraform (if used)
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Security sensitive files - NEVER commit these!
+.env
+.env.*
+!.env.example
+.htpasswd
+cert.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.pem
+*.secret
+config.ini
+config.json
+*.credentials
+auth.json
+
+# Passwords and tokens
+*password*
+*secret*
+*token*
+*api_key*
+jwt.txt
+oauth.json
+
+# User uploads and sensitive data
+/storage/app/public/avatars/
+/storage/app/private/
+/storage/app/uploads/
+/storage/logs/*.log
+laravel.log
+debug.log
+
+# Backup files - contain sensitive data
+*.backup
+*.bak
+*.old
+*.orig
+*.save
+*~
+.backup
+backup/
+backups/
+dump/
+dumps/
+
+# IDE and editor specific
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.vscode/launch.json
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+
+# Application specific
+/storage/clockwork
+.phpunit.result.cache
