@@ -34,7 +34,7 @@
 
     <!-- Open Graph Tags -->
     <meta property="og:title" content="@yield('og_title', 'KI-Coding - Kostenlose Knowledge Base für KI-Programmierung')">
-    <meta property="og:description" content="@yield('og_description', 'Kostenlose Wissensdatenbank für KI-gestütztes Programmieren. Tutorials, Tools, Best Practices - alles gratis für die Entwickler-Community.')">
+    <meta property="og:description" content="@yield('og_description', 'Kostenlose Wissensdatenbank für KI-gestütztes Programmieren. Tutorials, Tools, Best Practices - alles gratis für die Entwickler*innen-Community.')">
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="@yield('og_image', asset('images/apb-logo-512.png'))">
@@ -61,7 +61,7 @@
     <!-- Twitter Card Tags (behalten für Sharing-Funktionalität) -->
     <meta name="twitter:card" content="@yield('twitter_card', 'summary_large_image')">
     <meta name="twitter:title" content="@yield('twitter_title', 'KI-Coding - Kostenlose Knowledge Base für KI-Programmierung')">
-    <meta name="twitter:description" content="@yield('twitter_description', 'Kostenlose Wissensdatenbank für KI-gestütztes Programmierung. Tutorials, Tools, Best Practices - alles gratis für die Entwickler-Community.')">
+    <meta name="twitter:description" content="@yield('twitter_description', 'Kostenlose Wissensdatenbank für KI-gestütztes Programmierung. Tutorials, Tools, Best Practices - alles gratis für die Entwickler*innen-Community.')">
     <meta name="twitter:image" content="@yield('twitter_image', asset('images/ki-coding-social.jpg'))">
     <meta name="twitter:image:alt" content="@yield('twitter_image_alt', 'KI-Coding Knowledge Base')">
 

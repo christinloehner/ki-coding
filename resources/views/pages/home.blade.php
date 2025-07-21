@@ -40,7 +40,7 @@
             </h1>
             <p class="text-xl md:text-2xl text-medium-contrast mb-8 max-w-3xl mx-auto leading-relaxed animate-ki-slide-up">
                 Deine umfassende, kostenlose Wissensdatenbank für KI-gestütztes Programmieren. 
-                Tutorials, Tools, Best Practices und Community-Wissen – alles für Entwickler.
+                Tutorials, Tools, Best Practices und Community-Wissen – alles für Entwickler*innen.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-ki-slide-up">
                 <a href="{{ route('wiki.index') }}" class="btn-ki-primary focus-ki">
@@ -123,7 +123,7 @@
                 </div>
                 <h3 class="text-xl font-semibold text-high-contrast mb-4">Community-driven</h3>
                 <p class="text-medium-contrast">
-                    Lerne mit und von anderen Entwicklern. Teile deine Erfahrungen, 
+                    Lerne mit und von anderen Entwickler*innen. Teile deine Erfahrungen, 
                     diskutiere Lösungen und profitiere vom kollektiven Wissen der Community.
                 </p>
             </div>
@@ -150,7 +150,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">KI-Tools für Entwickler</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">KI-Tools für Entwickler*innen</h3>
                 <p class="text-gray-600 text-center mb-6">
                     Umfassende Guides zu GitHub Copilot, VS Code Extensions, KI-Assistenten und mehr.
                 </p>
@@ -247,7 +247,7 @@
             {
                 "@@type": "ListItem",
                 "position": 1,
-                "name": "KI-Tools für Entwickler",
+                "name": "KI-Tools für Entwickler*innen",
                 "description": "GitHub Copilot, VS Code Extensions, KI-Assistenten",
                 "url": "{{ route('wiki.index') }}#ki-tools"
             },

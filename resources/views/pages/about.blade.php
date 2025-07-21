@@ -188,7 +188,7 @@
                 Unsere Community
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Entwickler aus verschiedenen Bereichen, die ihr Wissen teilen und gemeinsam die KI-Zukunft gestalten
+                Entwickler*innen aus verschiedenen Bereichen, die ihr Wissen teilen und gemeinsam die KI-Zukunft gestalten
             </p>
         </div>
 
