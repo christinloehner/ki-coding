@@ -7,6 +7,10 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\ArticleRevision;
+use App\Events\ArticleLiked;
+use App\Events\ArticlePublished;
+use App\Events\ArticleUnliked;
+use App\Events\ArticleVoted;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -129,6 +133,11 @@ class ArticleController extends Controller
                 'meta_keywords' => $validated['meta_keywords'],
                 'published_at' => $validated['status'] === 'published' ? now() : null,
             ]);
+            
+            // Fire reputation event if article is published
+            if ($validated['status'] === 'published') {
+                event(new ArticlePublished($article));
+            }
 
             // Process and attach tags
             if (!empty($validated['tags'])) {
@@ -391,6 +400,11 @@ class ArticleController extends Controller
             'status' => $validated['status'],
             'published_at' => $validated['status'] === 'published' && $oldStatus !== 'published' ? now() : $article->published_at,
         ]);
+        
+        // Fire reputation event if article gets published for first time
+        if ($validated['status'] === 'published' && $oldStatus !== 'published') {
+            event(new ArticlePublished($article));
+        }
 
         $article->createRevision(
             Auth::user(),
@@ -507,6 +521,9 @@ class ArticleController extends Controller
 
             $article->decrement('likes_count');
             $liked = false;
+            
+            // Fire reputation event for unlike
+            event(new ArticleUnliked($article, Auth::user()));
         } else {
             // Add like
             DB::table('article_likes')->insert([
@@ -518,6 +535,9 @@ class ArticleController extends Controller
 
             $article->increment('likes_count');
             $liked = true;
+            
+            // Fire reputation event
+            event(new ArticleLiked($article, Auth::user()));
         }
 
         return response()->json([
@@ -643,8 +663,12 @@ class ArticleController extends Controller
             // Update counters
             if ($isHelpful) {
                 $article->increment('helpful_votes');
+                // Fire reputation event for upvote
+                event(new ArticleVoted($article, Auth::user(), 'up'));
             } else {
                 $article->increment('not_helpful_votes');
+                // Fire reputation event for downvote
+                event(new ArticleVoted($article, Auth::user(), 'down'));
             }
 
             return response()->json([

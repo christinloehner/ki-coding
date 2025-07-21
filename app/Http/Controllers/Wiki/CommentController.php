@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Wiki;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Article;
+use App\Events\CommentCreated;
+use App\Events\CommentLiked;
+use App\Events\CommentUnliked;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -109,6 +112,9 @@ class CommentController extends Controller
             'parent_id' => $validated['parent_id'] ?? null,
             'status' => Auth::user()->can('approve comments') ? 'approved' : 'pending',
         ]);
+        
+        // Fire reputation event for comment creation
+        event(new CommentCreated($comment));
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -315,6 +321,9 @@ class CommentController extends Controller
 
             $comment->decrement('likes_count');
             $liked = false;
+            
+            // Fire reputation event for unlike
+            event(new CommentUnliked($comment, Auth::user()));
         } else {
             // Add like
             DB::table('comment_likes')->insert([
@@ -325,6 +334,9 @@ class CommentController extends Controller
 
             $comment->increment('likes_count');
             $liked = true;
+            
+            // Fire reputation event for like
+            event(new CommentLiked($comment, Auth::user()));
         }
 
         return response()->json([

@@ -26,7 +26,8 @@ class DashboardController extends Controller
             'articles' => Article::where('user_id', $user->id)->count(),
             'comments' => Comment::where('user_id', $user->id)->count(),
             'views' => Article::where('user_id', $user->id)->sum('views_count') ?? 0,
-            'reputation' => $user->reputation ?? 0,
+            'reputation' => $user->reputation_score ?? 0,
+            'reputation_level' => $user->reputation_level,
         ];
         
         // Benutzer-Artikel (letzte 5)
