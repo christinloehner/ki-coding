@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use App\Models\ArticleVote;
 use Illuminate\Support\Facades\Cache;
 use App\Services\MarkdownService;
 use Laravel\Scout\Searchable;
@@ -232,6 +233,14 @@ class Article extends Model
     public function incrementViews(): void
     {
         $this->increment('views_count');
+    }
+
+    /**
+     * Get the count of helpful votes for this article.
+     */
+    public function getHelpfulVotesCountAttribute(): int
+    {
+        return $this->hasMany(ArticleVote::class)->where('is_helpful', true)->count();
     }
 
     /**

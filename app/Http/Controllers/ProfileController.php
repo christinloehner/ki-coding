@@ -29,6 +29,10 @@ class ProfileController extends Controller
      */
     public function show(User $user): View
     {
+        $user->loadCount(['articles' => function($query) {
+            $query->where('status', 'published');
+        }]);
+
         $user->load(['articles' => function($query) {
             $query->where('status', 'published')
                   ->orderBy('created_at', 'desc')

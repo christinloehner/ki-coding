@@ -42,6 +42,8 @@
                 <span>von {{ $article->user->name ?? 'Unbekannt' }}</span>
                 <span>{{ $article->reading_time ?? 5 }} min Lesezeit</span>
                 <span>{{ $article->views_count ?? 0 }} Aufrufe</span>
+                <span>{{ $article->likes_count ?? 0 }} Likes</span>
+                <span>{{ $article->helpful_votes_count ?? 0 }} fanden den Artikel hilfreich</span>
             </div>
             <div class="flex items-center space-x-2">
                 @auth
@@ -51,26 +53,23 @@
                         $userVote = DB::table('article_votes')->where('article_id', $article->id)->where('user_id', auth()->id())->first();
                     @endphp
                     
-                    <button id="likeBtn" class="{{ $userLiked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="toggleLike('{{ $article->slug }}')">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="likeBtn" class="{{ $userLiked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userLiked ? 'Geliked' : 'Liken' }}" onclick="toggleLike('{{ $article->slug }}')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
-                        <span id="likeText">{{ $userLiked ? 'Geliked' : 'Liken' }}</span>
                     </button>
-                    <button id="bookmarkBtn" class="{{ $userBookmarked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="toggleBookmark('{{ $article->slug }}')">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="bookmarkBtn" class="{{ $userBookmarked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userBookmarked ? 'Gemerkt' : 'Merken' }}" onclick="toggleBookmark('{{ $article->slug }}')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                         </svg>
-                        <span id="bookmarkText">{{ $userBookmarked ? 'Gemerkt' : 'Merken' }}</span>
                     </button>
                     
                     <!-- Author/Admin Actions -->
                     @can('update', $article)
-                        <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="btn-ki-outline-sm">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="btn-ki-outline-sm" title="Bearbeiten">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
-                            Bearbeiten
                         </a>
                     @endcan
                     
@@ -79,12 +78,12 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    class="btn-ki-outline-sm text-red-600 border-red-300 hover:bg-red-50"
+                                    class="btn-ki-outline-sm text-red-600 border-red-300 hover:bg-red-50" 
+                                    title="Löschen"
                                     onclick="return confirm('Artikel \'{{ $article->title }}\' wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
-                                Löschen
                             </button>
                         </form>
                     @endcan
@@ -93,12 +92,12 @@
                         @if(!auth()->user()->can('delete all articles'))
                             @if(!$article->deletion_requested_at)
                                 <button type="button" 
-                                        class="btn-ki-outline-sm text-yellow-600 border-yellow-300 hover:bg-yellow-50"
+                                        class="btn-ki-outline-sm text-yellow-600 border-yellow-300 hover:bg-yellow-50" 
+                                        title="Löschung beantragen"
                                         onclick="showDeletionRequestModal()">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                                     </svg>
-                                    Löschung beantragen
                                 </button>
                             @else
                                 <span class="btn-ki-outline-sm text-orange-600 border-orange-300 bg-orange-50 cursor-not-allowed">
@@ -157,31 +156,33 @@
             <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-500">War dieser Artikel hilfreich?</span>
                 @auth
-                    <button id="helpfulBtn" class="{{ $userVote && $userVote->is_helpful === 1 ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="voteHelpful('{{ $article->slug }}', true)">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="helpfulBtn" class="{{ $userVote && $userVote->is_helpful === 1 ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userVote && $userVote->is_helpful === 1 ? 'Als hilfreich bewertet' : 'Hilfreich' }}" onclick="voteHelpful('{{ $article->slug }}', true)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.60L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
                         </svg>
-                        <span id="helpfulText">{{ $userVote && $userVote->is_helpful === 1 ? 'Als hilfreich bewertet' : 'Hilfreich' }}</span>
                     </button>
-                    <button id="notHelpfulBtn" class="{{ $userVote && $userVote->is_helpful === 0 ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" onclick="voteHelpful('{{ $article->slug }}', false)">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="notHelpfulBtn" class="{{ $userVote && $userVote->is_helpful === 0 ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userVote && $userVote->is_helpful === 0 ? 'Als nicht hilfreich bewertet' : 'Nicht hilfreich' }}" onclick="voteHelpful('{{ $article->slug }}', false)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.60L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10H5a2 2 0 00-2 2v6a2 2 0 002 2h2.5"></path>
                         </svg>
-                        <span id="notHelpfulText">{{ $userVote && $userVote->is_helpful === 0 ? 'Als nicht hilfreich bewertet' : 'Nicht hilfreich' }}</span>
                     </button>
                 @endauth
             </div>
 
             <div class="flex items-center space-x-4">
                 @can('update', $article)
-                    <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="btn-ki-outline-sm">
-                        Bearbeiten
+                    <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="btn-ki-outline-sm" title="Bearbeiten">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
                     </a>
                 @endcan
 
                 @auth
-                    <button class="btn-ki-outline-sm text-red-600 hover:text-red-800" onclick="reportArticle('{{ $article->slug }}')">
-                        Melden
+                    <button class="btn-ki-outline-sm text-red-600 hover:text-red-800" title="Melden" onclick="reportArticle('{{ $article->slug }}')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
                     </button>
                 @endauth
             </div>
@@ -487,7 +488,6 @@ document.addEventListener('click', function(e) {
 // Artikel-Interaktions-Funktionen
 function toggleLike(articleSlug) {
     const btn = document.getElementById('likeBtn');
-    const text = document.getElementById('likeText');
     
     btn.disabled = true;
     
@@ -504,11 +504,11 @@ function toggleLike(articleSlug) {
             if (data.liked) {
                 btn.classList.remove('btn-ki-outline-sm');
                 btn.classList.add('btn-ki-primary-sm');
-                text.textContent = 'Geliked';
+                btn.title = 'Geliked';
             } else {
                 btn.classList.remove('btn-ki-primary-sm');
                 btn.classList.add('btn-ki-outline-sm');
-                text.textContent = 'Liken';
+                btn.title = 'Liken';
             }
         } else {
             alert('Fehler beim Liken: ' + (data.message || 'Unbekannter Fehler'));
@@ -525,7 +525,6 @@ function toggleLike(articleSlug) {
 
 function toggleBookmark(articleSlug) {
     const btn = document.getElementById('bookmarkBtn');
-    const text = document.getElementById('bookmarkText');
     
     btn.disabled = true;
     
@@ -542,11 +541,11 @@ function toggleBookmark(articleSlug) {
             if (data.bookmarked) {
                 btn.classList.remove('btn-ki-outline-sm');
                 btn.classList.add('btn-ki-primary-sm');
-                text.textContent = 'Gemerkt';
+                btn.title = 'Gemerkt';
             } else {
                 btn.classList.remove('btn-ki-primary-sm');
                 btn.classList.add('btn-ki-outline-sm');
-                text.textContent = 'Merken';
+                btn.title = 'Merken';
             }
         } else {
             alert('Fehler beim Merken: ' + (data.message || 'Unbekannter Fehler'));
@@ -564,8 +563,6 @@ function toggleBookmark(articleSlug) {
 function voteHelpful(articleSlug, isHelpful) {
     const helpfulBtn = document.getElementById('helpfulBtn');
     const notHelpfulBtn = document.getElementById('notHelpfulBtn');
-    const helpfulText = document.getElementById('helpfulText');
-    const notHelpfulText = document.getElementById('notHelpfulText');
     
     helpfulBtn.disabled = true;
     notHelpfulBtn.disabled = true;
@@ -586,18 +583,18 @@ function voteHelpful(articleSlug, isHelpful) {
             helpfulBtn.classList.add('btn-ki-outline-sm');
             notHelpfulBtn.classList.remove('btn-ki-primary-sm');
             notHelpfulBtn.classList.add('btn-ki-outline-sm');
-            helpfulText.textContent = 'Hilfreich';
-            notHelpfulText.textContent = 'Nicht hilfreich';
+            helpfulBtn.title = 'Hilfreich';
+            notHelpfulBtn.title = 'Nicht hilfreich';
             
             // Highlight the voted button
             if (data.vote === 'helpful') {
                 helpfulBtn.classList.remove('btn-ki-outline-sm');
                 helpfulBtn.classList.add('btn-ki-primary-sm');
-                helpfulText.textContent = 'Als hilfreich bewertet';
+                helpfulBtn.title = 'Als hilfreich bewertet';
             } else if (data.vote === 'not_helpful') {
                 notHelpfulBtn.classList.remove('btn-ki-outline-sm');
                 notHelpfulBtn.classList.add('btn-ki-primary-sm');
-                notHelpfulText.textContent = 'Als nicht hilfreich bewertet';
+                notHelpfulBtn.title = 'Als nicht hilfreich bewertet';
             }
         } else {
             alert('Fehler beim Bewerten: ' + (data.message || 'Unbekannter Fehler'));
