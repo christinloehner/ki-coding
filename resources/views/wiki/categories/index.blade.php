@@ -214,49 +214,116 @@
         @endforelse
     </div>
 
-    <!-- All Categories (if there are subcategories) -->
+    <!-- All Categories - Hierarchical Tree View -->
     @if($categories->count() > $rootCategories->count())
         <div class="mt-12">
-            <h2 class="text-2xl font-display font-bold text-gray-900 mb-6">Alle Kategorien</h2>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-display font-bold text-gray-900">Hierarchische Kategorien-Übersicht</h2>
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-sitemap mr-2"></i>Alle Kategorien mit ihrer Hierarchie
+                </div>
+            </div>
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="divide-y divide-gray-200">
-                    @foreach($categories as $category)
-                        <div class="px-6 py-4 hover:bg-gray-50">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3"
-                                         style="background-color: {{ $category->color ?? '#6366f1' }}20;">
-                                        <svg class="w-4 h-4" style="color: {{ $category->color ?? '#6366f1' }};" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm font-medium text-gray-900">
-                                            <a href="{{ route('wiki.categories.show', $category->slug) }}" class="hover:text-primary-600">
-                                                @if($category->parent)
-                                                    {{ $category->parent->name }} /
-                                                @endif
-                                                {{ $category->name }}
-                                            </a>
-                                        </h3>
-                                        @if($category->description)
-                                            <p class="text-sm text-gray-500">{{ Str::limit($category->description, 100) }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-4">
-                                    <span class="text-sm text-gray-500">{{ $category->articles_count }} Artikel</span>
-                                    @can('update', $category)
-                                        <a href="{{ route('wiki.categories.edit', $category->slug) }}" class="text-gray-400 hover:text-gray-600">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                            </svg>
-                                        </a>
-                                    @endcan
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                <div class="p-6">
+                    @php
+                        // Funktion zur rekursiven Darstellung der Kategorie-Hierarchie
+                        function renderCategoryTree($categories, $parentId = null, $depth = 0) {
+                            $filtered = $categories->filter(function($category) use ($parentId) {
+                                return $category->parent_id == $parentId;
+                            });
+                            
+                            // Natural alphabetische Sortierung nach Name
+                            $filtered = $filtered->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE);
+                            
+                            if ($filtered->isEmpty()) return '';
+                            
+                            $html = '<div class="space-y-2">';
+                            
+                            foreach ($filtered as $category) {
+                                $marginClass = $depth > 0 ? 'ml-' . ($depth * 6) : '';
+                                $hasChildren = $categories->filter(function($cat) use ($category) {
+                                    return $cat->parent_id == $category->id;
+                                })->isNotEmpty();
+                                
+                                $html .= '<div class="' . $marginClass . ' group">';
+                                $html .= '<div class="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors">';
+                                
+                                // Left side - Category Info
+                                $html .= '<div class="flex items-center">';
+                                
+                                // Indentation indicator and connector lines
+                                if ($depth > 0) {
+                                    $html .= '<div class="flex items-center mr-3">';
+                                    for ($i = 0; $i < $depth; $i++) {
+                                        if ($i == $depth - 1) {
+                                            $html .= '<div class="w-4 h-4 border-l-2 border-b-2 border-gray-300 rounded-bl-md mr-2"></div>';
+                                        } else {
+                                            $html .= '<div class="w-4 h-4 border-l-2 border-gray-300 mr-2"></div>';
+                                        }
+                                    }
+                                    $html .= '</div>';
+                                }
+                                
+                                // Category icon
+                                $iconColor = $category->color ?? '#6366f1';
+                                $html .= '<div class="w-8 h-8 rounded-full flex items-center justify-center mr-3" style="background-color: ' . $iconColor . '20;">';
+                                if ($hasChildren) {
+                                    $html .= '<svg class="w-4 h-4" style="color: ' . $iconColor . ';" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                                    $html .= '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>';
+                                    $html .= '</svg>';
+                                } else {
+                                    $html .= '<svg class="w-4 h-4" style="color: ' . $iconColor . ';" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                                    $html .= '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>';
+                                    $html .= '</svg>';
+                                }
+                                $html .= '</div>';
+                                
+                                // Category name and description
+                                $html .= '<div>';
+                                $html .= '<h3 class="text-sm font-medium text-gray-900 group-hover:text-primary-600">';
+                                $html .= '<a href="' . route('wiki.categories.show', $category->slug) . '" class="hover:text-primary-600">';
+                                if ($depth == 0) {
+                                    $html .= '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 mr-2">Hauptkategorie</span>';
+                                }
+                                $html .= htmlspecialchars($category->name);
+                                $html .= '</a>';
+                                $html .= '</h3>';
+                                if ($category->description) {
+                                    $html .= '<p class="text-xs text-gray-500 mt-1">' . htmlspecialchars(Str::limit($category->description, 80)) . '</p>';
+                                }
+                                $html .= '</div>';
+                                
+                                $html .= '</div>'; // End left side
+                                
+                                // Right side - Stats and Actions
+                                $html .= '<div class="flex items-center space-x-4">';
+                                $html .= '<div class="text-right">';
+                                $html .= '<span class="text-sm font-medium text-gray-700">' . $category->articles_count . '</span>';
+                                $html .= '<span class="text-xs text-gray-500 block">Artikel</span>';
+                                $html .= '</div>';
+                                
+                                if (auth()->user() && auth()->user()->can('update', $category)) {
+                                    $html .= '<a href="' . route('wiki.categories.edit', $category->slug) . '" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 transition-opacity">';
+                                    $html .= '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                                    $html .= '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>';
+                                    $html .= '</svg>';
+                                    $html .= '</a>';
+                                }
+                                $html .= '</div>'; // End right side
+                                
+                                $html .= '</div>'; // End flex container
+                                $html .= '</div>'; // End group div
+                                
+                                // Recursive call for children
+                                $html .= renderCategoryTree($categories, $category->id, $depth + 1);
+                            }
+                            
+                            $html .= '</div>';
+                            return $html;
+                        }
+                    @endphp
+                    
+                    {!! renderCategoryTree($categories) !!}
                 </div>
             </div>
         </div>

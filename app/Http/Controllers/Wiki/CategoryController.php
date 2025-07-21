@@ -27,7 +27,8 @@ class CategoryController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        $rootCategories = $categories->whereNull('parent_id');
+        $rootCategories = $categories->whereNull('parent_id')
+            ->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE);
         $totalArticles = Article::published()->count();
 
         return view('wiki.categories.index', compact('categories', 'rootCategories', 'totalArticles'));

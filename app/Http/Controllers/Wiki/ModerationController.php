@@ -132,8 +132,29 @@ class ModerationController extends Controller
         return response()->json(['success' => true]);
     }
     
-    public function resolveReport($report) { return redirect()->back(); }
-    public function dismissReport($report) { return redirect()->back(); }
+    public function resolveReport(ArticleReport $report) 
+    { 
+        $report->update([
+            'status' => 'reviewed',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now()
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Meldung wurde als berechtigt markiert.');
+    }
+    
+    public function dismissReport(ArticleReport $report) 
+    { 
+        $report->update([
+            'status' => 'dismissed',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now()
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Meldung wurde als unberechtigt abgelehnt.');
+    }
     public function users() { return view('wiki.moderation.users'); }
     public function banUser(User $user) { return redirect()->back(); }
     public function unbanUser(User $user) { return redirect()->back(); }

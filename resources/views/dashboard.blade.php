@@ -83,152 +83,225 @@
         </div>
     </div>
 
-    <!-- Admin Notifications -->
-    @can('delete all articles')
+    <!-- Admin/Moderator Notifications -->
+    @canany(['delete all articles', 'moderate'])
         @php
             $deletionRequests = \App\Models\Article::whereNotNull('deletion_requested_at')->count();
+            $reportedArticles = \App\Models\ArticleReport::where('status', 'pending')->count();
         @endphp
         
-        @if($deletionRequests > 0)
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <div class="ml-3 flex-1">
-                    <h3 class="text-sm font-medium text-yellow-800">
-                        {{ $deletionRequests }} Löschungsantrag{{ $deletionRequests > 1 ? 'e' : '' }} ausstehend
-                    </h3>
-                    <div class="mt-2 text-sm text-yellow-700">
-                        <p>Es {{ $deletionRequests > 1 ? 'liegen' : 'liegt' }} {{ $deletionRequests }} Antrag{{ $deletionRequests > 1 ? 'e' : '' }} zur Artikellöschung vor, die deine Überprüfung benötigen.</p>
+        <!-- Deletion Requests Notification -->
+        @can('delete all articles')
+            @if($deletionRequests > 0)
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
                     </div>
-                    <div class="mt-3">
-                        <div class="flex space-x-3">
-                            <a href="{{ route('admin.articles.deletion-requests') }}" 
-                               class="bg-yellow-100 px-3 py-1.5 rounded-md text-sm font-medium text-yellow-800 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-yellow-50">
-                                Anträge bearbeiten
-                            </a>
-                            <a href="{{ route('admin.articles.index') }}" 
-                               class="bg-white px-3 py-1.5 rounded-md text-sm font-medium text-yellow-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-yellow-50">
-                                Artikel Management
-                            </a>
+                    <div class="ml-3 flex-1">
+                        <h3 class="text-sm font-medium text-yellow-800">
+                            {{ $deletionRequests }} Löschungsantrag{{ $deletionRequests > 1 ? 'e' : '' }} ausstehend
+                        </h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>Es {{ $deletionRequests > 1 ? 'liegen' : 'liegt' }} {{ $deletionRequests }} Antrag{{ $deletionRequests > 1 ? 'e' : '' }} zur Artikellöschung vor, die deine Überprüfung benötigen.</p>
+                        </div>
+                        <div class="mt-3">
+                            <div class="flex space-x-3">
+                                <a href="{{ route('admin.articles.deletion-requests') }}" 
+                                   class="bg-yellow-100 px-3 py-1.5 rounded-md text-sm font-medium text-yellow-800 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-yellow-50">
+                                    Anträge bearbeiten
+                                </a>
+                                <a href="{{ route('admin.articles.index') }}" 
+                                   class="bg-white px-3 py-1.5 rounded-md text-sm font-medium text-yellow-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-yellow-50">
+                                    Artikel Management
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <div class="flex-shrink-0">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                {{ $deletionRequests }}
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="ml-3">
+            </div>
+            @endif
+        @endcan
+
+        <!-- Reported Articles Notification -->
+        @can('moderate')
+            @if($reportedArticles > 0)
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            {{ $deletionRequests }}
-                        </span>
+                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <h3 class="text-sm font-medium text-red-800">
+                            {{ $reportedArticles }} Artikel{{ $reportedArticles > 1 ? '' : '' }} gemeldet
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <p>Es {{ $reportedArticles > 1 ? 'wurden' : 'wurde' }} {{ $reportedArticles }} Artikel{{ $reportedArticles > 1 ? '' : '' }} von der Community gemeldet, die deine Moderation benötigen.</p>
+                        </div>
+                        <div class="mt-3">
+                            <div class="flex space-x-3">
+                                <button onclick="scrollToElement('#moderation-section')" 
+                                   class="bg-red-100 px-3 py-1.5 rounded-md text-sm font-medium text-red-800 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-red-50">
+                                    Meldungen bearbeiten
+                                </button>
+                                <a href="{{ route('admin.articles.index') }}" 
+                                   class="bg-white px-3 py-1.5 rounded-md text-sm font-medium text-red-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-red-50">
+                                    Artikel Management
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <div class="flex-shrink-0">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                {{ $reportedArticles }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @endif
-    @endcan
+            @endif
+        @endcan
+    @endcanany
 
-    <!-- Quick Actions -->
+    <!-- Quick Access -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Schnellzugriff</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            <a href="{{ route('wiki.articles.create') }}" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
-                <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Neuer Artikel</span>
-            </a>
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">Schnellzugriff</h2>
+        
+        <!-- Management Links (Obere Reihe) -->
+        <div class="mb-6">
+            <h3 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                Management
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                @can('edit all articles')
+                <a href="{{ route('admin.articles.index') }}" class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-200">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Article Management</span>
+                </a>
+                @endcan
 
-            <a href="{{ route('wiki.articles.index') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Alle Artikel</span>
-            </a>
+                <a href="{{ route('wiki.categories.index') }}" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors group">
+                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-200">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Category Management</span>
+                </a>
 
-            <a href="{{ route('wiki.categories.index') }}" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Kategorien</span>
-            </a>
+                @hasrole('admin')
+                <a href="{{ route('admin.roles.index') }}" class="flex flex-col items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors group">
+                    <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-pink-200">
+                        <svg class="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Role Management</span>
+                </a>
+                @endhasrole
 
-            <a href="{{ route('wiki.search') }}" class="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
-                <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Suchen</span>
-            </a>
+                @can('view users')
+                <a href="{{ route('admin.users.index') }}" class="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors group">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-red-200">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">User Management</span>
+                </a>
+                @endcan
 
-            @can('create', App\Models\Category::class)
-            <a href="{{ route('wiki.categories.create') }}" class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Neue Kategorie</span>
-            </a>
-            @endcan
+                <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="flex flex-col items-center p-4 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors group">
+                    <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary-200">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Mein Profil</span>
+                </a>
+            </div>
+        </div>
 
-            <!-- Admin Quick Actions -->
-            @can('view users')
-            <a href="{{ route('admin.users.index') }}" class="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
-                <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">User Management</span>
-            </a>
-            @endcan
-            
-            @can('edit all articles')
-            <a href="{{ route('admin.articles.index') }}" class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
-                <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Article Management</span>
-            </a>
-            @endcan
-            
-            @hasrole('admin')
-            <a href="{{ route('admin.roles.index') }}" class="flex flex-col items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
-                <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mb-2">
-                    <i class="fas fa-users text-pink-600"></i>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Role Management</span>
-            </a>
-            @endhasrole
+        <!-- Divider -->
+        <div class="border-t border-gray-200 my-6"></div>
 
-            <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="flex flex-col items-center p-4 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors">
-                <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Mein Profil</span>
-            </a>
-            
-            <a href="{{ route('profile.edit-profile') }}" class="flex flex-col items-center p-4 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors">
-                <div class="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                </div>
-                <span class="text-sm font-medium text-gray-900">Profil bearbeiten</span>
-            </a>
+        <!-- Quick Actions (Untere Reihe) -->
+        <div>
+            <h3 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Schnellaktionen
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                <a href="{{ route('wiki.articles.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors group">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-green-200">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Neuer Artikel</span>
+                </a>
+
+                @can('create', App\Models\Category::class)
+                <a href="{{ route('wiki.categories.create') }}" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors group">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-indigo-200">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Neue Kategorie</span>
+                </a>
+                @endcan
+
+                @hasrole('admin')
+                <a href="{{ route('admin.roles.create') }}" class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors group">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-yellow-200">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Neue Rolle</span>
+                </a>
+                @endhasrole
+
+                <a href="{{ route('profile.edit-profile') }}" class="flex flex-col items-center p-4 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors group">
+                    <div class="w-10 h-10 bg-secondary-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-secondary-200">
+                        <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Profil bearbeiten</span>
+                </a>
+
+                <a href="{{ route('wiki.search') }}" class="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors group">
+                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-orange-200">
+                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 text-center">Suchen</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -371,5 +444,99 @@
             </div>
         </div>
     </div>
+
+    <!-- Moderation Section -->
+    @can('moderate')
+        @php
+            $pendingReports = \App\Models\ArticleReport::where('status', 'pending')
+                ->with(['article', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        @endphp
+
+        @if($pendingReports->count() > 0)
+        <div id="moderation-section" class="mt-8 bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    Artikel-Meldungen ({{ $pendingReports->count() }})
+                </h2>
+                <div class="text-sm text-gray-500">
+                    Benötigen deine Überprüfung
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                @foreach($pendingReports as $report)
+                    <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        {{ ucfirst($report->category ?? 'Allgemein') }}
+                                    </span>
+                                    <span class="text-xs text-gray-500">
+                                        Gemeldet am {{ $report->created_at->format('d.m.Y H:i') }}
+                                    </span>
+                                </div>
+                                <h3 class="text-sm font-medium text-gray-900 mb-1">
+                                    <a href="{{ route('wiki.articles.show', $report->article->slug) }}" 
+                                       class="hover:text-red-600" target="_blank">
+                                        {{ $report->article->title }}
+                                    </a>
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    <strong>Grund:</strong> {{ $report->reason }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Gemeldet von: {{ $report->user->name }}
+                                </p>
+                            </div>
+                            <div class="flex space-x-2 ml-4">
+                                <form method="POST" action="{{ route('wiki.moderation.reports.resolve', $report->id) }}" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" 
+                                            class="bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded text-xs font-medium"
+                                            onclick="return confirm('Meldung als berechtigt markieren und Artikel bearbeiten?')">
+                                        Berechtigt
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('wiki.moderation.reports.dismiss', $report->id) }}" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" 
+                                            class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1 rounded text-xs font-medium"
+                                            onclick="return confirm('Meldung als unberechtigt markieren?')">
+                                        Unberechtigt
+                                    </button>
+                                </form>
+                                <a href="{{ route('wiki.articles.edit', $report->article->slug) }}" 
+                                   class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded text-xs font-medium">
+                                    Artikel bearbeiten
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+    @endcan
 </div>
+
+<script>
+function scrollToElement(elementId) {
+    const element = document.querySelector(elementId);
+    if (element) {
+        element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+</script>
+
 @endsection
