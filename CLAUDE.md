@@ -7,6 +7,12 @@ Anweisungen für Claude Code bei der Arbeit mit diesem Repository.
 ### Kommunikation und Verhalten
 **SEHR WICHTIG:** Du antwortest IMMER auf Deutsch! Du sprichst mich mit "Du" oder "Christin" an. Du bist freundlich, hilfsbereit und verhältst dich wie ein sehr guter Freund.
 
+### Infrastruktur
+**SEHR WICHTIG:**
+1. wir arbeiten und testen in einem dev System und im dev Branch. Die URL lautet: https://dev.ki-coding.de
+2. Das Live Sytem ist unter der URL https://www.ki-coding.de zu finden. Hier kann erst nach erfolgreichem Merge und Deployment getestet werden.
+3. Du arbeitest nur im dev System.
+
 ### Code-Qualität und Standards
 **SEHR WICHTIG:** 
 1. Halte alle Dateien so klein wie möglich! Keine Datei länger als 1000 Zeilen!
@@ -41,13 +47,15 @@ Anweisungen für Claude Code bei der Arbeit mit diesem Repository.
 
 ## Git-Workflow
 
-**SEHR WICHTIG:** Wir arbeiten grunsätzlich nur im Branch "dev". Es ist Dir NICHT erlaubt, zu Branch main zu mergen!
+**SEHR WICHTIG:** Wir arbeiten grunsätzlich nur im Branch "dev". Außerdem arbeiten wir mit einem selbst gehosteten Gitlab, nicht mit github!
+Du darfst selbstständig Merge Requests in Gitlab zum Branch "main" erstellen. Du darfst aber nicht selbst den merge ausführen!
 Du führst selbstständig Git-Commits aus:
 
 ```bash
 git add .
 git commit -m "Kurze präzise Beschreibung der Änderung"
 git push origin dev
+glab mr create --source-branch dev --target-branch main --title "Titel" --description "Beschreibung"
 ```
 
 Commit Messages: Kurz, präzise, maximal zwei Fließtext-Sätze, keine Icons oder Formatierungen!

@@ -86,32 +86,75 @@ window.klaroConfig = {
             ]
         },
         {
-            name: 'analytics',
-            title: 'Analyse-Cookies',
-            description: 'Diese Cookies helfen uns zu verstehen, wie Besucher mit unserer Website interagieren, indem sie Informationen anonym sammeln und melden.',
+            name: 'matomo',
+            title: 'Matomo Analytics',
+            description: 'Matomo Analytics hilft uns zu verstehen, wie Besucher mit unserer Website interagieren. Alle Daten werden datenschutzkonform und anonym verarbeitet.',
             purposes: ['analytics'],
             required: false,
             optOut: true,
             onAccept: function() {
-                // Hier würde Google Analytics aktiviert werden
-                console.log('Analytics Cookies akzeptiert');
+                // Matomo Tracking Code laden
+                if (!window._paq) {
+                    window._paq = window._paq || [];
+                    window._paq.push(["setDoNotTrack", true]);
+                    window._paq.push(['trackPageView']);
+                    window._paq.push(['enableLinkTracking']);
+                    
+                    (function() {
+                        var u="https://matomo.christin-loehner.de/";
+                        window._paq.push(['setTrackerUrl', u+'matomo.php']);
+                        window._paq.push(['setSiteId', '9']);
+                        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                        g.async=true; 
+                        g.src=u+'matomo.js'; 
+                        s.parentNode.insertBefore(g,s);
+                    })();
+                    
+                    // Noscript Element für Matomo hinzufügen
+                    if (!document.querySelector('noscript img[src*="matomo.christin-loehner.de"]')) {
+                        const noscript = document.createElement('noscript');
+                        const img = document.createElement('p');
+                        img.innerHTML = '<img referrerpolicy="no-referrer-when-downgrade" src="https://matomo.christin-loehner.de/matomo.php?idsite=9&amp;rec=1" style="border:0;" alt="" />';
+                        noscript.appendChild(img);
+                        document.head.appendChild(noscript);
+                    }
+                }
+                console.log('Matomo Analytics aktiviert');
             },
             onDecline: function() {
-                // Hier würde Google Analytics deaktiviert werden
-                console.log('Analytics Cookies abgelehnt');
+                // Matomo deaktivieren
+                if (window._paq) {
+                    window._paq = undefined;
+                }
+                // Matomo Script entfernen falls vorhanden
+                const matomoScripts = document.querySelectorAll('script[src*="matomo.js"], script[src*="matomo.christin-loehner.de"]');
+                matomoScripts.forEach(script => {
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                });
+                // Noscript Element entfernen
+                const noscriptElements = document.querySelectorAll('noscript img[src*="matomo.christin-loehner.de"]');
+                noscriptElements.forEach(img => {
+                    const noscript = img.closest('noscript');
+                    if (noscript && noscript.parentNode) {
+                        noscript.parentNode.removeChild(noscript);
+                    }
+                });
+                console.log('Matomo Analytics deaktiviert');
             },
             cookies: [
                 {
-                    name: '_ga',
-                    description: 'Google Analytics - Hauptcookie'
+                    name: '_pk_id',
+                    description: 'Matomo - Benutzeridentifikation'
                 },
                 {
-                    name: '_gid',
-                    description: 'Google Analytics - Session-basierte Identifikation'
+                    name: '_pk_ses',
+                    description: 'Matomo - Session-Tracking'
                 },
                 {
-                    name: /^_ga_/,
-                    description: 'Google Analytics 4 - Property-spezifische Cookies'
+                    name: /^_pk_/,
+                    description: 'Matomo - Analytics Cookies'
                 }
             ]
         },
@@ -126,71 +169,6 @@ window.klaroConfig = {
                 {
                     name: '_gat',
                     description: 'Google Analytics - Rate Limiting'
-                }
-            ]
-        },
-        {
-            name: 'matomo',
-            title: 'Matomo Analytics',
-            description: 'Datenschutzfreundliche Website-Analyse mit Matomo. Hilft uns, die Website zu verbessern, ohne Ihre Privatsphäre zu verletzen.',
-            purposes: ['analytics'],
-            required: false,
-            optOut: true,
-            onAccept: function() {
-                // Matomo Script aktivieren
-                const matomoScript = document.querySelector('script[data-name="matomo"]');
-                if (matomoScript && matomoScript.type === 'text/plain') {
-                    // Script von text/plain zu application/javascript ändern
-                    matomoScript.type = 'application/javascript';
-                    // Script-Inhalt in neuem Script ausführen
-                    const newScript = document.createElement('script');
-                    newScript.innerHTML = matomoScript.innerHTML;
-                    document.head.appendChild(newScript);
-                    
-                    // NoScript Image anzeigen für Nutzer ohne JS
-                    const noscriptElement = document.getElementById('matomo-noscript');
-                    if (noscriptElement) {
-                        noscriptElement.style.display = 'block';
-                    }
-                }
-                
-                // Opt-User back in, falls bereits opted out
-                if (window._paq) {
-                    window._paq.push(['forgetUserOptOut']);
-                }
-                console.log('Matomo Analytics aktiviert');
-            },
-            onDecline: function() {
-                // Matomo tracking komplett stoppen
-                if (window._paq) {
-                    window._paq.push(['optUserOut']);
-                    window._paq.push(['requireConsent']);
-                }
-                
-                // NoScript Image verstecken
-                const noscriptElement = document.getElementById('matomo-noscript');
-                if (noscriptElement) {
-                    noscriptElement.style.display = 'none';
-                }
-                
-                console.log('Matomo Analytics deaktiviert');
-            },
-            cookies: [
-                {
-                    name: '_pk_id.*',
-                    description: 'Matomo - Visitor ID Cookie'
-                },
-                {
-                    name: '_pk_ses.*',
-                    description: 'Matomo - Session Cookie'
-                },
-                {
-                    name: '_pk_ref.*',
-                    description: 'Matomo - Referrer Information'
-                },
-                {
-                    name: '_pk_cvar.*',
-                    description: 'Matomo - Custom Variables'
                 }
             ]
         },

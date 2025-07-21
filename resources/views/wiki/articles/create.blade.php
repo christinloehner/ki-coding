@@ -58,10 +58,19 @@
                             required>
                         <option value="">Kategorie auswählen...</option>
                         @foreach($categories as $category)
+                            <!-- Hauptkategorie -->
                             <option value="{{ $category->id }}"
                                     {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
+                            
+                            <!-- Unterkategorien -->
+                            @foreach($category->children as $child)
+                                <option value="{{ $child->id }}"
+                                        {{ old('category_id') == $child->id ? 'selected' : '' }}>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;├─ {{ $child->name }}
+                                </option>
+                            @endforeach
                         @endforeach
                     </select>
                     @error('category_id')

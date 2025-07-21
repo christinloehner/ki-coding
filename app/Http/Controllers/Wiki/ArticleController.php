@@ -80,7 +80,16 @@ class ArticleController extends Controller
     {
         Gate::authorize('create', Article::class);
 
-        $categories = Category::active()->orderBy('name')->get();
+        // Kategorien hierarchisch laden: Hauptkategorien mit ihren Unterkategorien
+        $categories = Category::active()
+            ->whereNull('parent_id') // Nur Hauptkategorien
+            ->with(['children' => function ($query) {
+                $query->where('is_active', true)->orderBy('sort_order')->orderBy('name');
+            }])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+            
         $tags = Tag::all();
 
         return view('wiki.articles.create', compact('categories', 'tags'));
@@ -192,7 +201,16 @@ class ArticleController extends Controller
     {
         Gate::authorize('update', $article);
 
-        $categories = Category::active()->orderBy('name')->get();
+        // Kategorien hierarchisch laden: Hauptkategorien mit ihren Unterkategorien
+        $categories = Category::active()
+            ->whereNull('parent_id') // Nur Hauptkategorien
+            ->with(['children' => function ($query) {
+                $query->where('is_active', true)->orderBy('sort_order')->orderBy('name');
+            }])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+            
         $tags = Tag::all();
         $selectedTags = $article->tags->pluck('id')->toArray();
 

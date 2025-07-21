@@ -19,6 +19,9 @@ class Category extends Model
         'name',
         'slug',
         'description',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
         'parent_id',
         'color',
         'icon',
@@ -132,6 +135,14 @@ class Category extends Model
     public function scopeRoot($query)
     {
         return $query->whereNull('parent_id');
+    }
+
+    /**
+     * Get direct articles count (without subcategories).
+     */
+    public function getArticlesCountAttribute(): int
+    {
+        return $this->articles()->where('status', 'published')->count();
     }
 
     /**

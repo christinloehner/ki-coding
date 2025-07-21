@@ -63,7 +63,7 @@
     <meta name="twitter:title" content="@yield('twitter_title', 'KI-Coding - Kostenlose Knowledge Base für KI-Programmierung')">
     <meta name="twitter:description" content="@yield('twitter_description', 'Kostenlose Wissensdatenbank für KI-gestütztes Programmierung. Tutorials, Tools, Best Practices - alles gratis für die Entwickler-Community.')">
     <meta name="twitter:image" content="@yield('twitter_image', asset('images/ki-coding-social.jpg'))">
-    <meta name="twitter:image:alt" content="@yield('twitter_image_alt', 'KI-Coding Knowledge Base')">"
+    <meta name="twitter:image:alt" content="@yield('twitter_image_alt', 'KI-Coding Knowledge Base')">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
@@ -339,28 +339,6 @@
     <script src="{{ asset('js/klaro-config.js') }}"></script>
     <script defer src="{{ asset('js/klaro.js') }}"></script>
     
-    <!-- Matomo Analytics (wird nur geladen wenn Cookie-Consent erteilt) -->
-    <script type="text/plain" data-type="application/javascript" data-name="matomo">
-        // Matomo Tracking Code - wird nur nach Cookie-Consent geladen
-        var _paq = window._paq = window._paq || [];
-        _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-        _paq.push(["setCookieDomain", "*.www.ki-coding.de"]);
-        _paq.push(["setDomains", ["*.www.ki-coding.de","*.ki-coding.de","*.kicoding.de","*.www.kicoding.de"]]);
-        _paq.push(["enableCrossDomainLinking"]);
-        _paq.push(["setDoNotTrack", true]);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="https://matomo.christin-loehner.de/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '9']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
-    </script>
-    <noscript id="matomo-noscript" style="display: none;">
-        <img referrerpolicy="no-referrer-when-downgrade" src="https://matomo.christin-loehner.de/matomo.php?idsite=9&amp;rec=1&amp;action_name=KI-Coding" style="border:0" alt="" />
-    </noscript>
     
     <!-- Scripts -->
     @stack('scripts')
