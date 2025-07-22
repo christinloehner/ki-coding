@@ -17,6 +17,7 @@ return Application::configure(basePath: $basePath)
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
+            \App\Http\Middleware\CacheControlMiddleware::class,
             \App\Http\Middleware\WikiSecurity::class,
         ]);
         
