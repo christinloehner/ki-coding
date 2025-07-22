@@ -128,20 +128,20 @@
         Skip to main content
     </a>
 
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-subtle-border sticky top-0 z-40" x-data="{ mobileMenuOpen: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
+    <!-- MODERNER HEADER - Glassmorphism & Kompakt -->
+    <header class="glass-card sticky top-0 z-40 border-none shadow-glass-lg" x-data="{ mobileMenuOpen: false }">
+        <div class="modern-container">
+            <div class="flex justify-between items-center h-14">
+                <!-- MODERNES LOGO -->
                 <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-2 focus-ki">
-                        <img src="{{ asset('images/apb-logo-512.png') }}" alt="KI-Coding Logo" class="h-8 w-8">
-                        <span class="text-xl font-display font-bold text-high-contrast">KI-Coding</span>
+                    <a href="{{ route('home') }}" class="flex items-center space-x-3 focus-accessible hover-lift-subtle px-2 py-1 rounded-xl">
+                        <img src="{{ asset('images/apb-logo-512.png') }}" alt="KI-Coding Logo" class="h-10 w-10">
+                        <span class="text-xl font-display font-bold bg-gradient-logo bg-clip-text text-transparent">KI-Coding</span>
                     </a>
                 </div>
 
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex space-x-8">
+                <!-- MODERNE DESKTOP NAVIGATION - Kompakter -->
+                <nav class="hidden md:flex space-x-1">
                     <a href="{{ route('home') }}" class="nav-link @if(request()->routeIs('home')) active @endif">
                         Home
                     </a>
@@ -159,13 +159,13 @@
                     </a>
                 </nav>
 
-                <!-- Auth Links -->
-                <div class="hidden md:flex items-center space-x-4">
+                <!-- MODERNE AUTH LINKS -->
+                <div class="hidden md:flex items-center space-x-3">
                     @guest
-                        <a href="{{ route('login') }}" class="btn-ki-outline-sm focus-ki">
+                        <a href="{{ route('login') }}" class="btn-ki-outline-sm">
                             Anmelden
                         </a>
-                        <a href="{{ route('register') }}" class="btn-ki-primary-sm focus-ki">
+                        <a href="{{ route('register') }}" class="btn-ki-primary-sm">
                             Registrieren
                         </a>
                     @else
@@ -177,40 +177,43 @@
                                 </svg>
                             </button>
                             
-                            <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Dashboard
+                            <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-3 w-56 modern-card-compact py-2 z-50 animate-modern-scale">
+                                <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-primary-50 hover:text-primary-700 rounded-lg mx-2 transition-colors">
+                                    <i class="fas fa-tachometer-alt w-4 mr-3"></i>Dashboard
                                 </a>
                                 @can('view users')
-                                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    User Management
+                                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-secondary-50 hover:text-secondary-700 rounded-lg mx-2 transition-colors">
+                                    <i class="fas fa-users w-4 mr-3"></i>User Management
                                 </a>
                                 @endcan
                                 
                                 @can('edit all articles')
-                                <a href="{{ route('admin.articles.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Article Management
+                                <a href="{{ route('admin.articles.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-accent-50 hover:text-accent-700 rounded-lg mx-2 transition-colors">
+                                    <i class="fas fa-newspaper w-4 mr-3"></i>Article Management
                                 </a>
                                 @endcan
                                 
                                 @hasrole('admin')
-                                <a href="{{ route('admin.roles.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Role Management
+                                <a href="{{ route('admin.roles.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-warning-50 hover:text-warning-700 rounded-lg mx-2 transition-colors">
+                                    <i class="fas fa-shield-alt w-4 mr-3"></i>Role Management
                                 </a>
                                 @endhasrole
-                                <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-user mr-2"></i>Mein Profil
+                                
+                                <div class="border-t border-neutral-100 my-2 mx-2"></div>
+                                
+                                <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg mx-2 transition-colors">
+                                    <i class="fas fa-user w-4 mr-3"></i>Mein Profil
                                 </a>
-                                <a href="{{ route('profile.edit-profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-edit mr-2"></i>Profil bearbeiten
+                                <a href="{{ route('profile.edit-profile') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg mx-2 transition-colors">
+                                    <i class="fas fa-edit w-4 mr-3"></i>Profil bearbeiten
                                 </a>
-                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-cog mr-2"></i>Passwort ändern
+                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg mx-2 transition-colors">
+                                    <i class="fas fa-cog w-4 mr-3"></i>Passwort ändern
                                 </a>
-                                <form method="POST" action="{{ route('logout') }}" class="block">
+                                <form method="POST" action="{{ route('logout') }}" class="block mx-2">
                                     @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Abmelden
+                                    <button type="submit" class="w-full text-left px-4 py-2.5 text-sm font-medium text-error-600 hover:bg-error-50 rounded-lg transition-colors">
+                                        <i class="fas fa-sign-out-alt w-4 mr-3"></i>Abmelden
                                     </button>
                                 </form>
                             </div>
@@ -218,8 +221,8 @@
                     @endguest
                 </div>
 
-                <!-- Mobile menu button -->
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-gray-600 hover:text-gray-900 focus-ki">
+                <!-- MODERNER MOBILE MENU BUTTON -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl focus-accessible transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -228,52 +231,55 @@
             </div>
         </div>
 
-        <!-- Mobile Navigation -->
-        <div x-show="mobileMenuOpen" x-cloak class="md:hidden bg-white border-t border-subtle-border">
-            <div class="px-2 pt-2 pb-3 space-y-1">
+        <!-- MODERNE MOBILE NAVIGATION -->
+        <div x-show="mobileMenuOpen" x-cloak class="md:hidden glass-card mt-2 mx-4 rounded-2xl animate-modern-scale">
+            <div class="px-4 py-4 space-y-1">
                 <a href="{{ route('home') }}" class="mobile-nav-link @if(request()->routeIs('home')) active @endif">
-                    Home
+                    <i class="fas fa-home w-4 mr-3"></i>Home
                 </a>
                 <a href="{{ route('wiki.index') }}" class="mobile-nav-link @if(request()->routeIs('wiki.*')) active @endif">
-                    Wiki
+                    <i class="fas fa-book w-4 mr-3"></i>Wiki
                 </a>
                 <a href="{{ route('faq') }}" class="mobile-nav-link @if(request()->routeIs('faq')) active @endif">
-                    FAQ
+                    <i class="fas fa-question-circle w-4 mr-3"></i>FAQ
                 </a>
                 <a href="{{ route('about') }}" class="mobile-nav-link @if(request()->routeIs('about')) active @endif">
-                    Über uns
+                    <i class="fas fa-info-circle w-4 mr-3"></i>Über uns
                 </a>
                 <a href="{{ route('contact') }}" class="mobile-nav-link @if(request()->routeIs('contact')) active @endif">
-                    Kontakt
+                    <i class="fas fa-envelope w-4 mr-3"></i>Kontakt
                 </a>
                 
+                
+                <div class="border-t border-neutral-200 mt-3 pt-3">
                 @guest
                     <a href="{{ route('login') }}" class="mobile-nav-link">
-                        Anmelden
+                        <i class="fas fa-sign-in-alt w-4 mr-3"></i>Anmelden
                     </a>
                     <a href="{{ route('register') }}" class="mobile-nav-link">
-                        Registrieren
+                        <i class="fas fa-user-plus w-4 mr-3"></i>Registrieren
                     </a>
                 @else
                     <a href="{{ route('dashboard') }}" class="mobile-nav-link">
-                        Dashboard
+                        <i class="fas fa-tachometer-alt w-4 mr-3"></i>Dashboard
                     </a>
                     <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="mobile-nav-link">
-                        <i class="fas fa-user mr-2"></i>Mein Profil
+                        <i class="fas fa-user w-4 mr-3"></i>Mein Profil
                     </a>
                     <a href="{{ route('profile.edit-profile') }}" class="mobile-nav-link">
-                        <i class="fas fa-edit mr-2"></i>Profil bearbeiten
+                        <i class="fas fa-edit w-4 mr-3"></i>Profil bearbeiten
                     </a>
                     <a href="{{ route('profile.edit') }}" class="mobile-nav-link">
-                        <i class="fas fa-cog mr-2"></i>Passwort ändern
+                        <i class="fas fa-cog w-4 mr-3"></i>Passwort ändern
                     </a>
                     <form method="POST" action="{{ route('logout') }}" class="px-3 py-2">
                         @csrf
-                        <button type="submit" class="w-full text-left text-gray-700 hover:text-gray-900">
-                            Abmelden
+                        <button type="submit" class="w-full text-left font-medium text-error-600 hover:text-error-700 px-1 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt w-4 mr-3"></i>Abmelden
                         </button>
                     </form>
                 @endguest
+                </div>
             </div>
         </div>
     </header>
@@ -283,22 +289,22 @@
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- MODERNER FOOTER - Kompakter und eleganter -->
+    <footer class="bg-gradient-dark text-white">
+        <div class="modern-container modern-section-compact">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Company Info -->
+                <!-- MODERNE COMPANY INFO -->
                 <div class="md:col-span-2">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <img src="{{ asset('images/apb-logo-512.png') }}" alt="KI-Coding Logo" class="h-8 w-8">
-                        <span class="text-xl font-display font-bold">KI-Coding</span>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="{{ asset('images/apb-logo-512.png') }}" alt="KI-Coding Logo" class="h-10 w-10">
+                        <span class="text-2xl font-display font-bold bg-gradient-logo bg-clip-text text-transparent">KI-Coding</span>
                     </div>
-                    <p class="text-gray-400 mb-4">
+                    <p class="text-neutral-300 mb-6 leading-relaxed">
                         Kostenlose Wissensdatenbank für KI-gestütztes Programmieren. 
                         Tutorials, Tools, Best Practices - alles gratis für die Entwickler*innen-Community.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="https://github.com/christinloehner/ki-coding" class="text-gray-400 hover:text-white" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                        <a href="https://github.com/christinloehner/ki-coding" class="p-2 bg-neutral-800 hover:bg-primary-600 rounded-xl transition-all duration-300 hover:scale-110" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                             </svg>
@@ -306,31 +312,31 @@
                     </div>
                 </div>
 
-                <!-- Quick Links -->
+                <!-- MODERNE QUICK LINKS -->
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white">Home</a></li>
-                        <li><a href="{{ route('wiki.index') }}" class="text-gray-400 hover:text-white">Wiki</a></li>
-                        <li><a href="{{ route('faq') }}" class="text-gray-400 hover:text-white">FAQ</a></li>
-                        <li><a href="{{ route('about') }}" class="text-gray-400 hover:text-white">Über uns</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-gray-400 hover:text-white">Kontakt</a></li>
+                    <h3 class="text-lg font-display font-semibold mb-4 text-white">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{{ route('home') }}" class="text-neutral-300 hover:text-primary-400 transition-colors font-medium">Home</a></li>
+                        <li><a href="{{ route('wiki.index') }}" class="text-neutral-300 hover:text-primary-400 transition-colors font-medium">Wiki</a></li>
+                        <li><a href="{{ route('faq') }}" class="text-neutral-300 hover:text-primary-400 transition-colors font-medium">FAQ</a></li>
+                        <li><a href="{{ route('about') }}" class="text-neutral-300 hover:text-primary-400 transition-colors font-medium">Über uns</a></li>
+                        <li><a href="{{ route('contact') }}" class="text-neutral-300 hover:text-primary-400 transition-colors font-medium">Kontakt</a></li>
                     </ul>
                 </div>
 
-                <!-- Legal -->
+                <!-- MODERNE LEGAL LINKS -->
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Rechtliches</h3>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('privacy') }}" class="text-gray-400 hover:text-white">Datenschutz</a></li>
-                        <li><a href="{{ route('imprint') }}" class="text-gray-400 hover:text-white">Impressum</a></li>
-                        <li><a href="#" onclick="klaro.show(); return false;" class="text-gray-400 hover:text-white">Cookie-Einstellungen</a></li>
+                    <h3 class="text-lg font-display font-semibold mb-4 text-white">Rechtliches</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{{ route('privacy') }}" class="text-neutral-300 hover:text-secondary-400 transition-colors font-medium">Datenschutz</a></li>
+                        <li><a href="{{ route('imprint') }}" class="text-neutral-300 hover:text-secondary-400 transition-colors font-medium">Impressum</a></li>
+                        <li><a href="#" onclick="klaro.show(); return false;" class="text-neutral-300 hover:text-secondary-400 transition-colors font-medium">Cookie-Einstellungen</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} KI-Coding. Alle Rechte vorbehalten.</p>
+            <div class="border-t border-neutral-700 mt-10 pt-6 text-center">
+                <p class="text-neutral-400 font-medium">&copy; {{ date('Y') }} KI-Coding. Alle Rechte vorbehalten.</p>
             </div>
         </div>
     </footer>

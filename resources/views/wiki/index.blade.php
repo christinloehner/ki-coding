@@ -85,7 +85,7 @@
                 Empfohlene Artikel
             </h2>
             <p class="text-xl text-medium-contrast max-w-2xl mx-auto">
-                Entdecken Sie unsere am häufigsten empfohlenen und wertvollsten Artikel
+                Entdecke unsere am häufigsten empfohlenen und wertvollsten Artikel
             </p>
         </div>
 
@@ -237,7 +237,7 @@
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
             @guest
-                <a href="{{ route('register') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
+                <a href="{{ route('register') }}" class="btn-ki-primary-inverse">
                     <i class="fas fa-user-plus mr-2"></i>Jetzt registrieren
                 </a>
                 <a href="{{ route('login') }}" class="btn-ki-outline border-white text-white hover:bg-white hover:text-primary-600">
@@ -245,11 +245,11 @@
                 </a>
             @else
                 @can('create', App\Models\Article::class)
-                    <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
+                    <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary-inverse">
                         <i class="fas fa-edit mr-2"></i>Artikel schreiben
                     </a>
                 @endcan
-                <a href="{{ route('dashboard') }}" class="btn-ki-outline border-white text-white hover:bg-white hover:text-primary-600">
+                <a href="{{ route('dashboard') }}" class="btn-ki-primary-inverse">
                     <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                 </a>
             @endguest

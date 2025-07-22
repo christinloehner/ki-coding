@@ -11,7 +11,7 @@
     gradient="gradient-dawn">
     <x-slot name="actions">
         @can('create', App\Models\Category::class)
-            <a href="{{ route('wiki.categories.create') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
+            <a href="{{ route('wiki.categories.create') }}" class="btn-ki-primary-inverse">
                 <i class="fas fa-plus mr-2"></i>Neue Kategorie erstellen
             </a>
         @endcan

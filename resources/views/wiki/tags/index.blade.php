@@ -11,7 +11,7 @@
     gradient="gradient-sunset">
     <x-slot name="actions">
         @can('create', App\Models\Tag::class)
-            <a href="{{ route('wiki.tags.create') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
+            <a href="{{ route('wiki.tags.create') }}" class="btn-ki-primary-inverse">
                 <i class="fas fa-tag mr-2"></i>Neuen Tag erstellen
             </a>
         @endcan

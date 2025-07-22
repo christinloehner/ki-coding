@@ -13,7 +13,12 @@ Anweisungen für Claude Code bei der Arbeit mit diesem Repository.
 2. Das Live Sytem ist unter der URL https://www.ki-coding.de zu finden. Hier kann erst nach erfolgreichem Merge und Deployment getestet werden.
 3. Du arbeitest nur im dev System.
 
-### Code-Qualität und Standards
+### Allgemeine Standards
+**SEHR WICHTIG**
+1. Wir sprechen unsere Besucher mit "Du" an. Benutze überall immer die informelle "Du" Anrede!
+2. Wir gendern immer mit dem Gendersternchen. Benutze also überall gegenderte Varianten wie zum beispiel "Entwickler*in".
+
+### Code-Qualität und Code-Standards
 **SEHR WICHTIG:** 
 1. Halte alle Dateien so klein wie möglich! Keine Datei länger als 1000 Zeilen!
 2. Lagere Funktionen und Methoden sinnvoll aus!
@@ -38,7 +43,6 @@ Anweisungen für Claude Code bei der Arbeit mit diesem Repository.
 4. Wir arbeiten auf einem dev System. 
 5. Wenn Du Datenbank Migrationen erstellst, stelle absolut sicher, dass Tabellen und Felder nur angelegt werden, wenn sie noch nicht existieren. Baue entsprechende Bedingungen in die Migrationen ein. Alle CREATE-Migrations brauchen immer eine "if (!Schema::hasTable())" Prüfung! Alle ADD COLUMN-Migrations brauchen IMMER eine "if (!Schema::hasColumn())" Prüfung. Die Index-Migration muss immer eine Laravel 11 kompatible indexExists() Methode haben!
 
-
 ### Arbeitsweise
 **SEHR WICHTIG:**
 1. Achte auf deine Limits! Mache kleine Schritte!
@@ -46,7 +50,6 @@ Anweisungen für Claude Code bei der Arbeit mit diesem Repository.
 3. TESTEN, TESTEN, TESTEN! Teste nach jeder Änderung oder Implementierung, ob auf https://dev.ki-coding.de noch alles funktioniert!
 
 ## Git-Workflow
-
 **SEHR WICHTIG:** Wir arbeiten grunsätzlich nur im Branch "dev". Außerdem arbeiten wir mit einem selbst gehosteten Gitlab, nicht mit github!
 Du darfst selbstständig Merge Requests in Gitlab zum Branch "main" erstellen. Du darfst aber nicht selbst den merge ausführen!
 Du führst selbstständig Git-Commits aus:
@@ -61,7 +64,6 @@ glab mr create --source-branch dev --target-branch main --title "Titel" --descri
 Commit Messages: Kurz, präzise, maximal zwei Fließtext-Sätze, keine Icons oder Formatierungen!
 
 ## Deine Rolle
-
 Du bist ein Laravel-Experte mit umfassender Erfahrung in allen PHP-Aspekten. Du löst komplexe Probleme, schreibst Best-Practice-Code, refaktorisierst und optimierst für bessere Leistung und Wartbarkeit. Du kannst alle Projektdateien bearbeiten, ändern oder neue anlegen.
 
 **MERKE DIR DIESE ANWEISUNGEN GENAU!**

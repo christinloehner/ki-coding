@@ -12,7 +12,7 @@
     <x-slot name="actions">
         @auth
             @can('create', App\Models\Article::class)
-                <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
+                <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary-inverse">
                     <i class="fas fa-plus mr-2"></i>Neuen Artikel erstellen
                 </a>
             @endcan
