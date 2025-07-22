@@ -4,6 +4,7 @@
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Code Coverage](https://gitlab.apboard.de/private/ki-coding/badges/dev/coverage.svg)](https://gitlab.apboard.de/private/ki-coding/-/commits/dev)
 
 > **Eine moderne, sicherheitsfokussierte Wiki-Plattform für die KI-Programmierung-Community**
 

@@ -11,10 +11,12 @@
                 <h1 class="text-3xl font-bold text-gray-900">Role Management</h1>
                 <p class="mt-2 text-gray-600">Manage user roles and their permissions</p>
             </div>
+            @can('create roles')
             <a href="{{ route('admin.roles.create') }}" 
                class="btn-ki-primary">
                 <i class="fas fa-plus mr-2"></i>Create New Role
             </a>
+            @endcan
         </div>
     </div>
 
@@ -122,18 +124,23 @@
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 
+                                @can('manage permissions')
                                 <a href="{{ route('admin.roles.permissions', $role) }}" 
                                    class="text-blue-600 hover:text-blue-900" title="Manage Permissions">
                                     <i class="fas fa-key"></i>
                                 </a>
+                                @endcan
                                 
+                                @can('edit roles')
                                 @if(!in_array($role->name, ['admin', 'user']))
                                 <a href="{{ route('admin.roles.edit', $role) }}" 
                                    class="text-green-600 hover:text-green-900" title="Edit Role">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 @endif
+                                @endcan
                                 
+                                @can('delete roles')
                                 @if(!in_array($role->name, ['admin', 'user', 'moderator', 'editor', 'contributor']))
                                 <form method="POST" action="{{ route('admin.roles.destroy', $role) }}" 
                                       class="inline" onsubmit="return confirm('Rolle wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')">
@@ -144,6 +151,7 @@
                                     </button>
                                 </form>
                                 @endif
+                                @endcan
                             </div>
                         </td>
                     </tr>

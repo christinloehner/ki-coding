@@ -49,6 +49,58 @@
         @apply bg-gray-50;
     }
 
+    /* Hierarchical Comments Styles */
+    .comment {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .comment:hover {
+        @apply bg-gray-50;
+    }
+
+    .comment .replies {
+        position: relative;
+    }
+
+    .comment .replies::before {
+        content: '';
+        position: absolute;
+        left: -1rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, theme('colors.gray.200'), transparent);
+    }
+
+    /* Specific depth styling */
+    .comment[data-depth="0"] {
+        @apply border-l-primary-200;
+    }
+
+    .comment[data-depth="1"] {
+        @apply border-l-blue-200;
+    }
+
+    .comment[data-depth="2"] {
+        @apply border-l-gray-200;
+    }
+
+    /* Reply form animations */
+    .reply-form {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     .border-subtle-border {
         @apply border-gray-200;
     }

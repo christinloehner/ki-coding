@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Wiki;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Article;
+use App\Models\UserActivity;
 use App\Events\CommentCreated;
 use App\Events\CommentLiked;
 use App\Events\CommentUnliked;
@@ -89,6 +90,15 @@ class CommentController extends Controller
                 }
                 return back()->withErrors(['comment' => 'Ungültiger Elternkommentar.']);
             }
+            
+            // Check maximum depth (prevent deeper than 2 levels = 3 total levels: 0, 1, 2)
+            $depth = $parentComment->depth;
+            if ($depth >= 2) {
+                if ($request->wantsJson()) {
+                    return response()->json(['error' => 'Maximale Verschachtelungstiefe erreicht.'], 400);
+                }
+                return back()->withErrors(['comment' => 'Maximale Verschachtelungstiefe erreicht.']);
+            }
         }
 
         // Rate limiting: Check if user has posted too many comments recently
@@ -115,6 +125,15 @@ class CommentController extends Controller
         
         // Fire reputation event for comment creation
         event(new CommentCreated($comment));
+
+        // Log activity
+        UserActivity::log(
+            Auth::id(),
+            'comment_posted',
+            "Hat einen Kommentar zu \"{$article->title}\" geschrieben",
+            $comment,
+            ['article_title' => $article->title]
+        );
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -165,6 +184,14 @@ class CommentController extends Controller
             'edited_at' => now(),
         ]);
 
+        // Log activity
+        UserActivity::log(
+            Auth::id(),
+            'comment_updated',
+            "Hat einen Kommentar bearbeitet",
+            $comment
+        );
+
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -182,6 +209,15 @@ class CommentController extends Controller
     public function destroy(Comment $comment): RedirectResponse|JsonResponse
     {
         Gate::authorize('delete', $comment);
+
+        // Log activity before deletion
+        UserActivity::log(
+            Auth::id(),
+            'comment_deleted',
+            "Hat einen Kommentar gelöscht",
+            null, // Comment will be deleted, so no subject
+            ['comment_content' => substr($comment->content, 0, 100)]
+        );
 
         $comment->delete();
 

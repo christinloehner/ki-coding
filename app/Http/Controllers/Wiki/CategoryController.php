@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Wiki;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Article;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -89,6 +90,14 @@ class CategoryController extends Controller
             'meta_description' => $validated['meta_description'] ?? null,
             'meta_keywords' => $validated['meta_keywords'] ?? null,
         ]);
+
+        // Log activity
+        UserActivity::log(
+            auth()->id(),
+            'category_created',
+            "Hat die Kategorie \"{$category->name}\" erstellt",
+            $category
+        );
 
         return redirect()->route('wiki.categories.show', $category->slug)
             ->with('success', 'Kategorie wurde erfolgreich erstellt.');
@@ -217,6 +226,14 @@ class CategoryController extends Controller
             'meta_keywords' => $validated['meta_keywords'] ?? null,
         ]);
 
+        // Log activity
+        UserActivity::log(
+            auth()->id(),
+            'category_updated',
+            "Hat die Kategorie \"{$category->name}\" bearbeitet",
+            $category
+        );
+
         return redirect()->route('wiki.categories.show', $category->slug)
             ->with('success', 'Kategorie wurde erfolgreich aktualisiert.');
     }
@@ -239,6 +256,15 @@ class CategoryController extends Controller
         if ($subcategoriesCount > 0) {
             return back()->withErrors(['category' => 'Diese Kategorie kann nicht gelöscht werden, da sie noch ' . $subcategoriesCount . ' Unterkategorien enthält.']);
         }
+
+        // Log activity before deletion
+        UserActivity::log(
+            auth()->id(),
+            'category_deleted',
+            "Hat die Kategorie \"{$category->name}\" gelöscht",
+            null,
+            ['category_name' => $category->name]
+        );
 
         $category->delete();
 

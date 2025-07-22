@@ -17,21 +17,23 @@
 
     <!-- Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
+        @can('create', App\Models\Article::class)
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-500">Meine Artikel</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $userStats['articles'] ?? 0 }}</p>
                     </div>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm text-gray-500">Meine Artikel</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $userStats['articles'] ?? 0 }}</p>
-                </div>
             </div>
-        </div>
+        @endcan
 
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center">
@@ -253,14 +255,16 @@
                 Schnellaktionen
             </h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                <a href="{{ route('wiki.articles.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors group">
-                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-green-200">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Neuer Artikel</span>
-                </a>
+                @can('create', App\Models\Article::class)
+                    <a href="{{ route('wiki.articles.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors group">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-green-200">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900 text-center">Neuer Artikel</span>
+                    </a>
+                @endcan
 
                 @can('create', App\Models\Category::class)
                 <a href="{{ route('wiki.categories.create') }}" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors group">
@@ -305,9 +309,10 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- My Articles -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        @can('create', App\Models\Article::class)
+            <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-lg font-semibold text-gray-900">Meine Artikel</h2>
                 <a href="{{ route('wiki.articles.index', ['author' => Auth::id()]) }}" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
@@ -356,6 +361,68 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
                             Ersten Artikel erstellen
+                        </a>
+                    </div>
+                </div>
+            @endif
+        </div>
+        @endcan
+
+        <!-- Bookmarked Articles -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                    </svg>
+                    Gemerkte Artikel
+                </h2>
+                <a href="{{ route('dashboard.bookmarks') }}" class="text-primary-600 hover:text-primary-800 text-sm font-medium">
+                    Alle anzeigen
+                </a>
+            </div>
+
+            @if($bookmarkedArticles && $bookmarkedArticles->count() > 0)
+                <div class="space-y-3">
+                    @foreach($bookmarkedArticles as $article)
+                        <div class="flex items-center justify-between p-3 bg-primary-50 rounded-lg group hover:bg-primary-100 transition-colors">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    <a href="{{ route('wiki.articles.show', $article->slug) }}" class="hover:text-primary-600">
+                                        {{ $article->title }}
+                                    </a>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    von {{ $article->user->name ?? 'Unbekannt' }} • 
+                                    Gemerkt am {{ $article->bookmarked_at ? \Carbon\Carbon::parse($article->bookmarked_at)->format('d.m.Y') : 'N/A' }}
+                                </p>
+                            </div>
+                            <div class="flex items-center space-x-2 ml-4">
+                                <span class="text-xs text-gray-500">{{ $article->views_count ?? 0 }} views</span>
+                                <button onclick="removeBookmark('{{ $article->slug }}')" 
+                                        class="text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity" 
+                                        title="Lesezeichen entfernen">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-8">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Keine gemerkten Artikel</h3>
+                    <p class="mt-1 text-sm text-gray-500">Merke Dir interessante Artikel mit dem Lesezeichen-Button.</p>
+                    <div class="mt-4">
+                        <a href="{{ route('wiki.index') }}" class="btn-ki-outline">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Artikel entdecken
                         </a>
                     </div>
                 </div>
@@ -536,6 +603,33 @@ function scrollToElement(elementId) {
             block: 'start'
         });
     }
+}
+
+function removeBookmark(articleSlug) {
+    if (!confirm('Lesezeichen entfernen?')) {
+        return;
+    }
+    
+    fetch(`/wiki/articles/${articleSlug}/bookmark`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Seite neu laden um die Änderung anzuzeigen
+            window.location.reload();
+        } else {
+            alert('Fehler beim Entfernen des Lesezeichens: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Entfernen des Lesezeichens. Bitte versuche es erneut.');
+    });
 }
 </script>
 

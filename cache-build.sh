@@ -53,6 +53,14 @@
       docker exec -u $CONTAINER_USER $CONTAINER_NAME bash -c "cd $APP_PATH && php artisan event:clear"
       log_success "Event cache cleared"
 
+      # Permission Cache
+      docker exec -u $CONTAINER_USER $CONTAINER_NAME bash -c "cd $APP_PATH && php artisan permission:cache-reset"
+      log_success "Permission cache cleared"
+
+      # Spatie Permission Cache
+      docker exec -u $CONTAINER_USER $CONTAINER_NAME bash -c "cd $APP_PATH && php artisan cache:forget spatie.permission.cache"
+      log_success "Spatie Permission cache cleared"
+
       # Application Cache (Redis/File)
       docker exec -u $CONTAINER_USER $CONTAINER_NAME bash -c "cd $APP_PATH && php artisan cache:clear" || log_warning "Application cache clear failed (Redis might be unavailable)"
 

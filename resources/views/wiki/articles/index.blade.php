@@ -11,7 +11,7 @@
     gradient="gradient-forest">
     <x-slot name="actions">
         @auth
-            @can('create articles')
+            @can('create', App\Models\Article::class)
                 <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
                     <i class="fas fa-plus mr-2"></i>Neuen Artikel erstellen
                 </a>

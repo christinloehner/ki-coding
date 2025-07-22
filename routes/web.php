@@ -34,6 +34,7 @@ Route::get('/', function () {
     return view('pages.home');
 })->name('home');
 
+
 Route::get('/faq', function () {
     return view('pages.faq');
 })->name('faq');
@@ -59,6 +60,7 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard/bookmarks', [DashboardController::class, 'bookmarks'])->middleware(['auth', 'verified'])->name('dashboard.bookmarks');
 
 // Profile Routes
 Route::middleware('auth')->group(function () {

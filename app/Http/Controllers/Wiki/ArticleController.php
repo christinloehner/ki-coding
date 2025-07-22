@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\ArticleRevision;
+use App\Models\UserActivity;
 use App\Events\ArticleLiked;
 use App\Events\ArticlePublished;
 use App\Events\ArticleUnliked;
@@ -165,6 +166,14 @@ class ArticleController extends Controller
             return $article;
         });
 
+        // Log activity
+        UserActivity::log(
+            Auth::id(),
+            'article_created',
+            "Hat den Artikel \"{$createdArticle->title}\" erstellt",
+            $createdArticle
+        );
+
         return redirect()->route('wiki.articles.show', $createdArticle->slug)
             ->with('success', 'Artikel wurde erfolgreich erstellt.');
     }
@@ -290,6 +299,14 @@ class ArticleController extends Controller
             );
         });
 
+        // Log activity
+        UserActivity::log(
+            Auth::id(),
+            'article_updated',
+            "Hat den Artikel \"{$article->title}\" bearbeitet",
+            $article
+        );
+
         return redirect()->route('wiki.articles.show', $article->slug)
             ->with('success', 'Artikel wurde erfolgreich aktualisiert.');
     }
@@ -300,6 +317,15 @@ class ArticleController extends Controller
     public function destroy(Article $article): RedirectResponse
     {
         Gate::authorize('delete', $article);
+
+        // Log activity before deletion
+        UserActivity::log(
+            Auth::id(),
+            'article_deleted',
+            "Hat den Artikel \"{$article->title}\" gelöscht",
+            null,
+            ['article_title' => $article->title]
+        );
 
         $article->delete();
 
@@ -538,6 +564,14 @@ class ArticleController extends Controller
             
             // Fire reputation event
             event(new ArticleLiked($article, Auth::user()));
+            
+            // Log activity
+            UserActivity::log(
+                Auth::id(),
+                'article_liked',
+                "Hat den Artikel \"{$article->title}\" geliked",
+                $article
+            );
         }
 
         return response()->json([
@@ -568,6 +602,14 @@ class ArticleController extends Controller
                 ->delete();
 
             $bookmarked = false;
+            
+            // Log activity
+            UserActivity::log(
+                Auth::id(),
+                'article_bookmark_removed',
+                "Hat das Lesezeichen für \"{$article->title}\" entfernt",
+                $article
+            );
         } else {
             // Add bookmark
             DB::table('article_bookmarks')->insert([
@@ -578,6 +620,14 @@ class ArticleController extends Controller
             ]);
 
             $bookmarked = true;
+            
+            // Log activity
+            UserActivity::log(
+                Auth::id(),
+                'article_bookmarked',
+                "Hat den Artikel \"{$article->title}\" als Lesezeichen gespeichert",
+                $article
+            );
         }
 
         return response()->json([
@@ -665,10 +715,26 @@ class ArticleController extends Controller
                 $article->increment('helpful_votes');
                 // Fire reputation event for upvote
                 event(new ArticleVoted($article, Auth::user(), 'up'));
+                
+                // Log activity
+                UserActivity::log(
+                    Auth::id(),
+                    'article_voted_helpful',
+                    "Hat den Artikel \"{$article->title}\" als hilfreich bewertet",
+                    $article
+                );
             } else {
                 $article->increment('not_helpful_votes');
                 // Fire reputation event for downvote
                 event(new ArticleVoted($article, Auth::user(), 'down'));
+                
+                // Log activity
+                UserActivity::log(
+                    Auth::id(),
+                    'article_voted_not_helpful',
+                    "Hat den Artikel \"{$article->title}\" als nicht hilfreich bewertet",
+                    $article
+                );
             }
 
             return response()->json([

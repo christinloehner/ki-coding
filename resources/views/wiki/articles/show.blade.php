@@ -27,112 +27,183 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Article Header -->
-    <div class="bg-white rounded-lg shadow-primary p-6 mb-6 border-l-4 border-primary-500">
-        <div class="flex items-center mb-4">
-            <span class="badge badge-secondary mr-2">{{ $article->category->name ?? 'Allgemein' }}</span>
-            <span class="text-sm text-gray-500">{{ $article->published_at ? $article->published_at->format('d.m.Y') : 'Unveröffentlicht' }}</span>
+    <div class="bg-white rounded-lg shadow-primary mb-6 border-l-4 border-primary-500 overflow-hidden">
+        <!-- Header Top Section -->
+        <div class="p-4 sm:p-6">
+            <!-- Category and Date Row -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="badge badge-secondary">{{ $article->category->name ?? 'Allgemein' }}</span>
+                    <span class="text-sm text-gray-500">{{ $article->published_at ? $article->published_at->format('d.m.Y') : 'Unveröffentlicht' }}</span>
+                </div>
+                
+                <!-- User Actions - Desktop -->
+                <div class="hidden sm:flex items-center gap-2">
+                    @auth
+                        @php
+                            $userLiked = DB::table('article_likes')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
+                            $userBookmarked = DB::table('article_bookmarks')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
+                        @endphp
+                        
+                        <button id="likeBtn" class="{{ $userLiked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userLiked ? 'Geliked' : 'Liken' }}" onclick="toggleLike('{{ $article->slug }}')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                        <button id="bookmarkBtn" class="{{ $userBookmarked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userBookmarked ? 'Gemerkt' : 'Merken' }}" onclick="toggleBookmark('{{ $article->slug }}')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                            </svg>
+                        </button>
+                    @endauth
+                </div>
+            </div>
+
+            <!-- Article Title -->
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-high-contrast mb-4 leading-tight">
+                {{ $article->title }}
+            </h1>
+
+            <!-- Article Excerpt -->
+            @if($article->excerpt)
+                <p class="text-base sm:text-lg text-gray-700 mb-4 leading-relaxed">{{ $article->excerpt }}</p>
+            @endif
         </div>
 
-        <h1 class="text-3xl font-display font-bold text-high-contrast mb-4">
-            {{ $article->title }}
-        </h1>
+        <!-- Stats and Meta Section -->
+        <div class="bg-gray-50 px-4 sm:px-6 py-4">
+            <!-- Author and Stats Row -->
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <!-- Author Info -->
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium">{{ substr($article->user->name ?? 'U', 0, 1) }}</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">{{ $article->user->name ?? 'Unbekannt' }}</p>
+                        <p class="text-xs text-gray-500">Autor</p>
+                    </div>
+                </div>
 
-        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
-            <div class="flex items-center space-x-4">
-                <span>von {{ $article->user->name ?? 'Unbekannt' }}</span>
-                <span>{{ $article->reading_time ?? 5 }} min Lesezeit</span>
-                <span>{{ $article->views_count ?? 0 }} Aufrufe</span>
-                <span>{{ $article->likes_count ?? 0 }} Likes</span>
-                <span>{{ $article->helpful_votes_count ?? 0 }} fanden den Artikel hilfreich</span>
+                <!-- Article Stats -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6">
+                    <div class="text-center">
+                        <p class="text-lg font-semibold text-gray-900">{{ $article->reading_time ?? 5 }}</p>
+                        <p class="text-xs text-gray-500">Min Lesezeit</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-lg font-semibold text-gray-900">{{ $article->views_count ?? 0 }}</p>
+                        <p class="text-xs text-gray-500">Aufrufe</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-lg font-semibold text-gray-900">{{ $article->likes_count ?? 0 }}</p>
+                        <p class="text-xs text-gray-500">Likes</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-lg font-semibold text-gray-900">{{ $article->helpful_votes_count ?? 0 }}</p>
+                        <p class="text-xs text-gray-500">Hilfreich</p>
+                    </div>
+                </div>
             </div>
-            <div class="flex items-center space-x-2">
-                @auth
-                    @php
-                        $userLiked = DB::table('article_likes')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
-                        $userBookmarked = DB::table('article_bookmarks')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
-                        $userVote = DB::table('article_votes')->where('article_id', $article->id)->where('user_id', auth()->id())->first();
-                    @endphp
-                    
-                    <button id="likeBtn" class="{{ $userLiked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userLiked ? 'Geliked' : 'Liken' }}" onclick="toggleLike('{{ $article->slug }}')">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
-                    </button>
-                    <button id="bookmarkBtn" class="{{ $userBookmarked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userBookmarked ? 'Gemerkt' : 'Merken' }}" onclick="toggleBookmark('{{ $article->slug }}')">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                        </svg>
-                    </button>
-                    
-                    <!-- Author/Admin Actions -->
-                    @can('update', $article)
-                        <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="btn-ki-outline-sm" title="Bearbeiten">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                        </a>
-                    @endcan
-                    
-                    @can('delete all articles')
-                        <form method="POST" action="{{ route('wiki.articles.destroy', $article->slug) }}" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                    class="btn-ki-outline-sm text-red-600 border-red-300 hover:bg-red-50" 
-                                    title="Löschen"
-                                    onclick="return confirm('Artikel \'{{ $article->title }}\' wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
-                            </button>
-                        </form>
-                    @endcan
-                    
-                    @can('delete', $article)
-                        @if(!auth()->user()->can('delete all articles'))
-                            @if(!$article->deletion_requested_at)
-                                <button type="button" 
-                                        class="btn-ki-outline-sm text-yellow-600 border-yellow-300 hover:bg-yellow-50" 
-                                        title="Löschung beantragen"
-                                        onclick="showDeletionRequestModal()">
+        </div>
+
+        <!-- Tags and Actions Section -->
+        @if(($article->tags && $article->tags->count() > 0) || auth()->check())
+            <div class="px-4 sm:px-6 py-4 border-t border-gray-100">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <!-- Tags -->
+                    @if($article->tags && $article->tags->count() > 0)
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($article->tags as $tag)
+                                <a href="{{ route('wiki.tags.show', $tag->slug) }}" class="badge badge-secondary hover:bg-primary-100 hover:text-primary-800 transition-colors">
+                                    {{ $tag->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <!-- Mobile Actions and Admin Actions -->
+                    @auth
+                        @php
+                            $userLiked = DB::table('article_likes')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
+                            $userBookmarked = DB::table('article_bookmarks')->where('article_id', $article->id)->where('user_id', auth()->id())->exists();
+                            $userVote = DB::table('article_votes')->where('article_id', $article->id)->where('user_id', auth()->id())->first();
+                        @endphp
+
+                        <div class="flex items-center justify-between lg:justify-end gap-2">
+                            <!-- Mobile User Actions -->
+                            <div class="flex items-center gap-2 sm:hidden">
+                                <button id="likeBtnMobile" class="{{ $userLiked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userLiked ? 'Geliked' : 'Liken' }}" onclick="toggleLike('{{ $article->slug }}')">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                     </svg>
                                 </button>
-                            @else
-                                <span class="btn-ki-outline-sm text-orange-600 border-orange-300 bg-orange-50 cursor-not-allowed">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <button id="bookmarkBtnMobile" class="{{ $userBookmarked ? 'btn-ki-primary-sm' : 'btn-ki-outline-sm' }}" title="{{ $userBookmarked ? 'Gemerkt' : 'Merken' }}" onclick="toggleBookmark('{{ $article->slug }}')">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                                     </svg>
-                                    Löschung beantragt
-                                </span>
-                                <form method="POST" action="{{ route('wiki.articles.cancel-deletion', $article->slug) }}" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="btn-ki-outline-sm text-gray-600 border-gray-300 hover:bg-gray-50"
-                                            onclick="return confirm('Löschungsantrag wirklich zurückziehen?')">
-                                        Antrag zurückziehen
-                                    </button>
-                                </form>
-                            @endif
-                        @endif
-                    @endcan
-                @endauth
-            </div>
-        </div>
+                                </button>
+                            </div>
 
-        @if($article->excerpt)
-            <p class="text-lg text-gray-700 mb-4">{{ $article->excerpt }}</p>
-        @endif
-
-        @if($article->tags && $article->tags->count() > 0)
-            <div class="flex flex-wrap gap-2">
-                @foreach($article->tags as $tag)
-                    <a href="{{ route('wiki.tags.show', $tag->slug) }}" class="badge badge-secondary hover:bg-primary-100 hover:text-primary-800">
-                        {{ $tag->name }}
-                    </a>
-                @endforeach
+                            <!-- Admin/Author Actions -->
+                            <div class="flex items-center gap-2">
+                                @can('update', $article)
+                                    <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="btn-ki-outline-sm" title="Bearbeiten">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                    </a>
+                                @endcan
+                                
+                                @can('delete all articles')
+                                    <form method="POST" action="{{ route('wiki.articles.destroy', $article->slug) }}" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                class="btn-ki-outline-sm text-red-600 border-red-300 hover:bg-red-50" 
+                                                title="Löschen"
+                                                onclick="return confirm('Artikel \'{{ $article->title }}\' wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                @endcan
+                                
+                                @can('delete', $article)
+                                    @if(!auth()->user()->can('delete all articles'))
+                                        @if(!$article->deletion_requested_at)
+                                            <button type="button" 
+                                                    class="btn-ki-outline-sm text-yellow-600 border-yellow-300 hover:bg-yellow-50" 
+                                                    title="Löschung beantragen"
+                                                    onclick="showDeletionRequestModal()">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                                </svg>
+                                            </button>
+                                        @else
+                                            <span class="btn-ki-outline-sm text-orange-600 border-orange-300 bg-orange-50 cursor-not-allowed text-xs">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                Löschung beantragt
+                                            </span>
+                                            <form method="POST" action="{{ route('wiki.articles.cancel-deletion', $article->slug) }}" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="btn-ki-outline-sm text-gray-600 border-gray-300 hover:bg-gray-50 text-xs"
+                                                        onclick="return confirm('Löschungsantrag wirklich zurückziehen?')">
+                                                    Zurückziehen
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endif
+                                @endcan
+                            </div>
+                        </div>
+                    @endauth
+                </div>
             </div>
         @endif
     </div>
@@ -220,96 +291,24 @@
             @endauth
 
             <!-- Comments List -->
-            <div class="space-y-4">
+            <div class="space-y-6">
                 @php
-                    $comments = collect();
+                    $topLevelComments = collect();
                     try {
-                        $comments = $article->comments()
+                        $topLevelComments = $article->comments()
                             ->where('status', 'approved')
-                            ->with('user')
+                            ->whereNull('parent_id')
+                            ->with(['user', 'replies.user', 'replies.replies.user'])
                             ->orderBy('created_at', 'desc')
                             ->get();
                     } catch (\Exception $e) {
                         // Fallback für den Fall, dass die Kommentare nicht geladen werden können
-                        $comments = collect();
+                        $topLevelComments = collect();
                     }
                 @endphp
 
-                @forelse($comments as $comment)
-                    <div class="border-l-4 border-primary-200 pl-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center space-x-2">
-                                <span class="font-medium">{{ $comment->user->name ?? 'Unbekannt' }}</span>
-                                <span class="text-sm text-gray-500">{{ $comment->created_at->format('d.m.Y H:i') }}</span>
-                            </div>
-                            @auth
-                                <div class="relative">
-                                    <button class="text-gray-400 hover:text-gray-600" onclick="toggleCommentMenu({{ $comment->id }})">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                                        </svg>
-                                    </button>
-                                    
-                                    <!-- Dropdown Menu -->
-                                    <div id="commentMenu{{ $comment->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                                        <div class="py-1">
-                                            @if(auth()->user()->id === $comment->user_id)
-                                                <button onclick="editComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                    </svg>
-                                                    Bearbeiten
-                                                </button>
-                                                <button onclick="deleteComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                    </svg>
-                                                    Löschen
-                                                </button>
-                                            @endif
-                                            
-                                            @if(auth()->user()->id !== $comment->user_id)
-                                                <button onclick="reportComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                                    </svg>
-                                                    Melden
-                                                </button>
-                                            @endif
-                                            
-                                            @can('delete all comments')
-                                                <div class="border-t border-gray-100 mt-1 pt-1">
-                                                    <button onclick="adminDeleteComment({{ $comment->id }})" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                        </svg>
-                                                        Admin: Löschen
-                                                    </button>
-                                                </div>
-                                            @endcan
-                                        </div>
-                                    </div>
-                                </div>
-                            @endauth
-                        </div>
-                        <!-- Normale Kommentar-Anzeige -->
-                        <div id="commentContent{{ $comment->id }}">
-                            <p class="text-gray-700">{{ $comment->content }}</p>
-                        </div>
-                        
-                        <!-- Bearbeitungsform (initial versteckt) -->
-                        <div id="editForm{{ $comment->id }}" class="hidden mt-2">
-                            <form action="{{ route('wiki.comments.update', $comment->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <textarea name="content" rows="3" class="form-input w-full mb-2">{{ $comment->content }}</textarea>
-                                <div class="flex space-x-2">
-                                    <button type="submit" class="btn-ki-primary-sm">Speichern</button>
-                                    <button type="button" onclick="cancelEdit({{ $comment->id }})" class="btn-ki-outline-sm">Abbrechen</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                @forelse($topLevelComments as $comment)
+                    @include('wiki.comments.comment', ['comment' => $comment, 'depth' => 0])
                 @empty
                     <div class="text-center py-6">
                         <p class="text-gray-500">Noch keine Kommentare vorhanden.</p>
@@ -477,6 +476,43 @@ function reportComment(commentId) {
     }
 }
 
+// Reply-Funktionen für hierarchische Kommentare
+function toggleReplyForm(commentId) {
+    const replyForm = document.getElementById('replyForm' + commentId);
+    if (!replyForm) return;
+    
+    // Alle anderen Reply-Forms schließen
+    const allReplyForms = document.querySelectorAll('[id^="replyForm"]');
+    allReplyForms.forEach(form => {
+        if (form.id !== 'replyForm' + commentId) {
+            form.classList.add('hidden');
+        }
+    });
+    
+    // Aktuelles Form togglen
+    replyForm.classList.toggle('hidden');
+    
+    // Focus auf das Textarea wenn Form geöffnet wird
+    if (!replyForm.classList.contains('hidden')) {
+        const textarea = replyForm.querySelector('textarea');
+        if (textarea) {
+            textarea.focus();
+        }
+    }
+}
+
+function cancelReply(commentId) {
+    const replyForm = document.getElementById('replyForm' + commentId);
+    if (replyForm) {
+        replyForm.classList.add('hidden');
+        // Clear textarea content
+        const textarea = replyForm.querySelector('textarea');
+        if (textarea) {
+            textarea.value = '';
+        }
+    }
+}
+
 // Menüs schließen beim Klick außerhalb
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.relative')) {
@@ -487,9 +523,11 @@ document.addEventListener('click', function(e) {
 
 // Artikel-Interaktions-Funktionen
 function toggleLike(articleSlug) {
-    const btn = document.getElementById('likeBtn');
+    const btnDesktop = document.getElementById('likeBtn');
+    const btnMobile = document.getElementById('likeBtnMobile');
     
-    btn.disabled = true;
+    if (btnDesktop) btnDesktop.disabled = true;
+    if (btnMobile) btnMobile.disabled = true;
     
     fetch(`/wiki/articles/${articleSlug}/like`, {
         method: 'POST',
@@ -501,15 +539,19 @@ function toggleLike(articleSlug) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            if (data.liked) {
-                btn.classList.remove('btn-ki-outline-sm');
-                btn.classList.add('btn-ki-primary-sm');
-                btn.title = 'Geliked';
-            } else {
-                btn.classList.remove('btn-ki-primary-sm');
-                btn.classList.add('btn-ki-outline-sm');
-                btn.title = 'Liken';
-            }
+            // Update beide Buttons
+            [btnDesktop, btnMobile].forEach(btn => {
+                if (!btn) return;
+                if (data.liked) {
+                    btn.classList.remove('btn-ki-outline-sm');
+                    btn.classList.add('btn-ki-primary-sm');
+                    btn.title = 'Geliked';
+                } else {
+                    btn.classList.remove('btn-ki-primary-sm');
+                    btn.classList.add('btn-ki-outline-sm');
+                    btn.title = 'Liken';
+                }
+            });
         } else {
             alert('Fehler beim Liken: ' + (data.message || 'Unbekannter Fehler'));
         }
@@ -519,14 +561,17 @@ function toggleLike(articleSlug) {
         alert('Fehler beim Liken. Bitte versuche es erneut.');
     })
     .finally(() => {
-        btn.disabled = false;
+        if (btnDesktop) btnDesktop.disabled = false;
+        if (btnMobile) btnMobile.disabled = false;
     });
 }
 
 function toggleBookmark(articleSlug) {
-    const btn = document.getElementById('bookmarkBtn');
+    const btnDesktop = document.getElementById('bookmarkBtn');
+    const btnMobile = document.getElementById('bookmarkBtnMobile');
     
-    btn.disabled = true;
+    if (btnDesktop) btnDesktop.disabled = true;
+    if (btnMobile) btnMobile.disabled = true;
     
     fetch(`/wiki/articles/${articleSlug}/bookmark`, {
         method: 'POST',
@@ -538,15 +583,19 @@ function toggleBookmark(articleSlug) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            if (data.bookmarked) {
-                btn.classList.remove('btn-ki-outline-sm');
-                btn.classList.add('btn-ki-primary-sm');
-                btn.title = 'Gemerkt';
-            } else {
-                btn.classList.remove('btn-ki-primary-sm');
-                btn.classList.add('btn-ki-outline-sm');
-                btn.title = 'Merken';
-            }
+            // Update beide Buttons
+            [btnDesktop, btnMobile].forEach(btn => {
+                if (!btn) return;
+                if (data.bookmarked) {
+                    btn.classList.remove('btn-ki-outline-sm');
+                    btn.classList.add('btn-ki-primary-sm');
+                    btn.title = 'Gemerkt';
+                } else {
+                    btn.classList.remove('btn-ki-primary-sm');
+                    btn.classList.add('btn-ki-outline-sm');
+                    btn.title = 'Merken';
+                }
+            });
         } else {
             alert('Fehler beim Merken: ' + (data.message || 'Unbekannter Fehler'));
         }
@@ -556,7 +605,8 @@ function toggleBookmark(articleSlug) {
         alert('Fehler beim Merken. Bitte versuche es erneut.');
     })
     .finally(() => {
-        btn.disabled = false;
+        if (btnDesktop) btnDesktop.disabled = false;
+        if (btnMobile) btnMobile.disabled = false;
     });
 }
 

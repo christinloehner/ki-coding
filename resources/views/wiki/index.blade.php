@@ -244,9 +244,11 @@
                     <i class="fas fa-sign-in-alt mr-2"></i>Anmelden
                 </a>
             @else
-                <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
-                    <i class="fas fa-edit mr-2"></i>Artikel schreiben
-                </a>
+                @can('create', App\Models\Article::class)
+                    <a href="{{ route('wiki.articles.create') }}" class="btn-ki-primary bg-white text-primary-600 hover:bg-gray-100 shadow-lg">
+                        <i class="fas fa-edit mr-2"></i>Artikel schreiben
+                    </a>
+                @endcan
                 <a href="{{ route('dashboard') }}" class="btn-ki-outline border-white text-white hover:bg-white hover:text-primary-600">
                     <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                 </a>

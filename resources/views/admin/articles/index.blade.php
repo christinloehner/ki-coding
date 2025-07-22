@@ -67,6 +67,7 @@
     </div>
 
     <!-- Bulk Actions -->
+    @can('moderate', App\Models\Article::class)
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
         <div class="p-6">
             <form id="bulkForm" method="POST" class="flex items-center space-x-4">
@@ -82,7 +83,9 @@
                     <option value="status_pending_review">⏳ Set to Pending Review</option>
                     <option value="status_published">✅ Set to Published</option>
                     <option value="status_archived">📦 Set to Archived</option>
+                    @can('forceDelete', App\Models\Article::class)
                     <option value="delete" class="text-red-600">🗑️ Delete Selected</option>
+                    @endcan
                 </select>
                 
                 <button type="button" onclick="executeBulkAction()" 
@@ -95,6 +98,7 @@
             </form>
         </div>
     </div>
+    @endcan
 
     <!-- Articles Table -->
     <div class="bg-white shadow-sm rounded-lg border border-gray-200">
@@ -110,7 +114,9 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            @can('moderate', App\Models\Article::class)
                             <input type="checkbox" id="tableSelectAll" class="rounded border-gray-300 text-indigo-600">
+                            @endcan
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             <a href="{{ request()->fullUrlWithQuery(['sort' => 'title', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="hover:text-gray-700">
@@ -138,8 +144,10 @@
                     @forelse($articles as $article)
                     <tr class="hover:bg-gray-50" data-article-id="{{ $article->id }}">
                         <td class="px-6 py-4 whitespace-nowrap">
+                            @can('moderate', App\Models\Article::class)
                             <input type="checkbox" name="article_ids[]" value="{{ $article->id }}" 
                                    class="article-checkbox rounded border-gray-300 text-indigo-600">
+                            @endcan
                         </td>
                         <td class="px-6 py-4">
                             <div class="max-w-xs">
@@ -169,6 +177,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
+                            @can('changeStatus', App\Models\Article::class)
                             <form method="POST" action="{{ route('admin.articles.update-status', $article) }}" class="inline">
                                 @csrf
                                 <select name="status" onchange="this.form.submit()" 
@@ -184,6 +193,16 @@
                                     <option value="archived" {{ $article->status === 'archived' ? 'selected' : '' }}>Archived</option>
                                 </select>
                             </form>
+                            @else
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                @if($article->status === 'published') bg-green-100 text-green-800
+                                @elseif($article->status === 'pending_review') bg-yellow-100 text-yellow-800
+                                @elseif($article->status === 'draft') bg-gray-100 text-gray-800
+                                @elseif($article->status === 'archived') bg-red-100 text-red-800
+                                @endif">
+                                {{ ucfirst(str_replace('_', ' ', $article->status)) }}
+                            </span>
+                            @endcan
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $article->created_at->format('M d, Y') }}
@@ -194,10 +213,13 @@
                                    class="text-indigo-600 hover:text-indigo-900" target="_blank" title="View Article">
                                     <i class="fas fa-eye"></i>
                                 </a>
+                                @can('update', $article)
                                 <a href="{{ route('wiki.articles.edit', $article->slug) }}" 
                                    class="text-green-600 hover:text-green-900" title="Edit Article">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                @endcan
+                                @can('forceDelete', $article)
                                 <form method="POST" action="{{ route('admin.articles.destroy', $article) }}" 
                                       class="inline" onsubmit="return confirm('Artikel wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')">
                                     @csrf
@@ -206,6 +228,7 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                                @endcan
                             </div>
                         </td>
                     </tr>

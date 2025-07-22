@@ -36,8 +36,17 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
         
-        // Neueste Aktivitäten (falls UserActivity Modell existiert)
-        $recentActivity = collect();
+        // Gemerkte Artikel (letzte 5)
+        $bookmarkedArticles = Article::join('article_bookmarks', 'articles.id', '=', 'article_bookmarks.article_id')
+            ->where('article_bookmarks.user_id', $user->id)
+            ->where('articles.status', 'published')
+            ->select('articles.*', 'article_bookmarks.created_at as bookmarked_at')
+            ->orderBy('article_bookmarks.created_at', 'desc')
+            ->limit(5)
+            ->get();
+        
+        // Neueste Aktivitäten
+        $recentActivity = UserActivity::getRecentForUser($user->id, 5);
         
         // Community-Statistiken
         $communityStats = [
@@ -52,8 +61,27 @@ class DashboardController extends Controller
         return view('dashboard', compact(
             'userStats',
             'myArticles', 
+            'bookmarkedArticles',
             'recentActivity',
             'communityStats'
         ));
+    }
+    
+    /**
+     * Alle gemerkten Artikel des Benutzers anzeigen.
+     */
+    public function bookmarks(): View
+    {
+        $user = Auth::user();
+        
+        // Alle gemerkten Artikel mit Pagination
+        $bookmarkedArticles = Article::join('article_bookmarks', 'articles.id', '=', 'article_bookmarks.article_id')
+            ->where('article_bookmarks.user_id', $user->id)
+            ->where('articles.status', 'published')
+            ->select('articles.*', 'article_bookmarks.created_at as bookmarked_at')
+            ->orderBy('article_bookmarks.created_at', 'desc')
+            ->paginate(12);
+        
+        return view('dashboard.bookmarks', compact('bookmarkedArticles'));
     }
 }
