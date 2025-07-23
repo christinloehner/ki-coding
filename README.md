@@ -19,11 +19,13 @@
 
 - 🔐 **Fortgeschrittenes Rollen-System** - 5-stufige Hierarchie mit 80+ granularen Permissions
 - 📝 **Professionelles Wiki-System** - Markdown-Editor, Versionshistorie, Featured Articles
-- 🛡️ **Security-First Design** - XSS-Schutz, CSRF-Protection, Content Security Policy
-- 👥 **Community-Features** - Kommentare, Likes, Reputation-System, Moderation
+- 🛡️ **Security-First Design** - XSS-Schutz, CSRF-Protection, Content Security Policy, RFC 9116 Security.txt
+- 👥 **Community-Features** - Kommentare, Likes, Real-time Notifications, Moderation
 - 🎨 **Modernes Design** - Logo-basierte Farbpalette, Glassmorphism, Responsive Design
 - 🔍 **Erweiterte Suche** - Meilisearch-Integration mit Auto-Complete
 - 👤 **Umfassende Profile** - Avatar-Upload, Privacy-Settings, Social Media Integration
+- 🔔 **Push-Notification System** - Real-time Benachrichtigungen für Likes, Kommentare, Bookmarks
+- 🤖 **RESTful API v1** - Vollständige API mit Bearer Token Authentifizierung
 
 ---
 
@@ -140,22 +142,24 @@ ADMIN_NAME="Your Admin Name"
 🟢 Contributor (Content Creator)
 ├── Artikel erstellen/bearbeiten
 ├── Tag-Management
-└── Draft-System
+├── Draft-System
+└── API-Zugang
 
 ⚪ User (Basis-Rolle)
 ├── Artikel lesen
 ├── Kommentare schreiben
-└── Profil bearbeiten
+├── Profil bearbeiten
+└── Notifications erhalten
 ```
 
 ### Permission-System
 
-Über **80 granulare Permissions** für präzise Zugriffskontrolle:
+**Ausschließlich rollenbasierte Permissions** - keine direkten User-Permissions für maximale Sicherheit:
 
-- **Content**: `view/create/edit/delete/publish articles`
+- **Content**: `view/create/edit/delete/publish articles`, `use api`
 - **Community**: `moderate comments`, `ban users`, `manage reports`
 - **Administration**: `manage roles`, `assign roles`, `delete users`
-- **System**: `access admin panel`, `manage settings`
+- **System**: `access admin panel`, `manage settings`, `view users`
 
 ---
 
@@ -166,11 +170,14 @@ ADMIN_NAME="Your Admin Name"
 - **🔒 XSS-Protection**: WikiSecurity Middleware mit Pattern-Detection
 - **🛡️ CSRF-Protection**: Laravel Standard + Custom Implementation
 - **📋 Input Validation**: Umfassende Request Validation Classes
-- **👮 Permission System**: Spatie Laravel Permissions
+- **👮 Permission System**: Spatie Laravel Permissions (ONLY role-based)
 - **🚧 Rate Limiting**: API & Wiki Rate Limits
 - **📊 Activity Logging**: Verdächtige Aktivitäten-Tracking
 - **🚫 Ban System**: Temporäre/Permanente User-Bans
 - **🔐 Content Security Policy**: Restriktive CSP-Headers
+- **🔒 Cookie Security**: HttpOnly, Secure, SameSite Flags
+- **📋 RFC 9116 Security.txt**: Responsible Disclosure Guidelines
+- **🏆 Security Acknowledgments**: Hall of Fame für Security Researcher
 
 ### Security Headers
 
@@ -199,9 +206,48 @@ Strict-Transport-Security: max-age=31536000
 
 - **💬 Comment-System**: Nested Comments mit Moderation
 - **👍 Like-System**: Artikel und Kommentar-Likes
+- **🔔 Push-Notifications**: Real-time Benachrichtigungen für Artikel-Interaktionen
+- **📌 Bookmark-System**: Artikel zur späteren Lektüre markieren
 - **🏆 Reputation-System**: Aktivitäts-basierte Punktevergabe
 - **🚨 Report-System**: Community-basierte Moderation
 - **👤 Profile**: Umfassende Benutzerprofile
+
+---
+
+## 🤖 RESTful API v1
+
+### API-Features
+
+- **🔐 Bearer Token Authentication**: Laravel Sanctum-basierte Authentifizierung
+- **📋 Role-based Access Control**: API-Zugang über `use api` Permission
+- **🚧 Rate Limiting**: 60 Requests/Minute für authentifizierte Benutzer
+- **📊 Consistent Response Format**: Einheitliche JSON-Antworten
+- **📖 Comprehensive Documentation**: Vollständige API-Dokumentation im Dashboard
+- **🔒 Security-First**: HTTPS, Token-Scoping, Input Validation
+
+### Verfügbare Endpunkte
+
+| Methode | Endpunkt | Beschreibung | Permission |
+|---------|----------|--------------|------------|
+| `GET` | `/api/user` | Authentifizierte User-Informationen | `use api` |
+| `POST` | `/api/v1/articles` | Artikel erstellen | `create articles` + `use api` |
+| `GET` | `/api/v1/articles` | Artikel auflisten | `view articles` + `use api` |
+| `PUT` | `/api/v1/articles/{id}` | Artikel bearbeiten | `edit articles` + `use api` |
+| `DELETE` | `/api/v1/articles/{id}` | Artikel löschen | `delete articles` + `use api` |
+
+### Beispiel-Request
+
+```bash
+curl -X POST https://www.ki-coding.de/api/v1/articles \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Mein API-Artikel",
+    "content": "Inhalt des Artikels...",
+    "category_slug": "tutorials",
+    "status": "published"
+  }'
+```
 
 ---
 
@@ -339,7 +385,8 @@ services:
 - **📊 Advanced Analytics**: User Behavior Analytics
 - **🔌 Plugin System**: Erweiterbare Architektur
 - **📤 Content Export**: PDF/EPUB Export
-- **🔔 Real-time Notifications**: WebSocket Integration
+- **🔔 WebSocket Notifications**: Real-time Push via WebSockets
+- **🤖 Extended API**: Vollständige CRUD-API für alle Ressourcen
 
 ### Performance-Verbesserungen
 
@@ -374,8 +421,11 @@ services:
 ### Support-Kanäle
 
 - **📧 Email**: admin@ki-coding.de
+- **🔒 Security**: security@ki-coding.de (für Sicherheitslücken)
 - **💬 Issues**: [GitLab Issues](https://gitlab.com/ki-coding/issues)
 - **📖 Documentation**: [Interne Dokumentation](PROJECT.md)
+- **🔒 Security Policy**: [/security-policy](https://www.ki-coding.de/security-policy)
+- **🏆 Security Acknowledgments**: [/security-acknowledgments](https://www.ki-coding.de/security-acknowledgments)
 
 ### Wartungs-Zyklen
 
@@ -399,6 +449,8 @@ services:
 - **Search**: [Meilisearch](https://meilisearch.com) - Lightning Fast Search
 - **Styling**: [Tailwind CSS](https://tailwindcss.com) - Utility-First CSS Framework
 - **Icons**: [Font Awesome](https://fontawesome.com) - Icon Library
+- **Security Standards**: [RFC 9116](https://tools.ietf.org/rfc/rfc9116.txt) - Security.txt Format
+- **Humans.txt**: [/humans.txt](https://www.ki-coding.de/humans.txt) - Team & Technology Credits
 
 ### Entwickelt mit ❤️ für die KI-Community
 
@@ -407,15 +459,18 @@ services:
 ## 📊 Projekt-Statistiken
 
 ```
-📁 Codebase Size:    ~50,000+ Zeilen
-🧩 Components:       80+ Blade Components  
-🎯 Features:         25+ Hauptfeatures
-🔐 Permissions:      80+ Granulare Rechte
-🎨 UI Components:    40+ Wiederverwendbare UI-Elemente
-📝 Database Tables:  25+ Optimierte Tabellen
+📁 Codebase Size:    ~55,000+ Zeilen
+🧩 Components:       85+ Blade Components  
+🎯 Features:         30+ Hauptfeatures
+🔐 Permissions:      80+ Granulare Rechte (ONLY role-based)
+🎨 UI Components:    45+ Wiederverwendbare UI-Elemente
+📝 Database Tables:  27+ Optimierte Tabellen
 🧪 Test Suite:       13 Test Files (PHPUnit 12.2.7)
 ⚡ Performance:      < 200ms Average Response
 🚀 Framework:        Laravel 12.21.0 + PHP 8.4
+🔔 Notifications:    Real-time Push System
+🤖 API Endpoints:    RESTful API v1
+🔒 Security:         RFC 9116 compliant
 ```
 
 ---

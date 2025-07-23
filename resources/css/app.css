@@ -718,6 +718,12 @@
         box-shadow: 0 4px 10px #2e7d324d, 0 4px 10px #2e7d3233;
     }
     
+    .shadow-glass-lg {
+        --tw-shadow: 0 4px 14px rgba(0, 0, 0, .15), 0 4px 12px rgba(0, 0, 0, .1);
+        --tw-shadow-colored: 0 4px 14px var(--tw-shadow-color), 0 4px 12px var(--tw-shadow-color);
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow);
+    }
+
     /* Scroll-Button spezifische Animationen */
     #scrollToTopBtn {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

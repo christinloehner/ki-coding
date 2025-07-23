@@ -71,6 +71,8 @@
                             <div class="flex items-center space-x-4">
                                 <span>von {{ $article->user->name ?? 'Unbekannt' }}</span>
                                 <span>{{ $article->reading_time ?? 5 }} min</span>
+                                <span title="Kommentare"><i class="fas fa-comment text-gray-400 mr-1"></i>{{ $article->comments_count ?? 0 }}</span>
+                                <span title="Likes"><i class="fas fa-heart text-gray-400 mr-1"></i>{{ $article->likes_count ?? 0 }}</span>
                                 <span>{{ $article->views_count ?? 0 }} Aufrufe</span>
                             </div>
                         </div>

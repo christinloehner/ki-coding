@@ -39,14 +39,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Super Admin Bypass: Admins automatically have all permissions
+        // Super Admin Bypass: Users with admin panel access automatically have all permissions
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('admin') ? true : null;
+            return $user->hasPermissionTo('access admin panel') ? true : null;
         });
 
         // Define additional gates
         Gate::define('admin-access', function ($user) {
-            return $user->hasPermissionTo('admin access');
+            return $user->hasPermissionTo('access admin panel');
         });
 
         Gate::define('moderator-access', function ($user) {
@@ -117,7 +117,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('can-change-user-roles', function ($user) {
-            return $user->hasPermissionTo('admin access');
+            return $user->hasPermissionTo('access admin panel');
         });
 
         Gate::define('can-manage-invitations', function ($user) {
@@ -126,28 +126,28 @@ class AuthServiceProvider extends ServiceProvider
 
         // System gates
         Gate::define('can-access-system-settings', function ($user) {
-            return $user->hasPermissionTo('admin access');
+            return $user->hasPermissionTo('access admin panel');
         });
 
         Gate::define('can-manage-permissions', function ($user) {
-            return $user->hasPermissionTo('admin access');
+            return $user->hasPermissionTo('access admin panel');
         });
 
         Gate::define('can-view-system-logs', function ($user) {
-            return $user->hasPermissionTo('admin access');
+            return $user->hasPermissionTo('access admin panel');
         });
 
-        // Role and Permission Management Gates
+        // Role and Permission Management Gates - Nur Permission-basiert
         Gate::define('manage roles', function ($user) {
-            return $user->hasRole('admin') || $user->hasPermissionTo('manage roles');
+            return $user->hasPermissionTo('manage roles');
         });
 
         Gate::define('assign admin role', function ($user) {
-            return $user->hasRole('admin') || $user->hasPermissionTo('assign admin role');
+            return $user->hasPermissionTo('assign admin role');
         });
 
         Gate::define('remove admin role', function ($user) {
-            return $user->hasRole('admin') || $user->hasPermissionTo('remove admin role');
+            return $user->hasPermissionTo('remove admin role');
         });
     }
 }

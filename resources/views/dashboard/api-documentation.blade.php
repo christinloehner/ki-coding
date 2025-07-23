@@ -344,7 +344,7 @@ Accept: application/json</code></pre>
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">cURL</h3>
                 <div class="bg-gray-900 rounded-lg p-4">
                     <pre class="text-yellow-400 text-sm"><code># Artikel erstellen
-curl -X POST https://dev.ki-coding.de/api/v1/articles \
+curl -X POST https://www.ki-coding.de/api/v1/articles \
   -H "Authorization: Bearer DEIN_API_TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
@@ -366,7 +366,7 @@ use GuzzleHttp\Client;
 
 $client = new Client();
 
-$response = $client->post('https://dev.ki-coding.de/api/v1/articles', [
+$response = $client->post('https://www.ki-coding.de/api/v1/articles', [
     'headers' => [
         'Authorization' => 'Bearer DEIN_API_TOKEN',
         'Content-Type' => 'application/json',
@@ -392,7 +392,7 @@ echo "Artikel erstellt mit ID: " . $data['data']['id'];</code></pre>
                 <div class="bg-gray-900 rounded-lg p-4">
                     <pre class="text-green-400 text-sm"><code>import requests
 
-url = "https://dev.ki-coding.de/api/v1/articles"
+url = "https://www.ki-coding.de/api/v1/articles"
 headers = {
     "Authorization": "Bearer DEIN_API_TOKEN",
     "Content-Type": "application/json",
@@ -424,7 +424,7 @@ else:
                     <h4 class="font-semibold text-blue-900 mb-2">HTTP Request Node Konfiguration:</h4>
                     <ul class="list-disc list-inside text-blue-800 space-y-1">
                         <li><strong>Method:</strong> POST</li>
-                        <li><strong>URL:</strong> https://dev.ki-coding.de/api/v1/articles</li>
+                        <li><strong>URL:</strong> https://www.ki-coding.de/api/v1/articles</li>
                         <li><strong>Headers:</strong>
                             <ul class="list-disc list-inside ml-4 mt-1">
                                 <li>Authorization: Bearer DEIN_API_TOKEN</li>

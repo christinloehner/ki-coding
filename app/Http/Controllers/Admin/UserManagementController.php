@@ -128,7 +128,7 @@ class UserManagementController extends Controller
         Gate::authorize('ban users');
         
         // Prevent banning users with admin permissions
-        if ($user->can('admin access')) {
+        if ($user->can('access admin panel')) {
             return back()->withErrors(['user' => 'Cannot ban users with administrative permissions.']);
         }
         
@@ -165,7 +165,7 @@ class UserManagementController extends Controller
         Gate::authorize('delete users');
         
         // Prevent deleting users with admin permissions
-        if ($user->can('admin access')) {
+        if ($user->can('access admin panel')) {
             abort(403, 'Cannot delete users with administrative permissions.');
         }
         
@@ -190,7 +190,7 @@ class UserManagementController extends Controller
         Gate::authorize('delete users');
         
         // Prevent deleting users with admin permissions
-        if ($user->can('admin access')) {
+        if ($user->can('access admin panel')) {
             return back()->withErrors(['user' => 'Cannot delete users with administrative permissions.']);
         }
         

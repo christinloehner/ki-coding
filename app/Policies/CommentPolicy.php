@@ -66,8 +66,8 @@ class CommentPolicy
 
         // Comments can only be edited within 15 minutes of creation
         if ($comment->created_at->diffInMinutes(now()) > 15) {
-            // Unless user is moderator or admin
-            if (!$user->hasRole(['moderator', 'admin'])) {
+            // Unless user has moderation permissions
+            if (!$user->hasPermissionTo('moderate content')) {
                 return false;
             }
         }
@@ -113,7 +113,7 @@ class CommentPolicy
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        return $user->can('admin access');
+        return $user->can('access admin panel');
     }
 
     /**

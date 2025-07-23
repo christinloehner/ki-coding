@@ -12,6 +12,8 @@ use App\Events\ArticleLiked;
 use App\Events\ArticlePublished;
 use App\Events\ArticleUnliked;
 use App\Events\ArticleVoted;
+use App\Notifications\ArticleLikedNotification;
+use App\Notifications\ArticleBookmarkedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -566,6 +568,21 @@ class ArticleController extends Controller
             // Fire reputation event
             event(new ArticleLiked($article, Auth::user()));
             
+            // Send notification to article author (not to self)
+            if ($article->user_id !== $userId) {
+                try {
+                    $article->user->notify(new ArticleLikedNotification($article, Auth::user()));
+                    
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send article liked notification', [
+                        'error' => $e->getMessage(),
+                        'article_id' => $article->id,
+                        'author_id' => $article->user_id,
+                        'liker_id' => $userId
+                    ]);
+                }
+            }
+            
             // Log activity
             UserActivity::log(
                 Auth::id(),
@@ -621,6 +638,21 @@ class ArticleController extends Controller
             ]);
 
             $bookmarked = true;
+            
+            // Send notification to article author (not to self)
+            if ($article->user_id !== $userId) {
+                try {
+                    $article->user->notify(new ArticleBookmarkedNotification($article, Auth::user()));
+                    
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send article bookmarked notification', [
+                        'error' => $e->getMessage(),
+                        'article_id' => $article->id,
+                        'author_id' => $article->user_id,
+                        'bookmarker_id' => $userId
+                    ]);
+                }
+            }
             
             // Log activity
             UserActivity::log(

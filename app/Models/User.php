@@ -188,7 +188,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->is_active && 
                !$this->isBanned() && 
                $this->hasVerifiedEmail() &&
-               ($this->hasPermissionTo('create articles') || $this->hasRole(['admin', 'moderator', 'editor', 'contributor']));
+               $this->hasPermissionTo('create articles');
     }
 
     /**
@@ -199,7 +199,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->is_active && 
                !$this->isBanned() && 
                $this->hasVerifiedEmail() &&
-               ($this->hasPermissionTo('create comments') || $this->hasRole(['admin', 'moderator', 'editor', 'contributor', 'user']));
+               $this->hasPermissionTo('create comments');
     }
 
     /**
@@ -207,7 +207,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canModerate(): bool
     {
-        return $this->hasRole(['admin', 'moderator']);
+        return $this->hasPermissionTo('moderate content');
     }
 
     /**
@@ -300,22 +300,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         parent::boot();
         
-        // Assign default role to new users
+        // Assign default roles to new users
         static::created(function ($user) {
-            // Assign basic user role - contributor only after manual approval/invitation
-            $user->assignRole('user');
-            $user->givePermissionTo([
-                'view articles',
-                'view categories', 
-                'view tags',
-                'view comments',
-                'create comments',
-                'edit own comments',
-                'delete own comments',
-                'edit own profile'
-                // REMOVED: 'create articles', 'edit own articles', 'delete own articles', 'publish articles'
-                // These require contributor role or higher, assigned manually by admins
-            ]);
+            // Assign both user and contributor roles to new registrations
+            // Permissions werden automatisch durch die Rollen vergeben
+            $user->assignRole(['user', 'contributor']);
         });
     }
 

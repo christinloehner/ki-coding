@@ -85,7 +85,7 @@ class CategoryPolicy
      */
     public function forceDelete(User $user, Category $category): bool
     {
-        return $user->can('admin access');
+        return $user->can('access admin panel');
     }
 
     /**

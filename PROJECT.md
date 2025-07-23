@@ -5,12 +5,15 @@
 **KI-Coding.de** ist eine professionelle Laravel-basierte Wiki-Plattform für die KI-Programmierung-Community. Das System kombiniert moderne Web-Technologien mit robusten Sicherheitsfeatures und einem umfassenden Content-Management-System.
 
 ### Technische Basis
-- **Framework**: Laravel 12.0 (neueste Version)
-- **PHP**: 8.2+
+- **Framework**: Laravel 12.21.0 (neueste Version)
+- **PHP**: 8.4+
 - **Datenbank**: MySQL/PostgreSQL
-- **Frontend**: Tailwind CSS + Vite
+- **Frontend**: Tailwind CSS + Vite + Alpine.js
 - **Containerisierung**: Docker
 - **Suchengine**: Meilisearch
+- **Cache/Sessions**: Redis
+- **API**: RESTful API v1 mit Laravel Sanctum
+- **Notifications**: Real-time Push-System
 
 ---
 
@@ -20,11 +23,13 @@
 
 #### Models
 - **User**: Erweiterte Benutzerprofile mit Spatie Permissions Integration
-- **Article**: Wiki-Artikel mit Revision-System und Soft Deletes
+- **Article**: Wiki-Artikel mit Revision-System, Soft Deletes, Like/Bookmark-Funktionalität
 - **Category**: Hierarchische Kategorien für Content-Organisation
 - **Comment**: Moderiertes Kommentar-System mit Like-Funktionalität
 - **Tag**: Flexible Content-Kategorisierung
 - **Revision**: Vollständige Versionshistorie für Artikel
+- **Notification**: Laravel Notification System für Real-time Benachrichtigungen
+- **PersonalAccessToken**: API-Token Management mit Laravel Sanctum
 
 #### Controllers
 **Wiki-Bereich:**
@@ -43,6 +48,12 @@
 - `ProfileController`: Erweiterte Profil-Features
 - `DashboardController`: Rollen-basierte Dashboards
 - `ContactController`: reCAPTCHA-geschütztes Kontaktformular
+- `NotificationController`: Push-Notifications Management
+- `ApiTokenController`: API-Token Verwaltung
+
+**API-Bereich:**
+- `Api\V1\ArticleController`: RESTful API für Artikel-Management
+- `Api\UserController`: Authentifizierte User-Informationen
 
 #### Views
 **Layout-System:**
@@ -71,6 +82,7 @@
    - Artikel erstellen, bearbeiten, löschen (eigene)
    - Tags erstellen und verwalten
    - Draft-Artikel speichern
+   - API-Zugang für Artikel-Management
 
 3. **Editor** (Content Manager)
    - Alle Artikel bearbeiten und publizieren
@@ -91,12 +103,15 @@
    - System-Konfiguration
 
 ### Permission-System
+**Ausschließlich rollenbasierte Permissions** - keine direkten User-Permissions für maximale Sicherheit.
 Über 80 granulare Permissions für präzise Zugriffskontrolle:
-- `view articles`, `edit articles`, `delete articles`
+- `view articles`, `edit articles`, `delete articles`, `create articles`
 - `publish articles`, `feature articles`
 - `manage categories`, `manage tags`
-- `moderate comments`, `ban users`
-- `manage roles`, `assign roles`
+- `moderate comments`, `ban users`, `unban users`
+- `manage roles`, `assign roles`, `access admin panel`
+- `use api` - API-Zugang für externe Integrationen
+- `view users`, `delete users` - Admin-Funktionen
 
 ### Sicherheits-Middleware
 
@@ -110,6 +125,7 @@
 - `BanCheck`: Überprüft aktive User-Bans
 - `RateLimitWiki`: Wiki-spezifische Rate Limits
 - `SecurityHeaders`: Globale Security Headers
+- `auth:sanctum`: API-Authentifizierung mit Laravel Sanctum
 
 ---
 
@@ -135,9 +151,10 @@
 - user_id, category_id
 - status (draft/published), featured
 - published_at, reading_time
-- views_count, likes_count
+- views_count, likes_count, comments_count
 - deletion_requested_at, deletion_requested_by
 - deleted_at (Soft Deletes)
+- meta_title, meta_description (SEO)
 ```
 
 **categories**
@@ -166,6 +183,21 @@
 - `roles`, `permissions`
 - `model_has_roles`, `model_has_permissions`
 - `role_has_permissions`
+
+### Notification-System
+- `notifications`: Laravel Notification System
+  - `id` (UUID), `type`, `notifiable_type`, `notifiable_id`
+  - `data` (JSON), `read_at`, `created_at`, `updated_at`
+
+### API-System
+- `personal_access_tokens`: Laravel Sanctum Tokens
+  - `id`, `tokenable_type`, `tokenable_id`, `name`
+  - `token`, `abilities` (JSON), `last_used_at`
+  - `expires_at`, `created_at`, `updated_at`
+
+### Bookmark-System
+- `article_bookmarks`: Benutzer-Bookmarks für Artikel
+  - `id`, `user_id`, `article_id`, `created_at`
 
 ### Moderation-Tabellen
 - `article_reports`, `user_reports`, `comment_reports`
@@ -199,6 +231,8 @@
 - Modal-System für User-Interaktionen
 - Form-Components mit Validation-Display
 - Responsive Navigation mit Dropdown-Menüs
+- **Notification Bell**: Alpine.js-basierte Real-time Notifications
+- **API Token Management**: Dashboard-Integration für Token-Verwaltung
 
 ---
 
@@ -219,7 +253,9 @@
 
 ### Community-Features
 - **Comment-System**: Nested Comments mit Moderation
-- **Like-System**: Artikel und Kommentar-Likes
+- **Like-System**: Artikel und Kommentar-Likes mit Real-time Notifications
+- **Bookmark-System**: Artikel zur späteren Lektüre markieren
+- **Push-Notifications**: Real-time Benachrichtigungen für Artikel-Interaktionen
 - **Reputation-System**: Aktivitäts-basierte Punktevergabe
 - **Tag-System**: Flexible Content-Kategorisierung
 - **Report-System**: Community-basierte Moderation
@@ -273,9 +309,20 @@ privacy_settings: {
 - **File Upload Validation**: Mime-Type und Größen-Checks
 
 ### Rate Limiting
-- **API Rate Limits**: Schutz vor Brute-Force-Angriffen
+- **API Rate Limits**: 60 Requests/Minute für authentifizierte Benutzer
 - **Wiki Rate Limits**: Content-Creation Throttling
 - **Search Rate Limits**: Suchengine-Schutz
+
+### Cookie Security
+- **HttpOnly Flags**: Verhindert JavaScript-Zugriff auf sensible Cookies
+- **Secure Flags**: HTTPS-only Übertragung
+- **SameSite Attributes**: CSRF-Schutz auf Cookie-Ebene
+
+### RFC 9116 Compliance
+- **Security.txt**: Standardisierte Security-Kontaktinformationen
+- **Responsible Disclosure**: Koordinierte Vulnerability-Meldungen
+- **Security Acknowledgments**: Hall of Fame für Security Researcher
+- **Security Policy**: Umfassende Guidelines für Sicherheitsmeldungen
 
 ---
 
@@ -299,12 +346,59 @@ privacy_settings: {
 
 ---
 
+## 🤖 RESTful API v1
+
+### API-Architektur
+- **Authentication**: Laravel Sanctum Bearer Token
+- **Rate Limiting**: 60 Requests/Minute für authentifizierte User
+- **Response Format**: Konsistente JSON-Struktur
+- **Error Handling**: Standardisierte Fehler-Responses
+- **Validation**: Request Classes für Input-Validation
+
+### Authentifizierung
+```php
+// Header Format
+Authorization: Bearer {API_TOKEN}
+Content-Type: application/json
+Accept: application/json
+```
+
+### Verfügbare Endpunkte
+
+**User API:**
+- `GET /api/user` - Authentifizierte User-Informationen
+
+**Articles API:**
+- `POST /api/v1/articles` - Artikel erstellen
+- `GET /api/v1/articles` - Artikel auflisten (geplant)
+- `PUT /api/v1/articles/{id}` - Artikel bearbeiten (geplant)
+- `DELETE /api/v1/articles/{id}` - Artikel löschen (geplant)
+
+### Response-Format
+```json
+{
+  "success": true,
+  "message": "Artikel wurde erfolgreich erstellt.",
+  "data": {
+    // Response-Daten
+  },
+  "timestamp": "2025-07-23T14:30:00.000000Z"
+}
+```
+
+### Permission-Integration
+- `use api` - Grundvoraussetzung für API-Zugang
+- Zusätzliche Action-spezifische Permissions erforderlich
+- Rollenbasierte Zugriffskontrolle über Spatie Permissions
+
+---
+
 ## 🔧 Entwicklungsumgebung
 
 ### Docker-Setup
 ```yaml
 Services:
-- PHP 8.2+ (www.ki-coding.de-php)
+- PHP 8.4+ (www.ki-coding.de-php)
 - Apache (www.ki-coding.de-http)
 - MySQL/PostgreSQL (www.ki-coding.de-db)
 - Redis (www.ki-coding.de-redis)
@@ -316,6 +410,7 @@ Services:
 ```json
 Core Dependencies:
 - laravel/breeze: Authentication Scaffolding
+- laravel/sanctum: API Token Authentication
 - spatie/laravel-permission: Rollen-System
 - laravel/scout: Search Abstraction
 - meilisearch/meilisearch-php: Search Engine
@@ -328,6 +423,10 @@ Security:
 Frontend:
 - @tailwindcss/forms: Form-Styling
 - @tailwindcss/typography: Content-Styling
+- alpinejs: Reactive Frontend Components
+
+Notifications:
+- Laravel Notification System (built-in)
 ```
 
 ### Deployment
@@ -354,9 +453,11 @@ Frontend:
 
 ### System-Administration
 - **Role-Management**: Spatie Permission Interface
-- **Permission-Assignment**: Granulare Rechte-Verwaltung
+- **Permission-Assignment**: Granulare Rechte-Verwaltung (ONLY role-based)
+- **API-Token Management**: Sanctum Token Administration
 - **System-Monitoring**: Performance und Health Checks
 - **Invitation-System**: Kontrollierte Registrierung
+- **Notification Management**: Push-Notification Übersicht
 
 ---
 
@@ -367,6 +468,8 @@ Frontend:
 - **Comment API**: AJAX-basierte Kommentar-Funktionen
 - **User API**: Profile und Role-Management
 - **Content API**: Article und Category Management
+- **Notification API**: Real-time Push-Notifications
+- **RESTful API v1**: Laravel Sanctum-basierte Artikel-API
 
 ### Externe Integrationen
 - **reCAPTCHA v2**: Bot-Schutz für Formulare
@@ -386,11 +489,14 @@ Frontend:
 - **XSS-Attack Logging**: WikiSecurity Middleware
 - **Failed Login Tracking**: Brute-Force Detection
 - **Suspicious Activity Logging**: Security-Events
+- **API Rate Limit Monitoring**: Sanctum Request Tracking
 
 ### Content-Analytics
 - **Article Views**: Popularity-Tracking
 - **User Engagement**: Comment und Like-Statistiken
 - **Search Analytics**: Popular Search Terms
+- **Notification Analytics**: Push-Notification Engagement
+- **API Usage Statistics**: Endpoint-spezifische Metriken
 
 ---
 
@@ -418,7 +524,9 @@ Frontend:
 
 ### Geplante Features
 - **API Documentation**: Swagger/OpenAPI Integration
-- **Mobile App**: REST API für Mobile Apps
+- **Extended API**: Vollständige CRUD-API für alle Ressourcen
+- **WebSocket Notifications**: Real-time Push via WebSockets
+- **Mobile App**: REST API für Native Apps
 - **Advanced Analytics**: User Behavior Analytics
 - **Internationalization**: Multi-Language Support
 
@@ -463,7 +571,17 @@ Frontend:
 
 ---
 
-**Letzte Aktualisierung**: 19. Juli 2025  
-**Version**: 1.0.0  
-**Wartung**: Christin  
+**Letzte Aktualisierung**: 23. Juli 2025  
+**Version**: 1.1.0 (mit API v1, Notifications, Security.txt)  
+**Wartung**: Christin Löhner  
 **Entwicklungszeit**: 6+ Monate intensive Entwicklung
+
+### Kürzlich hinzugefügte Features (v1.1.0)
+- ✅ **RESTful API v1** mit Laravel Sanctum Authentication
+- ✅ **Push-Notification System** für Real-time Benachrichtigungen
+- ✅ **Bookmark-System** für Artikel
+- ✅ **RFC 9116 Security.txt** Implementation
+- ✅ **Security Acknowledgments** Hall of Fame
+- ✅ **Cookie Security** mit HttpOnly/Secure/SameSite Flags
+- ✅ **Ausschließlich rollenbasierte Permissions** (keine User-Permissions)
+- ✅ **humans.txt** mit Technologie-Credits

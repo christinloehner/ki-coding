@@ -32,6 +32,7 @@ class DashboardController extends Controller
         
         // Benutzer-Artikel (letzte 5)
         $myArticles = Article::where('user_id', $user->id)
+            ->withCount(['comments'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
@@ -40,6 +41,7 @@ class DashboardController extends Controller
         $bookmarkedArticles = Article::join('article_bookmarks', 'articles.id', '=', 'article_bookmarks.article_id')
             ->where('article_bookmarks.user_id', $user->id)
             ->where('articles.status', 'published')
+            ->withCount(['comments'])
             ->select('articles.*', 'article_bookmarks.created_at as bookmarked_at')
             ->orderBy('article_bookmarks.created_at', 'desc')
             ->limit(5)
@@ -78,6 +80,7 @@ class DashboardController extends Controller
         $bookmarkedArticles = Article::join('article_bookmarks', 'articles.id', '=', 'article_bookmarks.article_id')
             ->where('article_bookmarks.user_id', $user->id)
             ->where('articles.status', 'published')
+            ->withCount(['comments'])
             ->select('articles.*', 'article_bookmarks.created_at as bookmarked_at')
             ->orderBy('article_bookmarks.created_at', 'desc')
             ->paginate(12);

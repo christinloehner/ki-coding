@@ -9,6 +9,7 @@ use App\Models\UserActivity;
 use App\Events\CommentCreated;
 use App\Events\CommentLiked;
 use App\Events\CommentUnliked;
+use App\Notifications\ArticleCommentedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -125,6 +126,11 @@ class CommentController extends Controller
         
         // Fire reputation event for comment creation
         event(new CommentCreated($comment));
+
+        // Send notification to article author (not to self)
+        if ($article->user_id !== Auth::id()) {
+            $article->user->notify(new ArticleCommentedNotification($article, $comment, Auth::user()));
+        }
 
         // Log activity
         UserActivity::log(

@@ -23,6 +23,10 @@ window.klaroConfig = {
 
     // Cookie Expires in Tagen
     cookieExpiresAfterDays: 365,
+    
+    // Cookie Security-Einstellungen
+    cookieSecure: true,
+    cookieSameSite: 'Lax',
 
     // Standard Sprache
     lang: 'de',
@@ -106,7 +110,8 @@ window.klaroConfig = {
                         window._paq.push(['setSiteId', '9']);
                         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
                         g.async=true; 
-                        g.src=u+'matomo.js'; 
+                        g.src=u+'matomo.js';
+                        g.referrerPolicy = 'strict-origin-when-cross-origin';
                         s.parentNode.insertBefore(g,s);
                     })();
                     
@@ -114,12 +119,15 @@ window.klaroConfig = {
                     if (!document.querySelector('noscript img[src*="matomo.christin-loehner.de"]')) {
                         const noscript = document.createElement('noscript');
                         const img = document.createElement('p');
-                        img.innerHTML = '<img referrerpolicy="no-referrer-when-downgrade" src="https://matomo.christin-loehner.de/matomo.php?idsite=9&amp;rec=1" style="border:0;" alt="" />';
+                        img.innerHTML = '<img referrerpolicy="strict-origin-when-cross-origin" src="https://matomo.christin-loehner.de/matomo.php?idsite=9&amp;rec=1" style="border:0;" alt="" />';
                         noscript.appendChild(img);
                         document.head.appendChild(noscript);
                     }
                 }
-                console.log('Matomo Analytics aktiviert');
+                // Nur bei Entwicklung loggen
+                if (window.location.hostname === 'localhost' || window.location.hostname.includes('dev')) {
+                    console.log('Matomo Analytics aktiviert');
+                }
             },
             onDecline: function() {
                 // Matomo deaktivieren
@@ -141,7 +149,10 @@ window.klaroConfig = {
                         noscript.parentNode.removeChild(noscript);
                     }
                 });
-                console.log('Matomo Analytics deaktiviert');
+                // Nur bei Entwicklung loggen
+                if (window.location.hostname === 'localhost' || window.location.hostname.includes('dev')) {
+                    console.log('Matomo Analytics deaktiviert');
+                }
             },
             cookies: [
                 {
@@ -186,9 +197,13 @@ window.klaroConfig = {
                     script.src = 'https://www.google.com/recaptcha/api.js';
                     script.async = true;
                     script.defer = true;
+                    script.referrerPolicy = 'strict-origin-when-cross-origin';
                     document.head.appendChild(script);
                 }
-                console.log('reCAPTCHA aktiviert');
+                // Nur bei Entwicklung loggen
+                if (window.location.hostname === 'localhost' || window.location.hostname.includes('dev')) {
+                    console.log('reCAPTCHA aktiviert');
+                }
             },
             onDecline: function() {
                 // reCAPTCHA entfernen
@@ -196,7 +211,10 @@ window.klaroConfig = {
                 recaptchaElements.forEach(el => {
                     el.style.display = 'none';
                 });
-                console.log('reCAPTCHA deaktiviert');
+                // Nur bei Entwicklung loggen
+                if (window.location.hostname === 'localhost' || window.location.hostname.includes('dev')) {
+                    console.log('reCAPTCHA deaktiviert');
+                }
             },
             cookies: [
                 {
@@ -211,9 +229,12 @@ window.klaroConfig = {
         }
     ],
 
-    // Callback-Funktionen
+    // Callback-Funktionen (silent mode)
     callback: function(consent, service) {
-        console.log('Klaro Callback:', consent, service);
+        // Nur bei Entwicklung loggen
+        if (window.location.hostname === 'localhost' || window.location.hostname.includes('dev')) {
+            console.log('Klaro Callback:', consent, service);
+        }
     },
 
     // Styling-Optionen

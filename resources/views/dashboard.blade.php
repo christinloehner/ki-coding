@@ -341,6 +341,12 @@
                                 </p>
                             </div>
                             <div class="flex items-center space-x-2 ml-4">
+                                <span class="text-xs text-gray-500 flex items-center">
+                                    <i class="fas fa-comment text-gray-400 mr-1"></i>{{ $article->comments_count ?? 0 }}
+                                </span>
+                                <span class="text-xs text-gray-500 flex items-center">
+                                    <i class="fas fa-heart text-gray-400 mr-1"></i>{{ $article->likes_count ?? 0 }}
+                                </span>
                                 <span class="text-xs text-gray-500">{{ $article->views_count ?? 0 }} views</span>
                                 <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="text-gray-400 hover:text-gray-600">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -401,6 +407,12 @@
                                 </p>
                             </div>
                             <div class="flex items-center space-x-2 ml-4">
+                                <span class="text-xs text-gray-500 flex items-center">
+                                    <i class="fas fa-comment text-gray-400 mr-1"></i>{{ $article->comments_count ?? 0 }}
+                                </span>
+                                <span class="text-xs text-gray-500 flex items-center">
+                                    <i class="fas fa-heart text-gray-400 mr-1"></i>{{ $article->likes_count ?? 0 }}
+                                </span>
                                 <span class="text-xs text-gray-500">{{ $article->views_count ?? 0 }} views</span>
                                 <button onclick="removeBookmark('{{ $article->slug }}')" 
                                         class="text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity" 

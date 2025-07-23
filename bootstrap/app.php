@@ -19,6 +19,7 @@ return Application::configure(basePath: $basePath)
         $middleware->web(append: [
             \App\Http\Middleware\CacheControlMiddleware::class,
             \App\Http\Middleware\WikiSecurity::class,
+            \App\Http\Middleware\SecureCookieMiddleware::class,
         ]);
         
         $middleware->alias([

@@ -22,7 +22,7 @@
     <!-- Additional SEO Meta Tags -->
     <meta name="distribution" content="global">
     <meta name="rating" content="general">
-    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="format-detection" content="telephone=no">
     <meta name="HandheldFriendly" content="true">
     <meta name="MobileOptimized" content="width">
@@ -169,6 +169,53 @@
                             Registrieren
                         </a>
                     @else
+                        <!-- Notification Bell -->
+                        <div class="relative" x-data="notificationData()" x-init="init()">
+                            <button @click="open = !open; if(open) { fetchNotifications(); }" class="relative flex items-center justify-center w-10 h-10 text-medium-contrast hover:text-high-contrast focus-ki rounded-full transition-colors" aria-label="Benachrichtigungen">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3.5 3.5-1.5-1.5M7.5 20.5a2.5 2.5 0 002.5-2.5h-2.5v2.5zM21 16a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9z"/>
+                                </svg>
+                                <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]"></span>
+                            </button>
+                            
+                            <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-3 w-80 modern-card-compact py-2 z-50 animate-modern-scale max-h-96 overflow-y-auto">
+                                <div class="px-4 py-2 border-b border-neutral-100">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-semibold text-neutral-900">Benachrichtigungen</h3>
+                                        <button @click="markAllAsRead()" x-show="unreadCount > 0" class="text-xs text-primary-600 hover:text-primary-800">
+                                            Alle als gelesen markieren
+                                        </button>
+                                    </div>
+                                </div>
+                                <div x-show="notifications.length === 0" class="px-4 py-8 text-center text-sm text-neutral-500">
+                                    Keine Benachrichtigungen
+                                </div>
+                                <template x-for="notification in notifications" :key="notification.id">
+                                    <div class="px-4 py-3 hover:bg-neutral-50 border-b border-neutral-50" :class="{ 'bg-blue-50': !notification.read_at }">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="flex-shrink-0">
+                                                <i :class="notification.data.icon || 'fas fa-bell'" class="w-4 h-4" :class="notification.data.color || 'text-gray-600'"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm text-neutral-900" x-text="notification.data.message"></p>
+                                                <p class="text-xs text-neutral-500 mt-1" x-text="formatDate(notification.created_at)"></p>
+                                            </div>
+                                            <div class="flex-shrink-0 flex items-center space-x-1">
+                                                <button @click="window.location.href = notification.data.url" class="text-xs text-primary-600 hover:text-primary-800">
+                                                    Ansehen
+                                                </button>
+                                                <button x-show="!notification.read_at" @click="markAsRead(notification.id)" class="text-xs text-neutral-400 hover:text-neutral-600">
+                                                    ✓
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        <!-- User Menu -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center space-x-2 text-medium-contrast hover:text-high-contrast focus-ki" aria-label="Benutzermenü öffnen" aria-expanded="false" x-bind:aria-expanded="open" aria-haspopup="true">
                                 <span>{{ Auth::user()->name }}</span>
@@ -342,6 +389,9 @@
         </div>
     </footer>
 
+    <!-- Early Console Cleanup (vor allen anderen Scripts) -->
+    <script src="{{ asset('js/console-early-cleanup.js') }}"></script>
+    
     <!-- Klaro Cookie Consent -->
     <script src="{{ asset('js/klaro-config.js') }}"></script>
     <script defer src="{{ asset('js/klaro.js') }}"></script>

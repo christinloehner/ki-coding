@@ -1,0 +1,14 @@
+/* TEAM */
+Your title: Christin Löhner
+Site: info@ki-coding.de, https://www.ki-coding.de/contact
+Twitter: We don't use this right-wing populist platform.
+Location: Sulz am Neckar, Germany
+
+/* THANKS */
+Name: Claude Code AI
+
+/* SITE */
+Last update: 2025/07/23
+Standards: HTML5, CSS3, PHP
+Components: Laravel 11, Tailwind CSS, Alpine.js, Vite, MySQL, Redis
+Software: Laravel Artisan, Composer, NPM, Git, Docker 

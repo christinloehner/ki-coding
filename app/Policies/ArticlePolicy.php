@@ -105,7 +105,7 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article): bool
     {
-        return $user->can('admin access');
+        return $user->can('access admin panel');
     }
 
     /**
@@ -147,7 +147,7 @@ class ArticlePolicy
 
         // If no article is provided (create case), check general publish permission
         if (!$article) {
-            return $user->hasPermissionTo('publish articles') || $user->hasRole(['editor', 'moderator', 'admin']);
+            return $user->hasPermissionTo('publish articles');
         }
 
         // Authors can publish their own articles if they have general publish permission

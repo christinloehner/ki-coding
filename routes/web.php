@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Wiki\WikiController;
 use App\Http\Controllers\Wiki\ArticleController;
@@ -52,6 +53,14 @@ Route::get('/imprint', function () {
     return view('pages.imprint');
 })->name('imprint');
 
+Route::get('/security-policy', function () {
+    return view('pages.security-policy');
+})->name('security-policy');
+
+Route::get('/security-acknowledgments', function () {
+    return view('pages.security-acknowledgments');
+})->name('security-acknowledgments');
+
 // Kontaktformular
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
@@ -84,6 +93,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/update-privacy', [ProfileController::class, 'updatePrivacy'])->name('profile.update-privacy');
     Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
     Route::delete('/profile/remove-avatar', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
+    
+    // Notification Routes
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('unread-count');
+        Route::patch('/{id}/read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
+        Route::patch('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // Public Profile Routes
@@ -290,7 +308,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'wiki.se
     });
     
     // Role Management Routes (Admins only)
-    Route::middleware('permission:admin access')->group(function () {
+    Route::middleware('permission:access admin panel')->group(function () {
         Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
         Route::get('roles/{role}/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'permissions'])->name('roles.permissions');
         Route::post('roles/{role}/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'updatePermissions'])->name('roles.update-permissions');
@@ -298,7 +316,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'wiki.se
 });
 
 // Legacy Admin Routes (Admins only) - keeping for backwards compatibility
-Route::prefix('wiki/admin')->name('wiki.admin.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'permission:admin access'])->group(function () {
+Route::prefix('wiki/admin')->name('wiki.admin.')->middleware(['auth', 'verified', 'wiki.security', 'check.ban', 'permission:access admin panel'])->group(function () {
     
     // Admin Dashboard
     Route::get('/', [ModerationController::class, 'adminDashboard'])->name('dashboard');

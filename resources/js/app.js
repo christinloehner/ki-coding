@@ -1,4 +1,6 @@
 import './bootstrap';
+import './console-cleanup';
+import './notifications';
 
 import Alpine from 'alpinejs';
 

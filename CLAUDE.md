@@ -33,11 +33,12 @@ Anweisungen für Claude Code bei der Arbeit mit diesem Repository.
 3. Behebe nur exakt die Probleme, die beschrieben werden!
 4. Schreibe nur den Code, der für die Problemlösung notwendig ist!
 5. Erstelle KEINE neuen .md Dateien!
-6. Es ist dir nicht erlaubt docker commands oder php artisan commands aufzurufen! Du rufst nur ./cache-build.sh auf um die Caches zu leeren und die templates zu builden.
+6. Es ist dir erlaubt 'docker exec --user web www.ki-coding.de-php bash -c "cd /var/www/current ; php artisan ..."' commands auszuführen, falls nötig.
+7. Um Migrationen auszuführen oder Caches zu leeren, gibt es das script './cache-build.sh'.
 
 ### Testing und Deployment
 **SEHR WICHTIG:**
-1. Führe nach jeder Änderung oder Implementierung ./cache-build.sh aus, um die Caches zu leeren!
+1. Führe nach jeder Änderung oder Implementierung ./cache-build.sh aus, um die Migrationen zu machen, Caches zu leeren und die templates zu builden!
 2. Führe nach jeder Änderung Funktionstests und Code-Quality-Tests durch!
 3. Die Webseite kann lokal unter https://dev.ki-coding.de getestet werden.
 4. Wir arbeiten auf einem dev System. 
@@ -48,6 +49,15 @@ Anweisungen für Claude Code bei der Arbeit mit diesem Repository.
 1. Achte auf deine Limits! Mache kleine Schritte!
 2. Frage nach jedem Schritt, ob du fortfahren sollst!
 3. TESTEN, TESTEN, TESTEN! Teste nach jeder Änderung oder Implementierung, ob auf https://dev.ki-coding.de noch alles funktioniert!
+
+### Wichtiger Hinwis
+**SEHR WICHTIG**
+1. Das Projekt läuft in einer Docker Umgebung!
+2. Der Docker Container, wo PHP Befehle ausgeführt werden können, heißt 'www.ki-coding.de-php'.
+3. Du darfst nur als user 'web' in den Docker Container hinein gehen!
+4. Das Verzeichnis in dem das Projekt im Container läuft, ist '/var/www/current'.
+5. Daraus ergibt sich für 'php artisan ...' dieses Command: 'docker exec --user web www.ki-coding.de-php bash -c "cd /var/www/current ; php artisan ..."'
+6. ABER: Du bearbeitest Dateien nur im lokalen Dateisystem, niemals innerhalb eines Docker Containers!
 
 ## Git-Workflow
 **SEHR WICHTIG:** Wir arbeiten grunsätzlich nur im Branch "dev". Außerdem arbeiten wir mit einem selbst gehosteten Gitlab, nicht mit github!
