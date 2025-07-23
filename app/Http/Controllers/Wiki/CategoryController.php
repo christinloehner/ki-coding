@@ -112,6 +112,7 @@ class CategoryController extends Controller
 
         $query = $category->articles()
             ->with(['user', 'category', 'tags'])
+            ->withCount(['comments'])
             ->published();
 
         // Sort

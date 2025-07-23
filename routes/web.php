@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Wiki\WikiController;
 use App\Http\Controllers\Wiki\ArticleController;
@@ -61,6 +62,15 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/dashboard/bookmarks', [DashboardController::class, 'bookmarks'])->middleware(['auth', 'verified'])->name('dashboard.bookmarks');
+Route::get('/dashboard/api-tokens', [ApiTokenController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard.api-tokens');
+Route::get('/dashboard/api-tokens/index', [ApiTokenController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard.api-tokens.index');
+Route::post('/dashboard/api-tokens', [ApiTokenController::class, 'store'])->middleware(['auth', 'verified'])->name('dashboard.api-tokens.store');
+Route::delete('/dashboard/api-tokens/{id}', [ApiTokenController::class, 'destroy'])->middleware(['auth', 'verified'])->name('dashboard.api-tokens.destroy');
+
+// API Dokumentation Route
+Route::get('/dashboard/api-documentation', function () {
+    return view('dashboard.api-documentation');
+})->middleware(['auth', 'verified'])->name('dashboard.api-documentation');
 
 // Profile Routes
 Route::middleware('auth')->group(function () {

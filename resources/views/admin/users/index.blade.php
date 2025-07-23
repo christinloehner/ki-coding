@@ -20,7 +20,7 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Total Users</p>
+                    <p class="text-sm font-medium text-gray-500">Benutzer*innen</p>
                     <p class="text-2xl font-semibold text-gray-900">{{ $users->total() }}</p>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Admin*innen</p>
+                    <p class="text-sm font-medium text-gray-500">Administrator*innen</p>
                     <p class="text-2xl font-semibold text-gray-900">{{ \App\Models\User::role('admin')->count() }}</p>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Moderators</p>
+                    <p class="text-sm font-medium text-gray-500">Moderator*innen</p>
                     <p class="text-2xl font-semibold text-gray-900">{{ \App\Models\User::role('moderator')->count() }}</p>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Banned Users</p>
+                    <p class="text-sm font-medium text-gray-500">Gebannte Benutzer*innen</p>
                     <p class="text-2xl font-semibold text-gray-900">{{ \App\Models\User::where('is_banned', true)->count() }}</p>
                 </div>
             </div>
@@ -72,7 +72,7 @@
     <!-- Users Table -->
     <div class="bg-white shadow-sm rounded-lg border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">All Users</h3>
+            <h3 class="text-lg font-medium text-gray-900">Alle Benutzer*innen</h3>
         </div>
         
         <div class="overflow-x-auto">

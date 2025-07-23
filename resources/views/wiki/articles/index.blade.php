@@ -23,7 +23,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- Filters -->
-    <div class="bg-white rounded-lg shadow-primary p-6 mb-8">
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
         <form method="GET" action="{{ route('wiki.articles.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <!-- Search -->
             <div>
@@ -72,23 +72,27 @@
     <!-- Articles Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($articles as $article)
-            <article class="card hover:shadow-lg transition-all duration-300 border border-gray-200 shadow-primary">
+            <article class="card hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer" onclick="window.location.href='{{ route('wiki.articles.show', $article->slug) }}'">
                 <div class="card-body">
                     <div class="flex items-center mb-3">
-                        <span class="badge badge-secondary mr-2">{{ $article->category->name }}</span>
+                        <span class="badge badge-secondary mr-2">{{ $article->category->name ?? 'Unkategorisiert' }}</span>
                         <span class="text-sm text-gray-500">{{ $article->published_at->format('d.m.Y') }}</span>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">
-                        <a href="{{ route('wiki.articles.show', $article->slug) }}" class="hover:text-primary-600">
-                            {{ $article->title }}
-                        </a>
+                    <h3 class="text-xl font-semibold mb-3 text-gray-900 hover:text-primary-600 transition-colors duration-300">
+                        {{ $article->title }}
                     </h3>
                     <p class="text-gray-600 mb-4">{{ $article->excerpt }}</p>
                     <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span>von {{ $article->user->name }}</span>
-                        <div class="flex items-center space-x-4">
+                        <span>von <a href="{{ route('wiki.users.show', $article->user->id) }}" class="text-gray-600 hover:text-primary-600 transition-colors duration-300" onclick="event.stopPropagation();">{{ $article->user->name }}</a></span>
+                        <div class="flex items-center space-x-3">
                             <span>{{ $article->reading_time }} min</span>
                             <span>{{ $article->views_count }} Aufrufe</span>
+                            <span title="Kommentare">
+                                <i class="fas fa-comment text-gray-400 mr-1"></i>{{ $article->comments_count ?? 0 }}
+                            </span>
+                            <span title="Likes">
+                                <i class="fas fa-heart text-gray-400 mr-1"></i>{{ $article->likes_count ?? 0 }}
+                            </span>
                         </div>
                     </div>
                     @if($article->tags->count() > 0)

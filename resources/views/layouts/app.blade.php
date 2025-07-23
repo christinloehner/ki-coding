@@ -129,19 +129,19 @@
     </a>
 
     <!-- MODERNER HEADER - Glassmorphism & Kompakt -->
-    <header class="glass-card sticky top-0 z-40 border-none shadow-glass-lg" x-data="{ mobileMenuOpen: false }">
+    <header class="glass-card-header sticky top-0 z-40 border-none shadow-glass-lg" x-data="{ mobileMenuOpen: false }">
         <div class="modern-container">
             <div class="flex justify-between items-center h-14">
                 <!-- MODERNES LOGO -->
                 <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-3 focus-accessible hover-lift-subtle px-2 py-1 rounded-xl">
-                        <img src="{{ asset('images/apb-logo-512.png') }}" alt="KI-Coding Logo" class="h-10 w-10">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-3 focus-accessible px-2 py-1 rounded-xl" aria-label="KI-Coding Startseite">
+                        <img src="{{ asset('images/apb-logo-512.png') }}" alt="KI-Coding - Kostenlose KI-Programmierung Tutorials" class="h-10 w-10">
                         <span class="text-xl font-display font-bold bg-gradient-logo bg-clip-text text-transparent">KI-Coding</span>
                     </a>
                 </div>
 
                 <!-- MODERNE DESKTOP NAVIGATION - Kompakter -->
-                <nav class="hidden md:flex space-x-1">
+                <nav class="hidden md:flex space-x-1" role="navigation" aria-label="Hauptnavigation">
                     <a href="{{ route('home') }}" class="nav-link @if(request()->routeIs('home')) active @endif">
                         Home
                     </a>
@@ -170,39 +170,39 @@
                         </a>
                     @else
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center space-x-2 text-medium-contrast hover:text-high-contrast focus-ki">
+                            <button @click="open = !open" class="flex items-center space-x-2 text-medium-contrast hover:text-high-contrast focus-ki" aria-label="Benutzermenü öffnen" aria-expanded="false" x-bind:aria-expanded="open" aria-haspopup="true">
                                 <span>{{ Auth::user()->name }}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </button>
                             
-                            <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-3 w-56 modern-card-compact py-2 z-50 animate-modern-scale">
-                                <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-primary-50 hover:text-primary-700 rounded-lg mx-2 transition-colors">
-                                    <i class="fas fa-tachometer-alt w-4 mr-3"></i>Dashboard
+                            <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-3 w-56 modern-card-compact py-2 z-50 animate-modern-scale" role="menu" aria-labelledby="user-menu-button">
+                                <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-primary-50 hover:text-primary-700 rounded-lg mx-2 transition-colors" role="menuitem">
+                                    <i class="fas fa-tachometer-alt w-4 mr-3" aria-hidden="true"></i>Dashboard
                                 </a>
                                 @can('view users')
-                                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-secondary-50 hover:text-secondary-700 rounded-lg mx-2 transition-colors">
-                                    <i class="fas fa-users w-4 mr-3"></i>User Management
+                                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-secondary-50 hover:text-secondary-700 rounded-lg mx-2 transition-colors" role="menuitem">
+                                    <i class="fas fa-users w-4 mr-3" aria-hidden="true"></i>User Management
                                 </a>
                                 @endcan
                                 
                                 @can('edit all articles')
-                                <a href="{{ route('admin.articles.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-accent-50 hover:text-accent-700 rounded-lg mx-2 transition-colors">
-                                    <i class="fas fa-newspaper w-4 mr-3"></i>Article Management
+                                <a href="{{ route('admin.articles.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-accent-50 hover:text-accent-700 rounded-lg mx-2 transition-colors" role="menuitem">
+                                    <i class="fas fa-newspaper w-4 mr-3" aria-hidden="true"></i>Article Management
                                 </a>
                                 @endcan
                                 
                                 @hasrole('admin')
-                                <a href="{{ route('admin.roles.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-warning-50 hover:text-warning-700 rounded-lg mx-2 transition-colors">
-                                    <i class="fas fa-shield-alt w-4 mr-3"></i>Role Management
+                                <a href="{{ route('admin.roles.index') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-warning-50 hover:text-warning-700 rounded-lg mx-2 transition-colors" role="menuitem">
+                                    <i class="fas fa-shield-alt w-4 mr-3" aria-hidden="true"></i>Role Management
                                 </a>
                                 @endhasrole
                                 
                                 <div class="border-t border-neutral-100 my-2 mx-2"></div>
                                 
-                                <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg mx-2 transition-colors">
-                                    <i class="fas fa-user w-4 mr-3"></i>Mein Profil
+                                <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg mx-2 transition-colors" role="menuitem">
+                                    <i class="fas fa-user w-4 mr-3" aria-hidden="true"></i>Mein Profil
                                 </a>
                                 <a href="{{ route('profile.edit-profile') }}" class="block px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg mx-2 transition-colors">
                                     <i class="fas fa-edit w-4 mr-3"></i>Profil bearbeiten
@@ -222,26 +222,27 @@
                 </div>
 
                 <!-- MODERNER MOBILE MENU BUTTON -->
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl focus-accessible transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl focus-accessible transition-all" aria-label="Mobilmenü" aria-expanded="false" x-bind:aria-expanded="mobileMenuOpen">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
+                    <span class="sr-only" x-text="mobileMenuOpen ? 'Menü schließen' : 'Menü öffnen'"></span>
                 </button>
             </div>
         </div>
 
         <!-- MODERNE MOBILE NAVIGATION -->
-        <div x-show="mobileMenuOpen" x-cloak class="md:hidden glass-card mt-2 mx-4 rounded-2xl animate-modern-scale">
+        <div x-show="mobileMenuOpen" x-cloak class="md:hidden glass-card mt-2 mx-4 rounded-2xl animate-modern-scale" role="navigation" aria-label="Mobile Navigation">
             <div class="px-4 py-4 space-y-1">
-                <a href="{{ route('home') }}" class="mobile-nav-link @if(request()->routeIs('home')) active @endif">
-                    <i class="fas fa-home w-4 mr-3"></i>Home
+                <a href="{{ route('home') }}" class="mobile-nav-link @if(request()->routeIs('home')) active @endif" aria-current="@if(request()->routeIs('home')) page @endif">
+                    <i class="fas fa-home w-4 mr-3" aria-hidden="true"></i>Home
                 </a>
-                <a href="{{ route('wiki.index') }}" class="mobile-nav-link @if(request()->routeIs('wiki.*')) active @endif">
-                    <i class="fas fa-book w-4 mr-3"></i>Wiki
+                <a href="{{ route('wiki.index') }}" class="mobile-nav-link @if(request()->routeIs('wiki.*')) active @endif" aria-current="@if(request()->routeIs('wiki.*')) page @endif">
+                    <i class="fas fa-book w-4 mr-3" aria-hidden="true"></i>Wiki
                 </a>
-                <a href="{{ route('faq') }}" class="mobile-nav-link @if(request()->routeIs('faq')) active @endif">
-                    <i class="fas fa-question-circle w-4 mr-3"></i>FAQ
+                <a href="{{ route('faq') }}" class="mobile-nav-link @if(request()->routeIs('faq')) active @endif" aria-current="@if(request()->routeIs('faq')) page @endif">
+                    <i class="fas fa-question-circle w-4 mr-3" aria-hidden="true"></i>FAQ
                 </a>
                 <a href="{{ route('about') }}" class="mobile-nav-link @if(request()->routeIs('about')) active @endif">
                     <i class="fas fa-info-circle w-4 mr-3"></i>Über uns
@@ -346,6 +347,80 @@
     <script defer src="{{ asset('js/klaro.js') }}"></script>
     
     
+    <!-- MODERNER NACH-OBEN BUTTON -->
+    <button id="scrollToTopBtn" 
+            class="fixed bottom-6 right-6 w-14 h-14 glass-card hover:glass-card-dark bg-primary-500/20 hover:bg-primary-500/80 backdrop-blur-lg border border-primary-300/30 hover:border-primary-400/50 rounded-full shadow-2xl hover:shadow-primary transition-all duration-300 z-50 opacity-0 invisible translate-y-4 hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-primary-200/50"
+            aria-label="Nach oben scrollen"
+            title="Nach oben scrollen">
+        <svg class="w-6 h-6 text-primary-700 hover:text-white transition-colors duration-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        </svg>
+    </button>
+
+    <script>
+        // MODERNER SCROLL-TO-TOP BUTTON mit sanften Animationen
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            let isVisible = false;
+            
+            // Show/Hide button based on scroll position
+            function toggleScrollButton() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 150 && !isVisible) {
+                    // Show button with modern animation
+                    scrollToTopBtn.style.opacity = '1';
+                    scrollToTopBtn.style.visibility = 'visible';
+                    scrollToTopBtn.style.transform = 'translateY(0)';
+                    isVisible = true;
+                } else if (scrollTop <= 150 && isVisible) {
+                    // Hide button with smooth animation
+                    scrollToTopBtn.style.opacity = '0';
+                    scrollToTopBtn.style.visibility = 'hidden';
+                    scrollToTopBtn.style.transform = 'translateY(16px)';
+                    isVisible = false;
+                }
+            }
+            
+            // Smooth scroll to top function
+            function scrollToTop() {
+                const scrollDuration = 600;
+                const scrollHeight = window.pageYOffset;
+                const scrollStep = Math.PI / (scrollDuration / 15);
+                const cosParameter = scrollHeight / 2;
+                let scrollCount = 0;
+                let scrollMargin;
+                
+                function step() {
+                    setTimeout(() => {
+                        if (window.pageYOffset !== 0) {
+                            scrollMargin = cosParameter - cosParameter * Math.cos(scrollCount);
+                            window.scrollTo(0, scrollHeight - scrollMargin);
+                            scrollCount += scrollStep;
+                            step();
+                        }
+                    }, 15);
+                }
+                step();
+            }
+            
+            // Event listeners
+            window.addEventListener('scroll', toggleScrollButton);
+            scrollToTopBtn.addEventListener('click', scrollToTop);
+            
+            // Keyboard accessibility
+            scrollToTopBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    scrollToTop();
+                }
+            });
+            
+            // Initial check on page load
+            toggleScrollButton();
+        });
+    </script>
+
     <!-- Scripts -->
     @stack('scripts')
 </body>

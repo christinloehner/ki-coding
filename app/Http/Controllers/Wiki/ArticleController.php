@@ -31,6 +31,7 @@ class ArticleController extends Controller
     public function index(Request $request): View
     {
         $query = Article::with(['user', 'category', 'tags'])
+            ->withCount(['comments'])
             ->published();
 
         // Filter by category

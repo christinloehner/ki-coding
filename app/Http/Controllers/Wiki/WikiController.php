@@ -21,18 +21,21 @@ class WikiController extends Controller
             $featuredArticles = Article::where('status', 'published')
                 ->where('is_featured', true)
                 ->with(['user', 'category', 'tags'])
+                ->withCount(['comments'])
                 ->latest('published_at')
                 ->take(6)
                 ->get();
 
             $recentArticles = Article::where('status', 'published')
                 ->with(['user', 'category', 'tags'])
+                ->withCount(['comments'])
                 ->latest('published_at')
                 ->take(10)
                 ->get();
 
             $popularArticles = Article::where('status', 'published')
                 ->with(['user', 'category', 'tags'])
+                ->withCount(['comments'])
                 ->orderBy('views_count', 'desc')
                 ->take(5)
                 ->get();

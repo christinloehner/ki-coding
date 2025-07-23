@@ -1,7 +1,8 @@
 # 🤖 KI-Coding.de - Community Wiki Platform
 
-[![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
-[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Laravel](https://img.shields.io/badge/Laravel-12.21.0-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![PHPUnit](https://img.shields.io/badge/PHPUnit-12.2.7-366488?style=for-the-badge&logo=php&logoColor=white)](https://phpunit.de)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Code Coverage](https://gitlab.apboard.de/private/ki-coding/badges/dev/coverage.svg)](https://gitlab.apboard.de/private/ki-coding/-/commits/dev)
@@ -90,7 +91,7 @@ ADMIN_NAME="Your Admin Name"
 
 | Komponente | Technologie | Version |
 |------------|-------------|---------|
-| **Backend** | Laravel | 12.0 |
+| **Backend** | Laravel | 12.21.0 |
 | **Frontend** | Tailwind CSS + Vite | 3.4+ |
 | **Datenbank** | MySQL/PostgreSQL | 8.0+ / 14+ |
 | **Search Engine** | Meilisearch | 1.5+ |
@@ -104,8 +105,8 @@ ADMIN_NAME="Your Admin Name"
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │     Backend     │    │    Database     │
 │                 │    │                 │    │                 │
-│ • Tailwind CSS  │◄───┤ • Laravel 12    │◄───┤ • MySQL/PostgreSQL
-│ • Vite Build    │    │ • PHP 8.2+      │    │ • Redis Cache   │
+│ • Tailwind CSS  │◄───┤ • Laravel 12.21 │◄───┤ • MySQL/PostgreSQL
+│ • Vite Build    │    │ • PHP 8.4+      │    │ • Redis Cache   │
 │ • Alpine.js     │    │ • Spatie Perms  │    │ • Meilisearch   │
 │ • Responsive    │    │ • Queue System  │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
@@ -319,7 +320,7 @@ docker exec --user web www.ki-coding.de-php bash -c "cd /var/www/current ; php a
 
 ```yaml
 services:
-  php:         # PHP 8.2+ with Laravel
+  php:         # PHP 8.4+ with Laravel
   http:        # Apache Web Server
   db:          # MySQL/PostgreSQL Database
   redis:       # Cache & Session Storage
@@ -406,14 +407,15 @@ services:
 ## 📊 Projekt-Statistiken
 
 ```
-📁 Codebase Size:    ~50,000 Zeilen
-🧩 Components:       80+ Blade Components
+📁 Codebase Size:    ~50,000+ Zeilen
+🧩 Components:       80+ Blade Components  
 🎯 Features:         25+ Hauptfeatures
 🔐 Permissions:      80+ Granulare Rechte
 🎨 UI Components:    40+ Wiederverwendbare UI-Elemente
 📝 Database Tables:  25+ Optimierte Tabellen
-🧪 Test Coverage:    85%+ Code Coverage
+🧪 Test Suite:       13 Test Files (PHPUnit 12.2.7)
 ⚡ Performance:      < 200ms Average Response
+🚀 Framework:        Laravel 12.21.0 + PHP 8.4
 ```
 
 ---

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_BASE_PATH')) {
             $this->app->useStoragePath(env('APP_BASE_PATH') . '/storage');
         }
+
+        Route::middleware('api')
+            ->prefix('api')
+            ->group(base_path('routes/api.php'));
     }
 }

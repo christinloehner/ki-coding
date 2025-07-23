@@ -203,7 +203,7 @@
     <!-- Articles -->
     <div class="space-y-6">
         @forelse($articles as $article)
-            <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-300 hover:scale-102 cursor-pointer" onclick="window.location.href='{{ route('wiki.articles.show', $article->slug) }}'">
                 <div class="flex items-start justify-between">
                     <div class="flex-1">
                         <div class="flex items-center space-x-2 mb-2">
@@ -214,17 +214,15 @@
                                 <span class="badge badge-primary">Featured</span>
                             @endif
                             @if($article->category)
-                                <span class="badge badge-secondary">{{ $article->category->name }}</span>
+                                <span class="badge badge-secondary">{{ $article->category->name ?? 'Unkategorisiert' }}</span>
                             @endif
                             <span class="text-sm text-gray-500">
                                 {{ $article->published_at ? $article->published_at->format('d.m.Y') : $article->created_at->format('d.m.Y') }}
                             </span>
                         </div>
 
-                        <h2 class="text-xl font-semibold text-gray-900 mb-2">
-                            <a href="{{ route('wiki.articles.show', $article->slug) }}" class="hover:text-indigo-600">
-                                {{ $article->title }}
-                            </a>
+                        <h2 class="text-xl font-semibold text-gray-900 mb-2 hover:text-indigo-600 transition-colors duration-300">
+                            {{ $article->title }}
                         </h2>
 
                         @if($article->excerpt)
@@ -232,20 +230,24 @@
                         @endif
 
                         <div class="flex items-center justify-between text-sm text-gray-500">
-                            <div class="flex items-center space-x-4">
-                                <span>von {{ $article->user->name ?? 'Unbekannt' }}</span>
-                                <span>{{ $article->reading_time ?? 5 }} min Lesezeit</span>
+                            <div class="flex items-center space-x-3">
+                                <span>von <a href="{{ route('wiki.users.show', $article->user->id) }}" class="text-gray-600 hover:text-primary-600 transition-colors duration-300" onclick="event.stopPropagation();">{{ $article->user->name ?? 'Unbekannt' }}</a></span>
+                                <span>{{ $article->reading_time ?? 5 }} min</span>
                                 <span>{{ $article->views_count ?? 0 }} Aufrufe</span>
-                                @if($article->comments_count > 0)
-                                    <span>{{ $article->comments_count }} Kommentare</span>
-                                @endif
+                                <span title="Kommentare">
+                                    <i class="fas fa-comment text-gray-400 mr-1"></i>{{ $article->comments_count ?? 0 }}
+                                </span>
+                                <span title="Likes">
+                                    <i class="fas fa-heart text-gray-400 mr-1"></i>{{ $article->likes_count ?? 0 }}
+                                </span>
                             </div>
 
                             @if($article->tags && $article->tags->count() > 1)
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($article->tags->where('id', '!=', $tag->id)->take(2) as $otherTag)
                                         <a href="{{ route('wiki.tags.show', $otherTag->slug) }}"
-                                           class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 hover:bg-indigo-100 hover:text-indigo-800">
+                                           class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 hover:bg-indigo-100 hover:text-indigo-800"
+                                           onclick="event.stopPropagation();">
                                             {{ $otherTag->name }}
                                         </a>
                                     @endforeach
@@ -259,15 +261,12 @@
 
                     <div class="ml-6 flex items-center space-x-2">
                         @can('update', $article)
-                            <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="text-gray-400 hover:text-gray-600">
+                            <a href="{{ route('wiki.articles.edit', $article->slug) }}" class="text-gray-400 hover:text-gray-600" onclick="event.stopPropagation();">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                             </a>
                         @endcan
-                        <a href="{{ route('wiki.articles.show', $article->slug) }}" class="btn-ki-outline-sm">
-                            Lesen
-                        </a>
                     </div>
                 </div>
             </article>

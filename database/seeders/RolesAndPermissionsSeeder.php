@@ -81,16 +81,19 @@ class RolesAndPermissionsSeeder extends Seeder
             'view reports',
             'handle reports',
             'manage spam',
+            
+            // API permissions
+            'use api',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // Create roles and assign permissions
         
         // User role - basic permissions
-        $userRole = Role::create(['name' => 'user']);
+        $userRole = Role::firstOrCreate(['name' => 'user']);
         $userRole->givePermissionTo([
             'view articles',
             'view categories',
@@ -103,7 +106,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Contributor role - can create articles
-        $contributorRole = Role::create(['name' => 'contributor']);
+        $contributorRole = Role::firstOrCreate(['name' => 'contributor']);
         $contributorRole->givePermissionTo([
             'view articles',
             'create articles',
@@ -120,7 +123,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Editor role - can edit articles and moderate comments
-        $editorRole = Role::create(['name' => 'editor']);
+        $editorRole = Role::firstOrCreate(['name' => 'editor']);
         $editorRole->givePermissionTo([
             'view articles',
             'create articles',
@@ -153,7 +156,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Moderator role - can moderate all content and manage users
-        $moderatorRole = Role::create(['name' => 'moderator']);
+        $moderatorRole = Role::firstOrCreate(['name' => 'moderator']);
         $moderatorRole->givePermissionTo([
             'view articles',
             'create articles',
@@ -198,7 +201,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Admin role - all permissions
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
 
         $this->command->info('Roles and permissions created successfully!');

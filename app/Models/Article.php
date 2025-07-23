@@ -280,8 +280,8 @@ class Article extends Model
         $originalSlug = $slug;
         $counter = 1;
         
-        // Check if slug exists and increment counter until unique
-        while (static::where('slug', $slug)->exists()) {
+        // Check if slug exists and increment counter until unique (ignore soft deleted)
+        while (static::where('slug', $slug)->whereNull('deleted_at')->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
         }

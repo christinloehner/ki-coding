@@ -35,40 +35,44 @@
             
             <!-- Search Bar -->
             <div class="max-w-2xl mx-auto mb-8">
-                <form action="{{ route('wiki.search') }}" method="GET" class="relative">
+                <form action="{{ route('wiki.search') }}" method="GET" class="relative" role="search">
                     <div class="relative">
+                        <label for="wiki-search" class="sr-only">Wiki durchsuchen</label>
                         <input 
+                            id="wiki-search"
                             type="text" 
                             name="q" 
                             placeholder="Suche nach Artikeln, Kategorien oder Tags..." 
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-lg transition-all duration-300"
                             value="{{ request('q') }}"
+                            aria-describedby="search-help"
                         >
-                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-600 transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-600 transition-colors duration-300" aria-label="Suche starten">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </button>
                     </div>
+                    <div id="search-help" class="sr-only">Durchsuche alle Wiki-Artikel, Kategorien und Tags nach relevanten Inhalten</div>
                 </form>
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-                <div class="bg-white rounded-lg p-4 shadow-primary hover:shadow-lg transition-all duration-300">
-                    <div class="text-2xl font-bold text-primary-600">{{ $stats['articles'] }}</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto" role="region" aria-label="Wiki-Statistiken">
+                <div class="bg-white rounded-lg p-4 shadow-primary hover:shadow-lg transition-all duration-300" role="stat">
+                    <div class="text-2xl font-bold text-primary-600" aria-label="{{ $stats['articles'] }} Artikel verfügbar">{{ $stats['articles'] }}</div>
                     <div class="text-sm text-gray-600">Artikel</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 shadow-secondary hover:shadow-lg transition-all duration-300">
-                    <div class="text-2xl font-bold text-secondary-600">{{ $stats['categories'] }}</div>
+                <div class="bg-white rounded-lg p-4 shadow-secondary hover:shadow-lg transition-all duration-300" role="stat">
+                    <div class="text-2xl font-bold text-secondary-600" aria-label="{{ $stats['categories'] }} Kategorien verfügbar">{{ $stats['categories'] }}</div>
                     <div class="text-sm text-gray-600">Kategorien</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 shadow-accent hover:shadow-lg transition-all duration-300">
-                    <div class="text-2xl font-bold text-accent-600">{{ $stats['tags'] }}</div>
+                <div class="bg-white rounded-lg p-4 shadow-accent hover:shadow-lg transition-all duration-300" role="stat">
+                    <div class="text-2xl font-bold text-accent-600" aria-label="{{ $stats['tags'] }} Tags verfügbar">{{ $stats['tags'] }}</div>
                     <div class="text-sm text-gray-600">Tags</div>
                 </div>
-                <div class="bg-white rounded-lg p-4 shadow-purple hover:shadow-lg transition-all duration-300">
-                    <div class="text-2xl font-bold text-purple-600">{{ $stats['contributors'] }}</div>
+                <div class="bg-white rounded-lg p-4 shadow-purple hover:shadow-lg transition-all duration-300" role="stat">
+                    <div class="text-2xl font-bold text-purple-600" aria-label="{{ $stats['contributors'] }} Autor*innen aktiv">{{ $stats['contributors'] }}</div>
                     <div class="text-sm text-gray-600">Autor*innen</div>
                 </div>
             </div>
@@ -91,21 +95,29 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($featuredArticles as $article)
-                <article class="card hover:shadow-lg transition-shadow">
+                <article class="card hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer" onclick="window.location.href='{{ route('wiki.articles.show', $article->slug) }}'">
                     <div class="card-body">
                         <div class="flex items-center mb-3">
                             <span class="badge badge-primary mr-2">Featured</span>
-                            <span class="text-sm text-gray-500">{{ $article->category->name }}</span>
+                            <span class="text-sm text-gray-500">{{ $article->category->name ?? 'Unkategorisiert' }}</span>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3">
-                            <a href="{{ route('wiki.articles.show', $article->slug) }}" class="hover:text-primary-600 transition-colors duration-300">
-                                {{ $article->title }}
-                            </a>
+                        <h3 class="text-xl font-semibold mb-3 text-gray-900 hover:text-primary-600 transition-colors duration-300">
+                            {{ $article->title }}
                         </h3>
                         <p class="text-gray-600 mb-4">{{ $article->excerpt }}</p>
                         <div class="flex items-center justify-between text-sm text-gray-500">
-                            <span>{{ $article->user->name }}</span>
-                            <span>{{ $article->reading_time }} min</span>
+                            <a href="{{ route('wiki.users.show', $article->user->id) }}" class="text-gray-600 hover:text-primary-600 transition-colors duration-300" onclick="event.stopPropagation();">
+                                {{ $article->user->name }}
+                            </a>
+                            <div class="flex items-center space-x-3">
+                                <span>{{ $article->reading_time }} min</span>
+                                <span title="Kommentare">
+                                    <i class="fas fa-comment text-gray-400 mr-1"></i>{{ $article->comments_count ?? 0 }}
+                                </span>
+                                <span title="Likes">
+                                    <i class="fas fa-heart text-gray-400 mr-1"></i>{{ $article->likes_count ?? 0 }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </article>
@@ -133,24 +145,28 @@
 
                     <div class="space-y-6">
                         @foreach($recentArticles as $article)
-                            <article class="border-b border-gray-200 pb-6 last:border-b-0">
+                            <article class="border-b border-gray-200 pb-6 last:border-b-0 hover:bg-gray-50 transition-colors duration-300 cursor-pointer p-2 -mx-2 rounded" onclick="window.location.href='{{ route('wiki.articles.show', $article->slug) }}'">
                                 <div class="flex items-start space-x-4">
                                     <div class="flex-1">
                                         <div class="flex items-center mb-2">
-                                            <span class="badge badge-secondary mr-2">{{ $article->category->name }}</span>
+                                            <span class="badge badge-secondary mr-2">{{ $article->category->name ?? 'Unkategorisiert' }}</span>
                                             <span class="text-sm text-gray-500">{{ $article->published_at->format('d.m.Y') }}</span>
                                         </div>
-                                        <h3 class="text-lg font-semibold mb-2">
-                                            <a href="{{ route('wiki.articles.show', $article->slug) }}" class="hover:text-primary-600 transition-colors duration-300">
-                                                {{ $article->title }}
-                                            </a>
+                                        <h3 class="text-lg font-semibold mb-2 text-gray-900 hover:text-primary-600 transition-colors duration-300">
+                                            {{ $article->title }}
                                         </h3>
                                         <p class="text-gray-600 mb-3">{{ $article->excerpt }}</p>
                                         <div class="flex items-center justify-between text-sm text-gray-500">
-                                            <span>von {{ $article->user->name }}</span>
-                                            <div class="flex items-center space-x-4">
+                                            <span>von <a href="{{ route('wiki.users.show', $article->user->id) }}" class="text-gray-600 hover:text-primary-600 transition-colors duration-300" onclick="event.stopPropagation();">{{ $article->user->name }}</a></span>
+                                            <div class="flex items-center space-x-3">
                                                 <span>{{ $article->reading_time }} min</span>
                                                 <span>{{ $article->views_count }} Aufrufe</span>
+                                                <span title="Kommentare">
+                                                    <i class="fas fa-comment text-gray-400 mr-1"></i>{{ $article->comments_count ?? 0 }}
+                                                </span>
+                                                <span title="Likes">
+                                                    <i class="fas fa-heart text-gray-400 mr-1"></i>{{ $article->likes_count ?? 0 }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

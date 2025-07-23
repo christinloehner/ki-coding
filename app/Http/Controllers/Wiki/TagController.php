@@ -42,7 +42,7 @@ class TagController extends Controller
                 $query->where('tags.id', $tag->id);
             })
             ->with(['user', 'category', 'tags'])
-            ->withCount(['comments', 'likes'])
+            ->withCount(['comments'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 

@@ -27,7 +27,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Article Header -->
-    <div class="bg-white rounded-lg shadow-primary mb-6 border-l-4 border-primary-500 overflow-hidden">
+    <div class="bg-white rounded-lg mb-6 border-l-4 border-primary-500 overflow-hidden">
         <!-- Header Top Section -->
         <div class="p-4 sm:p-6">
             <!-- Category and Date Row -->
@@ -209,7 +209,7 @@
     </div>
 
     <!-- Article Content -->
-    <div class="bg-white rounded-lg shadow-primary p-6 mb-6">
+    <div class="bg-white rounded-lg p-6 mb-6">
         <div class="wiki-content">
             @if($article->rendered_content)
                 {!! $article->rendered_content !!}
@@ -222,7 +222,7 @@
     </div>
 
     <!-- Article Actions -->
-    <div class="bg-white rounded-lg shadow-primary p-6 mb-6">
+    <div class="bg-white rounded-lg p-6 mb-6">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-500">War dieser Artikel hilfreich?</span>
@@ -262,7 +262,7 @@
 
     <!-- Comments Section -->
     @if($article->allow_comments ?? true)
-        <div class="bg-white rounded-lg shadow-primary p-6">
+        <div class="bg-white rounded-lg p-6">
             <h3 class="text-lg font-semibold mb-4">Kommentare</h3>
 
             @auth
@@ -291,14 +291,21 @@
             @endauth
 
             <!-- Comments List -->
-            <div class="space-y-6">
+            <div class="space-y-3">
                 @php
                     $topLevelComments = collect();
                     try {
                         $topLevelComments = $article->comments()
                             ->where('status', 'approved')
                             ->whereNull('parent_id')
-                            ->with(['user', 'replies.user', 'replies.replies.user'])
+                            ->with([
+                                'user', 
+                                'replies.user', 
+                                'replies.replies.user', 
+                                'replies.replies.replies.user',
+                                'replies.replies.replies.replies.user',
+                                'replies.replies.replies.replies.replies.user'
+                            ])
                             ->orderBy('created_at', 'desc')
                             ->get();
                     } catch (\Exception $e) {
@@ -320,7 +327,7 @@
 
     <!-- Related Articles -->
     @if($relatedArticles && $relatedArticles->count() > 0)
-        <div class="bg-white rounded-lg shadow-primary p-6 mt-6">
+        <div class="bg-white rounded-lg p-6 mt-6">
             <h3 class="text-lg font-semibold mb-4">Ähnliche Artikel</h3>
             <div class="grid md:grid-cols-3 gap-4">
                 @foreach($relatedArticles as $related)

@@ -131,7 +131,6 @@ auth.json
 # Passwords and tokens
 *password*
 *secret*
-*token*
 *api_key*
 jwt.txt
 oauth.json

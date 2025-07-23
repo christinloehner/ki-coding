@@ -6,80 +6,72 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Welcome Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-display font-bold text-gray-900">
+    <div class="mb-6">
+        <h1 class="text-2xl font-display font-bold text-gray-900">
             Willkommen zurück, {{ Auth::user()->name }}!
         </h1>
-        <p class="mt-2 text-gray-600">
+        <p class="mt-1 text-gray-600 text-sm">
             Hier ist deine persönliche Wiki-Übersicht und deine neuesten Aktivitäten.
         </p>
     </div>
 
     <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         @can('create', App\Models\Article::class)
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white rounded-lg p-4">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
+                    <div class="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center mr-3">
+                        <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm text-gray-500">Meine Artikel</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ $userStats['articles'] ?? 0 }}</p>
+                    <div>
+                        <p class="text-xs text-gray-500">Meine Artikel</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ $userStats['articles'] ?? 0 }}</p>
                     </div>
                 </div>
             </div>
         @endcan
 
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white rounded-lg p-4">
             <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                    </div>
+                <div class="w-6 h-6 bg-secondary-100 rounded-full flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm text-gray-500">Kommentare</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $userStats['comments'] ?? 0 }}</p>
+                <div>
+                    <p class="text-xs text-gray-500">Kommentare</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ $userStats['comments'] ?? 0 }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white rounded-lg p-4">
             <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                    </div>
+                <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm text-gray-500">Aufrufe</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $userStats['views'] ?? 0 }}</p>
+                <div>
+                    <p class="text-xs text-gray-500">Aufrufe</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ $userStats['views'] ?? 0 }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white rounded-lg p-4">
             <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
+                <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm text-gray-500">Reputation</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $userStats['reputation'] ?? 0 }}</p>
+                <div>
+                    <p class="text-xs text-gray-500">Reputation</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ $userStats['reputation'] ?? 0 }}</p>
                 </div>
             </div>
         </div>
@@ -178,144 +170,155 @@
     @endcanany
 
     <!-- Quick Access -->
-    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-6">Schnellzugriff</h2>
+    <div class="bg-white rounded-lg p-4 mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Schnellzugriff</h2>
         
         <!-- Management Links (Obere Reihe) -->
-        <div class="mb-6">
-            <h3 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                <svg class="w-3 h-3 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
                 </svg>
                 Management
             </h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
                 @can('edit all articles')
-                <a href="{{ route('admin.articles.index') }}" class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group">
-                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-200">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('admin.articles.index') }}" class="flex flex-col items-center p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-blue-200">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Article Management</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Articles</span>
                 </a>
                 @endcan
 
-                <a href="{{ route('wiki.categories.index') }}" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors group">
-                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-200">
-                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('wiki.categories.index') }}" class="flex flex-col items-center p-2 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors group">
+                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-purple-200">
+                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Category Management</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Kategorien</span>
                 </a>
 
                 @hasrole('admin')
-                <a href="{{ route('admin.roles.index') }}" class="flex flex-col items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors group">
-                    <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-pink-200">
-                        <svg class="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('admin.roles.index') }}" class="flex flex-col items-center p-2 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors group">
+                    <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-pink-200">
+                        <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Role Management</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Rollen</span>
                 </a>
                 @endhasrole
 
                 @can('view users')
-                <a href="{{ route('admin.users.index') }}" class="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors group">
-                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-red-200">
-                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('admin.users.index') }}" class="flex flex-col items-center p-2 bg-red-50 rounded-lg hover:bg-red-100 transition-colors group">
+                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-red-200">
+                        <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">User Management</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Benutzer</span>
                 </a>
                 @endcan
 
-                <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="flex flex-col items-center p-4 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors group">
-                    <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary-200">
-                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ Auth::user()->username ? route('profile.show', Auth::user()->username) : route('profile.show.id', Auth::user()->id) }}" class="flex flex-col items-center p-2 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors group">
+                    <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-primary-200">
+                        <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Mein Profil</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Profil</span>
                 </a>
+
+                @can('use api')
+                <a href="{{ route('dashboard.api-tokens') }}" class="flex flex-col items-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group">
+                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-200">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7h3a5 5 0 015 5 5 5 0 01-5 5h-3m-6 0H6a5 5 0 01-5-5 5 5 0 015-5h3m-4 5h8"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-medium text-gray-900 text-center">API</span>
+                </a>
+                @endcan
             </div>
         </div>
 
         <!-- Divider -->
-        <div class="border-t border-gray-200 my-6"></div>
+        <div class="border-t border-gray-200 my-4"></div>
 
         <!-- Quick Actions (Untere Reihe) -->
         <div>
-            <h3 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                <svg class="w-3 h-3 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
                 Schnellaktionen
             </h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
                 @can('create', App\Models\Article::class)
-                    <a href="{{ route('wiki.articles.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors group">
-                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-green-200">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('wiki.articles.create') }}" class="flex flex-col items-center p-2 bg-green-50 rounded-lg hover:bg-green-100 transition-colors group">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-green-200">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
                         </div>
-                        <span class="text-sm font-medium text-gray-900 text-center">Neuer Artikel</span>
+                        <span class="text-xs font-medium text-gray-900 text-center">Artikel</span>
                     </a>
                 @endcan
 
                 @can('create', App\Models\Category::class)
-                <a href="{{ route('wiki.categories.create') }}" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors group">
-                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-indigo-200">
-                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('wiki.categories.create') }}" class="flex flex-col items-center p-2 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors group">
+                    <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-indigo-200">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Neue Kategorie</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Kategorie</span>
                 </a>
                 @endcan
 
                 @hasrole('admin')
-                <a href="{{ route('admin.roles.create') }}" class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors group">
-                    <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-yellow-200">
-                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('admin.roles.create') }}" class="flex flex-col items-center p-2 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors group">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-yellow-200">
+                        <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Neue Rolle</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Rolle</span>
                 </a>
                 @endhasrole
 
-                <a href="{{ route('profile.edit-profile') }}" class="flex flex-col items-center p-4 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors group">
-                    <div class="w-10 h-10 bg-secondary-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-secondary-200">
-                        <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('profile.edit-profile') }}" class="flex flex-col items-center p-2 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors group">
+                    <div class="w-8 h-8 bg-secondary-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-secondary-200">
+                        <svg class="w-4 h-4 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Profil bearbeiten</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Bearbeiten</span>
                 </a>
 
-                <a href="{{ route('wiki.search') }}" class="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors group">
-                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-orange-200">
-                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('wiki.search') }}" class="flex flex-col items-center p-2 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors group">
+                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-orange-200">
+                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-900 text-center">Suchen</span>
+                    <span class="text-xs font-medium text-gray-900 text-center">Suchen</span>
                 </a>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- My Articles -->
         @can('create', App\Models\Article::class)
-            <div class="bg-white rounded-lg shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">Meine Artikel</h2>
-                <a href="{{ route('wiki.articles.index', ['author' => Auth::id()]) }}" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+            <div class="bg-white rounded-lg p-4">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-base font-semibold text-gray-900">Meine Artikel</h2>
+                <a href="{{ route('wiki.articles.index', ['author' => Auth::id()]) }}" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">
                     Alle anzeigen
                 </a>
             </div>
@@ -369,15 +372,15 @@
         @endcan
 
         <!-- Bookmarked Articles -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-lg p-4">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-base font-semibold text-gray-900 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                     </svg>
                     Gemerkte Artikel
                 </h2>
-                <a href="{{ route('dashboard.bookmarks') }}" class="text-primary-600 hover:text-primary-800 text-sm font-medium">
+                <a href="{{ route('dashboard.bookmarks') }}" class="text-primary-600 hover:text-primary-800 text-xs font-medium">
                     Alle anzeigen
                 </a>
             </div>
@@ -430,8 +433,8 @@
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Neueste Aktivitäten</h2>
+        <div class="bg-white rounded-lg p-4">
+            <h2 class="text-base font-semibold text-gray-900 mb-3">Neueste Aktivitäten</h2>
 
             @if($recentActivity && $recentActivity->count() > 0)
                 <div class="space-y-3">
@@ -481,33 +484,33 @@
     </div>
 
     <!-- Community Stats -->
-    <div class="mt-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Community-Statistiken</h2>
+    <div class="mt-6 bg-white rounded-lg p-4">
+        <h2 class="text-base font-semibold text-gray-900 mb-3">Community-Statistiken</h2>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
             <div class="text-center">
-                <div class="text-2xl font-bold text-indigo-600">{{ $communityStats['total_articles'] ?? 0 }}</div>
-                <div class="text-sm text-gray-500">Artikel</div>
+                <div class="text-lg font-bold text-indigo-600">{{ $communityStats['total_articles'] ?? 0 }}</div>
+                <div class="text-xs text-gray-500">Artikel</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl font-bold text-green-600">{{ $communityStats['total_users'] ?? 0 }}</div>
-                <div class="text-sm text-gray-500">Benutzer*innen</div>
+                <div class="text-lg font-bold text-green-600">{{ $communityStats['total_users'] ?? 0 }}</div>
+                <div class="text-xs text-gray-500">Benutzer*innen</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl font-bold text-purple-600">{{ $communityStats['total_categories'] ?? 0 }}</div>
-                <div class="text-sm text-gray-500">Kategorien</div>
+                <div class="text-lg font-bold text-purple-600">{{ $communityStats['total_categories'] ?? 0 }}</div>
+                <div class="text-xs text-gray-500">Kategorien</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl font-bold text-orange-600">{{ $communityStats['total_comments'] ?? 0 }}</div>
-                <div class="text-sm text-gray-500">Kommentare</div>
+                <div class="text-lg font-bold text-orange-600">{{ $communityStats['total_comments'] ?? 0 }}</div>
+                <div class="text-xs text-gray-500">Kommentare</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl font-bold text-blue-600">{{ $communityStats['total_views'] ?? 0 }}</div>
-                <div class="text-sm text-gray-500">Aufrufe</div>
+                <div class="text-lg font-bold text-blue-600">{{ $communityStats['total_views'] ?? 0 }}</div>
+                <div class="text-xs text-gray-500">Aufrufe</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl font-bold text-red-600">{{ $communityStats['total_tags'] ?? 0 }}</div>
-                <div class="text-sm text-gray-500">Tags</div>
+                <div class="text-lg font-bold text-red-600">{{ $communityStats['total_tags'] ?? 0 }}</div>
+                <div class="text-xs text-gray-500">Tags</div>
             </div>
         </div>
     </div>
@@ -522,22 +525,22 @@
         @endphp
 
         @if($pendingReports->count() > 0)
-        <div id="moderation-section" class="mt-8 bg-white rounded-lg shadow-sm p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+        <div id="moderation-section" class="mt-6 bg-white rounded-lg p-4">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-semibold text-gray-900 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                     </svg>
                     Artikel-Meldungen ({{ $pendingReports->count() }})
                 </h2>
-                <div class="text-sm text-gray-500">
+                <div class="text-xs text-gray-500">
                     Benötigen deine Überprüfung
                 </div>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-3">
                 @foreach($pendingReports as $report)
-                    <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+                    <div class="border border-red-200 rounded-lg p-3 bg-red-50">
                         <div class="flex items-start justify-between">
                             <div class="flex-1">
                                 <div class="flex items-center space-x-2 mb-2">
