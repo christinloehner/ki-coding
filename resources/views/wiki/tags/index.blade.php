@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Tags - KI-Coding Wiki')
-@section('description', 'Entdecke alle Tags und Schlagwörter der KI-Coding Knowledge Base')
+@section('title', 'KI-Programmierung Tags - Finde Tutorials zu GitHub Copilot, ChatGPT & AI-Coding')
+@section('description', 'Entdecke alle Tags der KI-Programmierung Wiki. Finde schnell Tutorials zu GitHub Copilot, ChatGPT, Claude AI, Prompt Engineering und mehr.')
+@section('keywords', 'KI-Programmierung Tags, GitHub Copilot Tag, ChatGPT Tutorial Tag, AI-Coding Schlagwörter, Claude AI Tag, Prompt Engineering, KI-Tools Tags, Machine Learning Tags, Tutorial Tags')
+@section('robots', 'index, follow')
+
+@section('og_title', 'KI-Programmierung Tags - Alle Tutorial-Themen')
+@section('og_description', 'Durchsuche alle Tags der KI-Programmierung Wiki. GitHub Copilot, ChatGPT, Claude AI und weitere KI-Tools für Entwickler*innen.')
+@section('og_type', 'website')
+@section('og_image', asset('images/tags-social.jpg'))
+
+@section('twitter_title', 'KI-Programmierung Tags - Tutorial-Themen')
+@section('twitter_description', 'Alle Tags: GitHub Copilot, ChatGPT, Claude AI. Finde schnell KI-Programmierung Tutorials.')
 
 @section('content')
 <!-- Hero Header -->

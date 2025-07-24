@@ -1,7 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'Suche' . (request('q') ? ' - ' . request('q') : '') . ' - KI-Coding Wiki')
-@section('description', 'Durchsuche die KI-Coding Knowledge Base nach Artikeln, Kategorien und Tags')
+@section('title', (request('q') ? request('q') . ' - Suchergebnisse' : 'KI-Programmierung Wiki durchsuchen') . ' | GitHub Copilot, ChatGPT & AI-Coding')
+@section('description', request('q') ? 
+    'Suchergebnisse für "' . request('q') . '" in der KI-Programmierung Wiki. GitHub Copilot, ChatGPT, Claude AI Tutorials und Anleitungen.' : 
+    'Durchsuche die KI-Programmierung Wiki. Finde Tutorials zu GitHub Copilot, ChatGPT, Claude AI, Prompt Engineering und mehr.')
+@section('keywords', 'KI-Programmierung Suche, GitHub Copilot Tutorial suchen, ChatGPT Anleitung finden, AI-Coding Hilfe, Claude AI Dokumentation, Prompt Engineering Guide, KI-Tools Suche')
+@section('robots', 'index, follow')
+
+@section('og_title', request('q') ? request('q') . ' - KI-Programmierung Suche' : 'KI-Programmierung Wiki durchsuchen')
+@section('og_description', request('q') ? 
+    'Suchergebnisse für "' . request('q') . '" - GitHub Copilot, ChatGPT, Claude AI Tutorials.' : 
+    'Durchsuche KI-Programmierung Wiki. GitHub Copilot, ChatGPT, Claude AI Tutorials für Entwickler*innen.')
+@section('og_type', 'website')
+@section('og_image', asset('images/search-social.jpg'))
+
+@section('twitter_title', request('q') ? request('q') . ' - KI-Suche' : 'KI-Programmierung Wiki Suche')
+@section('twitter_description', request('q') ? 
+    'Suchergebnisse: "' . request('q') . '" - KI-Programmierung Tutorials.' : 
+    'GitHub Copilot, ChatGPT, Claude AI Tutorials suchen und finden.')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

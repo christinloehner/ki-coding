@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Alle Artikel - KI-Coding Wiki')
-@section('description', 'Durchsuche alle verfügbaren Artikel in unserer KI-Coding Wissensdatenbank.')
+@section('title', 'KI-Programmierung Artikel - Kostenlose Tutorials | GitHub Copilot, ChatGPT & AI-Coding')
+@section('description', 'Entdecke alle KI-Programmierung Artikel und Tutorials. GitHub Copilot, ChatGPT, Claude AI, Prompt Engineering. Kostenlose Anleitungen für Entwickler*innen.')
+@section('keywords', 'KI-Programmierung Artikel, GitHub Copilot Tutorial, ChatGPT Coding, AI-Coding Anleitung, Claude AI Programmierung, Prompt Engineering, KI-Tools Entwickler, Machine Learning Tutorial, Kostenlos lernen')
+@section('robots', 'index, follow')
+
+@section('og_title', 'KI-Programmierung Artikel - Kostenlose Tutorials')
+@section('og_description', 'Alle KI-Programmierung Artikel: GitHub Copilot, ChatGPT, Claude AI Tutorials. Kostenlose Anleitungen für KI-gestütztes Programmieren.')
+@section('og_type', 'website')
+@section('og_image', asset('images/articles-social.jpg'))
+
+@section('twitter_title', 'KI-Programmierung Artikel - Kostenlose Tutorials')
+@section('twitter_description', 'GitHub Copilot, ChatGPT, Claude AI Tutorials. Kostenlose KI-Programmierung Anleitungen für Entwickler*innen.')
 
 @section('content')
 <!-- Hero Header -->

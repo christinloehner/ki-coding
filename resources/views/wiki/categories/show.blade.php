@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
-@section('title', $category->name . ' - KI-Coding Wiki')
-@section('description', $category->description ?? 'Alle Artikel in der Kategorie ' . $category->name)
+@section('title', $category->name . ' - KI-Coding Wiki | Kostenlose ' . $category->name . ' Tutorials')
+@section('description', $category->description ?? 'Entdecke kostenlose ' . $category->name . ' Tutorials und Anleitungen für KI-gestütztes Programmieren. Lerne Schritt-für-Schritt mit praktischen Beispielen.')
+@section('keywords', $category->name . ', KI-Programmierung, Tutorial, Anleitung, AI-Coding, ' . ($category->description ? 'Entwicklung, ' : '') . 'Kostenlos lernen, KI-Tools')
+@section('robots', 'index, follow')
+
+@section('og_title', $category->name . ' Tutorials - KI-Coding Wiki')
+@section('og_description', 'Kostenlose ' . $category->name . ' Tutorials für KI-gestütztes Programmieren. Praktische Anleitungen und Best Practices.')
+@section('og_type', 'website')
+@section('og_image', asset('images/category-social.jpg'))
+
+@section('twitter_title', $category->name . ' - Kostenlose Tutorials')
+@section('twitter_description', 'Lerne ' . $category->name . ' mit kostenlosen Tutorials. KI-gestütztes Programmieren für alle.')
+
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

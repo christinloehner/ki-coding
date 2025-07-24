@@ -872,15 +872,87 @@
     }
 
     [data-theme="dark"] .wiki-content code {
-        @apply bg-neutral-700 text-neutral-100;
+        @apply bg-neutral-700 text-white;
     }
 
     [data-theme="dark"] .wiki-content pre {
-        @apply bg-neutral-900 text-neutral-100;
+        @apply bg-neutral-800 text-white;
+    }
+
+    [data-theme="dark"] .wiki-content pre code {
+        @apply bg-transparent text-white;
     }
 
     [data-theme="dark"] .wiki-content blockquote {
-        @apply text-neutral-400;
+        @apply text-neutral-300 border-l-primary-400 bg-neutral-800/50 pl-4 py-3 rounded-r-md !important;
+    }
+
+    [data-theme="dark"] .wiki-content a {
+        @apply text-primary-400 hover:text-primary-300;
+    }
+
+    [data-theme="dark"] .wiki-content ul,
+    [data-theme="dark"] .wiki-content ol {
+        @apply text-neutral-300;
+    }
+
+    [data-theme="dark"] .wiki-content li {
+        @apply text-neutral-300;
+    }
+
+    /* Weitere Wiki-Content Elemente für Dark Mode */
+    [data-theme="dark"] .wiki-content em {
+        @apply text-neutral-200;
+    }
+
+    [data-theme="dark"] .wiki-content strong {
+        @apply text-neutral-100;
+    }
+
+    [data-theme="dark"] .wiki-content hr {
+        @apply border-neutral-600;
+    }
+
+    [data-theme="dark"] .wiki-content img {
+        @apply opacity-90 hover:opacity-100 transition-opacity;
+    }
+    
+    /* Zusätzliche Prose Klassen für Dark Mode */
+    [data-theme="dark"] .prose blockquote {
+        @apply text-neutral-300 border-l-primary-400 bg-neutral-800/50 pl-4 py-3 rounded-r-md !important;
+    }
+    [data-theme="dark"] .prose a {
+        @apply text-primary-400 hover:text-primary-300;
+    }
+    [data-theme="dark"] .prose ul,
+    [data-theme="dark"] .prose ol {
+        @apply text-neutral-300;
+    }
+    [data-theme="dark"] .prose li {
+        @apply text-neutral-300;
+    }
+    [data-theme="dark"] .prose p {
+        @apply text-neutral-300;
+    }
+    [data-theme="dark"] .prose h1,
+    [data-theme="dark"] .prose h2,
+    [data-theme="dark"] .prose h3,
+    [data-theme="dark"] .prose h4,
+    [data-theme="dark"] .prose h5,
+    [data-theme="dark"] .prose h6 {
+        @apply text-neutral-100;
+    }
+    [data-theme="dark"] .prose em {
+        @apply text-neutral-200;
+    }
+    [data-theme="dark"] .prose strong {
+        @apply text-neutral-100 font-bold;
+    }
+    [data-theme="dark"] .prose hr {
+        @apply border-neutral-600;
+    }
+    [data-theme="dark"] .prose img {
+        @apply opacity-90 hover:opacity-100 transition-opacity;
     }
 
     /* Dark Mode Alerts */
@@ -1086,7 +1158,7 @@
     }
 
     [data-theme="dark"] .wiki-content td {
-        @apply text-neutral-300;
+        @apply text-neutral-300 border-b border-neutral-700;
     }
 
     /* Contact Form */
@@ -1554,11 +1626,33 @@
 
     /* Code Syntax Highlighting Adjustment */
     [data-theme="dark"] pre[class*="language-"] {
-        @apply bg-neutral-900;
+        @apply bg-neutral-800 text-white;
     }
 
     [data-theme="dark"] code[class*="language-"] {
-        @apply text-neutral-200;
+        @apply text-white;
+    }
+
+    /* Zusätzliche Code-Block Regeln für Dark Mode */
+    [data-theme="dark"] .wiki-content pre,
+    [data-theme="dark"] .prose pre,
+    [data-theme="dark"] pre {
+        background-color: #404040 !important; /* neutral-700 equivalent */
+        color: white !important;
+    }
+
+    [data-theme="dark"] .wiki-content code,
+    [data-theme="dark"] .prose code,
+    [data-theme="dark"] code {
+        background-color: #525252 !important; /* neutral-600 equivalent */
+        color: white !important;
+    }
+
+    [data-theme="dark"] .wiki-content pre code,
+    [data-theme="dark"] .prose pre code,
+    [data-theme="dark"] pre code {
+        background-color: transparent !important;
+        color: white !important;
     }
 
     /* === VOLLSTÄNDIGE TAILWIND UTILITY OVERRIDES FÜR DARK MODE === */
@@ -1722,9 +1816,13 @@
     [data-theme="dark"] .prose p { @apply text-neutral-300 !important; }
     [data-theme="dark"] .prose a { @apply text-primary-400 hover:text-primary-300 !important; }
     [data-theme="dark"] .prose strong { @apply text-neutral-200 !important; }
-    [data-theme="dark"] .prose code { @apply bg-neutral-700 text-neutral-200 !important; }
-    [data-theme="dark"] .prose pre { @apply bg-neutral-900 !important; }
-    [data-theme="dark"] .prose blockquote { @apply text-neutral-400 border-l-neutral-600 !important; }
+    [data-theme="dark"] .prose code { @apply bg-neutral-700 text-white !important; }
+    [data-theme="dark"] .prose pre { @apply bg-neutral-800 text-white !important; }
+    [data-theme="dark"] .prose pre code { @apply bg-transparent text-white !important; }
+    [data-theme="dark"] .prose blockquote { @apply text-neutral-300 border-l-primary-400 bg-neutral-800/30 !important; }
+    [data-theme="dark"] .prose ul { @apply text-neutral-300 !important; }
+    [data-theme="dark"] .prose ol { @apply text-neutral-300 !important; }
+    [data-theme="dark"] .prose li { @apply text-neutral-300 !important; }
 
     /* Tables */
     [data-theme="dark"] .table-auto { @apply bg-neutral-800 !important; }

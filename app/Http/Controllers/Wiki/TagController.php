@@ -35,18 +35,81 @@ class TagController extends Controller
     /**
      * Artikel eines bestimmten Tags anzeigen
      */
-    public function show(Tag $tag)
+    public function show(Tag $tag, Request $request)
     {
-        $articles = Article::published()
+        // Query für Artikel mit Filtermöglichkeiten
+        $articlesQuery = Article::published()
             ->whereHas('tags', function ($query) use ($tag) {
                 $query->where('tags.id', $tag->id);
             })
-            ->with(['user', 'category', 'tags'])
-            ->withCount(['comments'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->with(['user', 'category', 'tags']);
 
-        return view('wiki.tags.show', compact('tag', 'articles'));
+        // Suchfilter
+        if ($request->has('search') && !empty($request->search)) {
+            $articlesQuery->where(function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->search . '%')
+                      ->orWhere('content', 'like', '%' . $request->search . '%')
+                      ->orWhere('excerpt', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Kategoriefilter
+        if ($request->has('category') && !empty($request->category)) {
+            $articlesQuery->whereHas('category', function ($query) use ($request) {
+                $query->where('slug', $request->category);
+            });
+        }
+
+        // Sortierung
+        $sort = $request->get('sort', 'latest');
+        switch ($sort) {
+            case 'oldest':
+                $articlesQuery->orderBy('published_at', 'asc');
+                break;
+            case 'popular':
+                $articlesQuery->orderBy('views_count', 'desc');
+                break;
+            case 'title':
+                $articlesQuery->orderBy('title', 'asc');
+                break;
+            default: // latest
+                $articlesQuery->orderBy('published_at', 'desc');
+                break;
+        }
+
+        $articles = $articlesQuery->withCount(['comments'])->paginate(10);
+
+        // Verwandte Tags finden (Tags die in den gleichen Artikeln verwendet werden)
+        $relatedTags = Tag::whereHas('articles', function ($query) use ($tag) {
+                $query->whereHas('tags', function ($subQuery) use ($tag) {
+                    $subQuery->where('tags.id', $tag->id);
+                });
+            })
+            ->where('id', '!=', $tag->id)
+            ->withCount('articles')
+            ->orderBy('articles_count', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Kategorien für Filter
+        $categories = \App\Models\Category::whereHas('articles.tags', function ($query) use ($tag) {
+                $query->where('tags.id', $tag->id);
+            })
+            ->orderBy('name')
+            ->get();
+
+        // Statistiken
+        $uniqueAuthors = $articles->pluck('user.id')->unique()->count();
+        $uniqueCategories = $articles->pluck('category.id')->unique()->count();
+
+        return view('wiki.tags.show', compact(
+            'tag', 
+            'articles', 
+            'relatedTags', 
+            'categories', 
+            'uniqueAuthors', 
+            'uniqueCategories'
+        ));
     }
 
     /**

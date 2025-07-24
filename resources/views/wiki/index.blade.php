@@ -1,22 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'KI-Programmierung Wiki: {{ $stats["articles"] ?? "100+" }} kostenlose Tutorials | GitHub Copilot & ChatGPT')
-@section('description', 'Durchsuche {{ $stats["articles"] ?? "100+" }} kostenlose KI-Programmierung Tutorials! GitHub Copilot, ChatGPT, Claude AI, Prompt Engineering. {{ $stats["categories"] ?? "10+" }} Kategorien. Lerne KI-Coding gratis.')
+@section('title', 'KI-Programmierung Wiki: ' . ($stats['articles'] ?? '100+') . ' kostenlose Tutorials | GitHub Copilot & ChatGPT')
+@section('description', 'Durchsuche ' . ($stats['articles'] ?? '100+') . ' kostenlose KI-Programmierung Tutorials! GitHub Copilot, ChatGPT, Claude AI, Prompt Engineering. ' . ($stats['categories'] ?? '10+') . ' Kategorien. Lerne KI-Coding gratis.')
 @section('keywords', 'KI Programmierung Wiki, GitHub Copilot Anleitung, ChatGPT Coding Tutorial, Claude AI Programmierung, Prompt Engineering Guide, KI Tools Entwickler, AI Assistant Tutorial, Machine Learning Coding, KI-gestützte Entwicklung, Open Source KI Learning, Programmieren mit AI, Coding Automation, KI Development Tools')
 @section('robots', 'index, follow, max-image-preview:large')
 
-@section('og_title', 'KI-Programmierung Wiki: {{ $stats["articles"] ?? "100+" }} kostenlose Tutorials')
-@section('og_description', 'Durchsuche {{ $stats["articles"] ?? "100+" }} kostenlose KI-Programmierung Tutorials! GitHub Copilot, ChatGPT, Claude AI, Prompt Engineering. Lerne KI-Coding gratis.')
+@section('og_title', 'KI-Programmierung Wiki: ' . ($stats['articles'] ?? '100+') . ' kostenlose Tutorials')
+@section('og_description', 'Durchsuche ' . ($stats['articles'] ?? '100+') . ' kostenlose KI-Programmierung Tutorials! GitHub Copilot, ChatGPT, Claude AI, Prompt Engineering. Lerne KI-Coding gratis.')
 @section('og_type', 'website')
 @section('og_image', asset('images/wiki-social.jpg'))
 @section('og_image_width', '1200')
 @section('og_image_height', '630')
-@section('og_image_alt', 'KI-Programmierung Wiki mit {{ $stats["articles"] ?? "100+" }} kostenlosen Tutorials')
+@section('og_image_alt', 'KI-Programmierung Wiki mit ' . ($stats['articles'] ?? '100+') . ' kostenlosen Tutorials')
 
-@section('twitter_title', 'KI-Programmierung Wiki: {{ $stats["articles"] ?? "100+" }} kostenlose Tutorials')
-@section('twitter_description', 'GitHub Copilot, ChatGPT, Claude AI Tutorials. {{ $stats["articles"] ?? "100+" }} kostenlose KI-Programmierung Guides. Open Source Community.')
+@section('twitter_title', 'KI-Programmierung Wiki: ' . ($stats['articles'] ?? '100+') . ' kostenlose Tutorials')
+@section('twitter_description', 'GitHub Copilot, ChatGPT, Claude AI Tutorials. ' . ($stats['articles'] ?? '100+') . ' kostenlose KI-Programmierung Guides. Open Source Community.')
 @section('twitter_image', asset('images/wiki-social.jpg'))
 @section('twitter_image_alt', 'KI-Programmierung Wiki Knowledge Base')
+
 
 @section('content')
 <!-- Hero Section -->
