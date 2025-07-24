@@ -1,29 +1,25 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>@yield('title', config('app.name', 'Laravel'))</title>
+            <title>@yield('title', config('app.name', 'Laravel'))</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+            <!-- Fonts -->
+            <link rel="preconnect" href="https://fonts.bunny.net">
+            <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- CRITICAL: Dark Mode Theme Detection - Must run before CSS loads to prevent flash -->
-        <script>
-            (function() {
-                // Theme detection MUST run synchronously before CSS to prevent FOUC
-                const savedTheme = localStorage.getItem('theme');
-                const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-                
-                // Set theme immediately on HTML element
-                document.documentElement.setAttribute('data-theme', theme);
-            })();
-        </script>
-
+            <!-- CRITICAL: Dark Mode Theme Detection - Must run before CSS loads to prevent flash -->
+            <script>
+                (function() {
+                // Theme detection ONLY: Keine Systempräferenz mehr! Immer Light, wenn keine Präferenz gespeichert
+                    const savedTheme = localStorage.getItem('theme');
+                    const theme = savedTheme || 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                })();
+            </script>
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/dark-mode.js', 'resources/js/category-colors.js'])
     </head>

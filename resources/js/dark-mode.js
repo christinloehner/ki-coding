@@ -22,6 +22,7 @@ class DarkModeManager {
      */
     init() {
         // Get current theme from DOM (already set by inline script to prevent FOUC)
+        // Vertraue auf das im HTML gesetzte data-theme für den aktuellen Modus
         const currentThemeFromDOM = document.documentElement.getAttribute('data-theme') || 'light';
         this.currentTheme = currentThemeFromDOM;
         

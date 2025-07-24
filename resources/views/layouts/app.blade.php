@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -122,12 +122,9 @@
     <!-- CRITICAL: Dark Mode Theme Detection - Must run before CSS loads to prevent flash -->
     <script>
         (function() {
-            // Theme detection MUST run synchronously before CSS to prevent FOUC
+            // Theme detection ONLY: Keine Systempräferenz mehr! Immer Light, wenn keine Präferenz gespeichert
             const savedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-            
-            // Set theme immediately on HTML element
+            const theme = savedTheme || 'light';
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
