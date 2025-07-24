@@ -16,7 +16,7 @@
     </div>
 
     <!-- Quick Stats -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 dashboard-stats">
         @can('create', App\Models\Article::class)
             <div class="bg-white rounded-lg p-4">
                 <div class="flex items-center">
@@ -170,7 +170,7 @@
     @endcanany
 
     <!-- Quick Access -->
-    <div class="bg-white rounded-lg p-4 mb-6">
+    <div class="bg-white rounded-lg p-4 mb-6 dashboard-quickaccess">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Schnellzugriff</h2>
         
         <!-- Management Links (Obere Reihe) -->
@@ -181,7 +181,7 @@
                 </svg>
                 Management
             </h3>
-            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 management-buttons">
                 @can('edit all articles')
                 <a href="{{ route('admin.articles.index') }}" class="flex flex-col items-center p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group">
                     <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-blue-200">
@@ -257,7 +257,7 @@
                 </svg>
                 Schnellaktionen
             </h3>
-            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 quickactions">
                 @can('create', App\Models\Article::class)
                     <a href="{{ route('wiki.articles.create') }}" class="flex flex-col items-center p-2 bg-green-50 rounded-lg hover:bg-green-100 transition-colors group">
                         <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-green-200">
@@ -315,7 +315,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- My Articles -->
         @can('create', App\Models\Article::class)
-            <div class="bg-white rounded-lg p-4">
+            <div class="bg-white rounded-lg p-4 my-articles">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-base font-semibold text-gray-900">Meine Artikel</h2>
                 <a href="{{ route('wiki.articles.index', ['author' => Auth::id()]) }}" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">
@@ -326,7 +326,7 @@
             @if($myArticles && $myArticles->count() > 0)
                 <div class="space-y-3">
                     @foreach($myArticles as $article)
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg article-list">
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-gray-900 truncate">
                                     <a href="{{ route('wiki.articles.show', $article->slug) }}" class="hover:text-indigo-600">
@@ -378,7 +378,7 @@
         @endcan
 
         <!-- Bookmarked Articles -->
-        <div class="bg-white rounded-lg p-4">
+        <div class="bg-white rounded-lg p-4 bookmarked-articles">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-base font-semibold text-gray-900 flex items-center">
                     <svg class="w-4 h-4 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -445,7 +445,7 @@
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-white rounded-lg p-4">
+        <div class="bg-white rounded-lg p-4 recent-activities">
             <h2 class="text-base font-semibold text-gray-900 mb-3">Neueste Aktivitäten</h2>
 
             @if($recentActivity && $recentActivity->count() > 0)
@@ -496,7 +496,7 @@
     </div>
 
     <!-- Community Stats -->
-    <div class="mt-6 bg-white rounded-lg p-4">
+    <div class="mt-6 bg-white rounded-lg p-4 community-stats">
         <h2 class="text-base font-semibold text-gray-900 mb-3">Community-Statistiken</h2>
 
         <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">

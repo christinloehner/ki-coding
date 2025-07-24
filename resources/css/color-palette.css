@@ -210,6 +210,141 @@
   --spacing-3xl: 4rem;
 }
 
+/* === DARK MODE FARBPALETTE === */
+[data-theme="dark"] {
+  /* === PRIMARY COLORS (Logo-basiert) für Dark Mode === */
+  
+  /* Grün-Familie (Hauptfarbe) - Hellere Varianten für besseren Kontrast */
+  --color-primary-50: #1a2e1d;    /* Sehr dunkles Grün für Hintergründe */
+  --color-primary-100: #2d4a32;   /* Dunkles Grün für Cards */
+  --color-primary-200: #3d5f42;   /* Mittlere Töne */
+  --color-primary-300: #4d7552;   /* Leichte Akzente */
+  --color-primary-400: #5d8b62;   /* Aktive Zustände */
+  --color-primary-500: #66bb6a;   /* Helles Logo Grün - Hoher Kontrast */
+  --color-primary-600: #81c784;   /* Noch heller für bessere Sichtbarkeit */
+  --color-primary-700: #a5d6a7;   /* Sehr hell für Hover States */
+  --color-primary-800: #c8e6c9;   /* Sehr helle Variante */
+  --color-primary-900: #e8f5e9;   /* Maximaler Kontrast für Text */
+  --color-primary-950: #f1f8e9;   /* Hellste Variante */
+
+  /* Orange-Familie (Sekundär) - Hellere Varianten für Dark Mode */
+  --color-secondary-50: #2d1b0a;  /* Sehr dunkles Orange für Hintergründe */
+  --color-secondary-100: #4a2d17; /* Dunkles Orange für Cards */
+  --color-secondary-200: #5f3d24; /* Mittlere Töne */
+  --color-secondary-300: #754d31; /* Leichte Akzente */
+  --color-secondary-400: #8b5d3e; /* Aktive Zustände */
+  --color-secondary-500: #ff8a50; /* Helles Logo Orange - Hoher Kontrast */
+  --color-secondary-600: #ffab40; /* Heller für bessere Sichtbarkeit */
+  --color-secondary-700: #ffc947; /* Sehr hell für Hover States */
+  --color-secondary-800: #ffe082; /* Sehr helle Variante */
+  --color-secondary-900: #fff3c4; /* Maximaler Kontrast für Text */
+  --color-secondary-950: #fffaeb; /* Hellste Variante */
+
+  /* Blau-Familie (Akzent) - Hellere Varianten für Dark Mode */
+  --color-accent-50: #0a1929;     /* Sehr dunkles Blau für Hintergründe */
+  --color-accent-100: #172d42;    /* Dunkles Blau für Cards */
+  --color-accent-200: #243d5b;    /* Mittlere Töne */
+  --color-accent-300: #314d74;    /* Leichte Akzente */
+  --color-accent-400: #3e5d8d;    /* Aktive Zustände */
+  --color-accent-500: #64b5f6;    /* Helles Logo Blau - Hoher Kontrast */
+  --color-accent-600: #90caf9;    /* Heller für bessere Sichtbarkeit */
+  --color-accent-700: #bbdefb;    /* Sehr hell für Hover States */
+  --color-accent-800: #e1f5fe;    /* Sehr helle Variante */
+  --color-accent-900: #f0f8ff;    /* Maximaler Kontrast für Text */
+  --color-accent-950: #f8fbff;    /* Hellste Variante */
+
+  /* === ERWEITERTE MODERNE FARBEN für Dark Mode === */
+  
+  /* Lila-Familie (Modern Ergänzung) */
+  --color-purple-50: #1f1035;
+  --color-purple-100: #2e1065;
+  --color-purple-200: #451990;
+  --color-purple-300: #541cb1;
+  --color-purple-400: #6521d5;
+  --color-purple-500: #8048f4;
+  --color-purple-600: #9d7ef9;
+  --color-purple-700: #bba9fc;
+  --color-purple-800: #d7d0fd;
+  --color-purple-900: #e9e5fe;
+  --color-purple-950: #f3f1ff;
+
+  /* Rosa-Familie (Akzent) */
+  --color-pink-50: #500724;
+  --color-pink-100: #831843;
+  --color-pink-200: #9d174d;
+  --color-pink-300: #be185d;
+  --color-pink-400: #db2777;
+  --color-pink-500: #ec4899;
+  --color-pink-600: #f472b6;
+  --color-pink-700: #f9a8d4;
+  --color-pink-800: #fbcfe8;
+  --color-pink-900: #fce7f3;
+  --color-pink-950: #fdf2f8;
+
+  /* Türkis-Familie (Modern Ergänzung) */
+  --color-teal-50: #042f2e;
+  --color-teal-100: #134e4a;
+  --color-teal-200: #115e59;
+  --color-teal-300: #0f766e;
+  --color-teal-400: #0d9488;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #2dd4bf;
+  --color-teal-700: #5eead4;
+  --color-teal-800: #99f6e4;
+  --color-teal-900: #ccfbf1;
+  --color-teal-950: #f0fdfa;
+
+  /* === NEUTRALE FARBEN für Dark Mode === */
+  
+  /* Grau-Familie (Basis) - Invertiert für Dark Mode */
+  --color-gray-50: #030712;      /* Dunkelste für Hintergründe */
+  --color-gray-100: #111827;     /* Sehr dunkle Cards */
+  --color-gray-200: #1f2937;     /* Dunkle Container */
+  --color-gray-300: #374151;     /* Mittlere Bereiche */
+  --color-gray-400: #4b5563;     /* Disabled/Subtle */
+  --color-gray-500: #6b7280;     /* Secondary Text */
+  --color-gray-600: #9ca3af;     /* Body Text */
+  --color-gray-700: #d1d5db;     /* Headings */
+  --color-gray-800: #e5e7eb;     /* High Contrast Text */
+  --color-gray-900: #f3f4f6;     /* Maximum Contrast */
+  --color-gray-950: #f9fafb;     /* Hellste für Text */
+
+  /* Warme Grau-Familie für Dark Mode */
+  --color-stone-50: #0c0a09;
+  --color-stone-100: #1c1917;
+  --color-stone-200: #292524;
+  --color-stone-300: #44403c;
+  --color-stone-400: #57534e;
+  --color-stone-500: #78716c;
+  --color-stone-600: #a8a29e;
+  --color-stone-700: #d6d3d1;
+  --color-stone-800: #e7e5e4;
+  --color-stone-900: #f5f5f4;
+  --color-stone-950: #fafaf9;
+
+  /* === MODERNE FARBVERLÄUFE für Dark Mode === */
+  
+  /* Haupt-Verläufe - Angepasst für Dark Mode */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-600) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--color-secondary-500) 0%, var(--color-secondary-600) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--color-accent-500) 0%, var(--color-accent-600) 100%);
+
+  /* Moderne Kombinationen für Dark Mode */
+  --gradient-sunset: linear-gradient(135deg, var(--color-secondary-400) 0%, var(--color-pink-500) 50%, var(--color-purple-600) 100%);
+  --gradient-ocean: linear-gradient(135deg, var(--color-accent-400) 0%, var(--color-teal-500) 50%, var(--color-primary-600) 100%);
+  --gradient-forest: linear-gradient(135deg, var(--color-primary-400) 0%, var(--color-teal-600) 100%);
+  --gradient-dawn: linear-gradient(135deg, var(--color-secondary-300) 0%, var(--color-primary-400) 100%);
+  
+  /* Subtile Verläufe für Dark Mode */
+  --gradient-subtle-primary: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+  --gradient-subtle-secondary: linear-gradient(135deg, var(--color-secondary-50) 0%, var(--color-secondary-100) 100%);
+  --gradient-subtle-accent: linear-gradient(135deg, var(--color-accent-50) 0%, var(--color-accent-100) 100%);
+  
+  /* Dunkle Verläufe bleiben dunkel */
+  --gradient-dark: linear-gradient(135deg, var(--color-gray-200) 0%, var(--color-gray-100) 100%);
+  --gradient-night: linear-gradient(135deg, var(--color-purple-100) 0%, var(--color-gray-100) 100%);
+}
+
 /* === UTILITY CLASSES === */
 
 .bg-gradient-primary { background: var(--gradient-primary); }

@@ -92,9 +92,19 @@ class SearchController extends Controller
         // Users hinzufügen
         foreach($results['users'] as $user) {
             $user->type = 'user';
-            $user->url = route('wiki.users.show', $user->username);
-            $user->title = $user->name;
-            $user->excerpt = $user->bio;
+            // Sicherer URL-Building für User
+            try {
+                if (!empty($user->username)) {
+                    $user->url = route('users.show', $user->username);
+                } else {
+                    $user->url = route('profile.show.id', $user->id);
+                }
+            } catch (\Exception $e) {
+                // Fallback auf Profile-Route mit ID wenn Route-Generation fehlschlägt
+                $user->url = route('profile.show.id', $user->id);
+            }
+            $user->title = $user->name ?? 'Unbekannter User';
+            $user->excerpt = $user->bio ?? '';
             $combinedResults->push($user);
         }
 

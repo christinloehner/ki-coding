@@ -2,7 +2,7 @@ Contact: mailto:security@ki-coding.de
 Contact: https://www.ki-coding.de/contact
 Expires: 2026-07-23T12:00:00.000Z
 Preferred-Languages: de, en
-Canonical: https://www.ki-coding.de/security.txt
+Canonical: https://www.ki-coding.de/.well-known/security.txt
 Policy: https://www.ki-coding.de/security-policy
 Acknowledgments: https://www.ki-coding.de/security-acknowledgments
 

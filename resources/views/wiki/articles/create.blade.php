@@ -30,7 +30,7 @@
         @csrf
 
         <!-- Basic Information -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white rounded-lg shadow-sm p-6 article-form-section">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Artikel-Details</h2>
 
             <div class="grid grid-cols-1 gap-6">
@@ -122,7 +122,7 @@
         </div>
 
         <!-- Content -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white rounded-lg shadow-sm p-6 article-form-section">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Artikel-Inhalt</h2>
 
             <div class="mb-4">
@@ -150,7 +150,7 @@
         </div>
 
         <!-- Article Settings -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white rounded-lg shadow-sm p-6 article-form-section">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Einstellungen</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -198,7 +198,7 @@
         </div>
 
         <!-- SEO Settings -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="bg-white rounded-lg shadow-sm p-6 article-form-section">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">SEO-Einstellungen (Optional)</h2>
 
             <div class="grid grid-cols-1 gap-6">

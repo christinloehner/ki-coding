@@ -41,7 +41,7 @@
     @endif
 
     <!-- Roles Table -->
-    <div class="bg-white shadow-sm rounded-lg border border-gray-200">
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200 admin-table-container">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">All Roles ({{ $roles->total() }})</h3>
         </div>

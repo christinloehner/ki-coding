@@ -12,7 +12,7 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 admin-stats-card">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-blue-100">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,7 +26,7 @@
             </div>
         </div>
         
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 admin-stats-card">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-green-100">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@
             </div>
         </div>
         
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 admin-stats-card">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-yellow-100">
                     <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +54,7 @@
             </div>
         </div>
         
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 admin-stats-card">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-red-100">
                     <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +70,7 @@
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white shadow-sm rounded-lg border border-gray-200">
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200 admin-table-container">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Alle Benutzer*innen</h3>
         </div>

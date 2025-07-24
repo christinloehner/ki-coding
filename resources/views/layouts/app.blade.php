@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -78,7 +78,7 @@
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/dark-mode.js', 'resources/js/category-colors.js'])
 
     <!-- Additional styles -->
     @stack('styles')
@@ -119,6 +119,19 @@
     }
     </script>
     
+    <!-- CRITICAL: Dark Mode Theme Detection - Must run before CSS loads to prevent flash -->
+    <script>
+        (function() {
+            // Theme detection MUST run synchronously before CSS to prevent FOUC
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+            
+            // Set theme immediately on HTML element
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
     <!-- Additional head content -->
     @stack('head')
 </head>
@@ -161,6 +174,18 @@
 
                 <!-- MODERNE AUTH LINKS -->
                 <div class="hidden md:flex items-center space-x-3">
+                    <!-- DARK MODE TOGGLE -->
+                    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Dark Mode umschalten" title="Dark Mode umschalten">
+                        <!-- Sun Icon (Light Mode) -->
+                        <svg id="sunIcon" class="w-5 h-5 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <!-- Moon Icon (Dark Mode) -->
+                        <svg id="moonIcon" class="w-5 h-5 transition-all duration-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+
                     @guest
                         <a href="{{ route('login') }}" class="btn-ki-outline-sm">
                             Anmelden
@@ -300,6 +325,21 @@
                 
                 
                 <div class="border-t border-neutral-200 mt-3 pt-3">
+                    <!-- Mobile Dark Mode Toggle -->
+                    <button id="darkModeToggleMobile" class="mobile-nav-link w-full justify-between" aria-label="Dark Mode umschalten">
+                        <span class="flex items-center">
+                            <i class="fas fa-adjust w-4 mr-3"></i>Dark Mode
+                        </span>
+                        <div class="flex items-center space-x-2">
+                            <svg id="sunIconMobile" class="w-4 h-4 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                            <svg id="moonIconMobile" class="w-4 h-4 transition-all duration-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                            </svg>
+                        </div>
+                    </button>
+
                 @guest
                     <a href="{{ route('login') }}" class="mobile-nav-link">
                         <i class="fas fa-sign-in-alt w-4 mr-3"></i>Anmelden
