@@ -45,7 +45,7 @@ class ArticleController extends Controller
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'content' => 'required|string',
-                'excerpt' => 'nullable|string|max:500',
+                'excerpt' => 'nullable|string|max:1000',
                 'category_slug' => 'required|string|exists:categories,slug',
                 'tags' => 'nullable|array',
                 'tags.*' => 'string|max:50',
@@ -54,6 +54,20 @@ class ArticleController extends Controller
                 'meta_title' => 'nullable|string|max:255',
                 'meta_description' => 'nullable|string|max:500',
                 'meta_keywords' => 'nullable|string|max:500',
+            ], [
+                'excerpt.max' => 'Die Kurzbeschreibung darf maximal 1000 Zeichen lang sein.',
+                'title.required' => 'Der Titel ist erforderlich.',
+                'title.max' => 'Der Titel darf maximal 255 Zeichen lang sein.',
+                'content.required' => 'Der Inhalt ist erforderlich.',
+                'category_slug.required' => 'Der Kategorie-Slug ist erforderlich.',
+                'category_slug.exists' => 'Die angegebene Kategorie existiert nicht.',
+                'status.required' => 'Der Status ist erforderlich.',
+                'status.in' => 'Der gewählte Status ist ungültig.',
+                'tags.array' => 'Tags müssen als Array übergeben werden.',
+                'tags.*.max' => 'Ein Tag darf maximal 50 Zeichen lang sein.',
+                'meta_title.max' => 'Der Meta-Titel darf maximal 255 Zeichen lang sein.',
+                'meta_description.max' => 'Die Meta-Beschreibung darf maximal 500 Zeichen lang sein.',
+                'meta_keywords.max' => 'Die Meta-Keywords dürfen maximal 500 Zeichen lang sein.',
             ]);
         } catch (ValidationException $e) {
             return $this->validationErrorResponse($e->errors(), 'Die übermittelten Daten sind ungültig.');

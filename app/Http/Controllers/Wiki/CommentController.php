@@ -92,9 +92,9 @@ class CommentController extends Controller
                 return back()->withErrors(['comment' => 'Ungültiger Elternkommentar.']);
             }
             
-            // Check maximum depth (prevent deeper than 2 levels = 3 total levels: 0, 1, 2)
+            // Check maximum depth (allow up to level 5, so 6 total levels: 0, 1, 2, 3, 4, 5)
             $depth = $parentComment->depth;
-            if ($depth >= 2) {
+            if ($depth > 4) {
                 if ($request->wantsJson()) {
                     return response()->json(['error' => 'Maximale Verschachtelungstiefe erreicht.'], 400);
                 }

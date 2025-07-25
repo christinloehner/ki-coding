@@ -169,9 +169,9 @@
         <div class="footer">
             <p>Diese E-Mail wurde automatisch vom KI-Coding Wiki-System gesendet.</p>
             <p>
-                <a href="https://ki-coding.de">KI-Coding.de</a> |
-                <a href="https://ki-coding.de/wiki">Wiki</a> |
-                <a href="https://ki-coding.de/contact">Kontakt</a>
+                <a href="{{ config('app.url') }}">KI-Coding.de</a> |
+                <a href="{{ config('app.url') }}/wiki">Wiki</a> |
+                <a href="{{ config('app.url') }}/contact">Kontakt</a>
             </p>
         </div>
     </div>

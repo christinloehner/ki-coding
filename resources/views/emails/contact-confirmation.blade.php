@@ -286,17 +286,17 @@
             </div>
 
             <div class="info-box">
-                <strong>💡 Tipp:</strong> Besuche unsere <a href="https://ki-coding.de/wiki" style="color: #0369a1;">Knowledge Base</a> für sofortige Antworten auf häufige Fragen zu KI-Coding und unseren Services.
+                <strong>💡 Tipp:</strong> Besuche unsere <a href="{{ config('app.url') }}/wiki" style="color: #0369a1;">Knowledge Base</a> für sofortige Antworten auf häufige Fragen zu KI-Coding und unseren Services.
             </div>
         </div>
 
         <div class="footer">
             <p>Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht auf diese E-Mail.</p>
             <p>
-                <a href="https://ki-coding.de">KI-Coding.de</a> |
-                <a href="https://ki-coding.de/wiki">Wiki</a> |
-                <a href="https://ki-coding.de/contact">Kontakt</a> |
-                <a href="https://ki-coding.de/privacy">Datenschutz</a>
+                <a href="{{ config('app.url') }}">KI-Coding.de</a> |
+                <a href="{{ config('app.url') }}/wiki">Wiki</a> |
+                <a href="{{ config('app.url') }}/contact">Kontakt</a> |
+                <a href="{{ config('app.url') }}/privacy">Datenschutz</a>
             </p>
             <p style="margin-top: 15px; color: #9ca3af;">
                 © {{ date('Y') }} KI-Coding GmbH. Alle Rechte vorbehalten.

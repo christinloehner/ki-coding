@@ -17,7 +17,7 @@
     <meta name="geo.country" content="Germany">
     <meta name="theme-color" content="#4F46E5">
     <meta name="msapplication-TileColor" content="#4F46E5">
-    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="{{ config('app.url') . request()->getPathInfo() }}">
     
     <!-- Additional SEO Meta Tags -->
     <meta name="distribution" content="global">
@@ -36,7 +36,7 @@
     <meta property="og:title" content="@yield('og_title', 'KI-Coding - Kostenlose Knowledge Base für KI-Programmierung')">
     <meta property="og:description" content="@yield('og_description', 'Kostenlose Wissensdatenbank für KI-gestütztes Programmieren. Tutorials, Tools, Best Practices - alles gratis für die Entwickler*innen-Community.')">
     <meta property="og:type" content="@yield('og_type', 'website')">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:url" content="{{ config('app.url') . request()->getPathInfo() }}">
     <meta property="og:image" content="@yield('og_image', asset('images/apb-logo-512.png'))">
     <meta property="og:image:width" content="@yield('og_image_width', '512')">
     <meta property="og:image:height" content="@yield('og_image_height', '512')">

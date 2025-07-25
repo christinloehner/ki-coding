@@ -214,8 +214,8 @@
         <div class="footer">
             <p>Diese E-Mail wurde automatisch vom KI-Coding Kontaktformular gesendet.</p>
             <p>
-                <a href="https://ki-coding.de/admin">Admin-Panel</a> |
-                <a href="https://ki-coding.de/contact">Kontaktformular</a>
+                <a href="{{ config('app.url') }}/admin">Admin-Panel</a> |
+                <a href="{{ config('app.url') }}/contact">Kontaktformular</a>
             </p>
         </div>
     </div>

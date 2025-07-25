@@ -12,6 +12,7 @@ use App\Events\ArticleLiked;
 use App\Events\ArticlePublished;
 use App\Events\ArticleUnliked;
 use App\Events\ArticleVoted;
+use App\Services\DiffService;
 use App\Notifications\ArticleLikedNotification;
 use App\Notifications\ArticleBookmarkedNotification;
 use Illuminate\Http\Request;
@@ -113,7 +114,7 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'excerpt' => 'nullable|string|max:500',
+            'excerpt' => 'nullable|string|max:1000',
             'category_id' => 'required|exists:categories,id',
             'tags' => 'nullable|string',
             'status' => 'required|in:draft,pending_review,published',
@@ -121,6 +122,18 @@ class ArticleController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
+        ], [
+            'excerpt.max' => 'Die Kurzbeschreibung darf maximal 1000 Zeichen lang sein.',
+            'title.required' => 'Der Titel ist erforderlich.',
+            'title.max' => 'Der Titel darf maximal 255 Zeichen lang sein.',
+            'content.required' => 'Der Inhalt ist erforderlich.',
+            'category_id.required' => 'Bitte wähle eine Kategorie aus.',
+            'category_id.exists' => 'Die ausgewählte Kategorie existiert nicht.',
+            'status.required' => 'Bitte wähle einen Status aus.',
+            'status.in' => 'Der gewählte Status ist ungültig.',
+            'meta_title.max' => 'Der Meta-Titel darf maximal 255 Zeichen lang sein.',
+            'meta_description.max' => 'Die Meta-Beschreibung darf maximal 500 Zeichen lang sein.',
+            'meta_keywords.max' => 'Die Meta-Keywords dürfen maximal 500 Zeichen lang sein.',
         ]);
 
         $createdArticle = DB::transaction(function () use ($validated) {
@@ -206,7 +219,8 @@ class ArticleController extends Controller
                 ->take(3)
                 ->get();
 
-            $revisions = collect(); // Erstmal leer lassen
+            // Lade die letzten 5 Revisionen für eventuelle Verwendung
+            $revisions = $article->revisions()->with('user')->latest()->take(5)->get();
 
             return view('wiki.articles.show', compact('article', 'relatedArticles', 'revisions'));
         } catch (\Exception $e) {
@@ -248,7 +262,7 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'excerpt' => 'nullable|string|max:500',
+            'excerpt' => 'nullable|string|max:1000',
             'category_id' => 'required|exists:categories,id',
             'tags' => 'nullable|string',
             'status' => 'required|in:draft,pending_review,published',
@@ -257,6 +271,19 @@ class ArticleController extends Controller
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
             'revision_summary' => 'nullable|string|max:255',
+        ], [
+            'excerpt.max' => 'Die Kurzbeschreibung darf maximal 1000 Zeichen lang sein.',
+            'title.required' => 'Der Titel ist erforderlich.',
+            'title.max' => 'Der Titel darf maximal 255 Zeichen lang sein.',
+            'content.required' => 'Der Inhalt ist erforderlich.',
+            'category_id.required' => 'Bitte wähle eine Kategorie aus.',
+            'category_id.exists' => 'Die ausgewählte Kategorie existiert nicht.',
+            'status.required' => 'Bitte wähle einen Status aus.',
+            'status.in' => 'Der gewählte Status ist ungültig.',
+            'meta_title.max' => 'Der Meta-Titel darf maximal 255 Zeichen lang sein.',
+            'meta_description.max' => 'Die Meta-Beschreibung darf maximal 500 Zeichen lang sein.',
+            'meta_keywords.max' => 'Die Meta-Keywords dürfen maximal 500 Zeichen lang sein.',
+            'revision_summary.max' => 'Der Änderungshinweis darf maximal 255 Zeichen lang sein.',
         ]);
 
         DB::transaction(function () use ($validated, $article) {
@@ -815,5 +842,53 @@ class ArticleController extends Controller
             'success' => true,
             'message' => 'Artikel wurde gemeldet. Danke für dein Feedback!'
         ]);
+    }
+
+    /**
+     * Compare two article revisions
+     */
+    public function compare(Article $article, Request $request, DiffService $diffService): View
+    {
+        Gate::authorize('view', $article);
+
+        $request->validate([
+            'revisions' => 'required|array|size:2',
+            'revisions.*' => 'required|integer|exists:article_revisions,id'
+        ]);
+
+        $revisionIds = $request->input('revisions');
+        
+        // Lade die beiden Revisionen
+        $revisions = ArticleRevision::whereIn('id', $revisionIds)
+            ->where('article_id', $article->id)
+            ->with('user')
+            ->get();
+
+        if ($revisions->count() !== 2) {
+            abort(404, 'Eine oder beide Revisionen wurden nicht gefunden.');
+        }
+
+        // Sortiere nach Versionsnummer (ältere zuerst)
+        $revisions = $revisions->sortBy('version_number');
+        $oldRevision = $revisions->first();
+        $newRevision = $revisions->last();
+
+        // Generiere Diffs für verschiedene Felder
+        $titleDiff = $diffService->generateDiff($oldRevision->title, $newRevision->title, 'title');
+        $contentDiff = $diffService->generateDiff($oldRevision->content, $newRevision->content, 'content');
+        $excerptDiff = $diffService->generateDiff($oldRevision->excerpt ?? '', $newRevision->excerpt ?? '', 'excerpt');
+        
+        // Generiere Statistiken
+        $stats = $diffService->getDiffStats($oldRevision->content, $newRevision->content);
+
+        return view('wiki.articles.compare', compact(
+            'article', 
+            'oldRevision', 
+            'newRevision', 
+            'titleDiff', 
+            'contentDiff', 
+            'excerptDiff',
+            'stats'
+        ));
     }
 }

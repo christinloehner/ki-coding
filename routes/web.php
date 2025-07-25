@@ -182,9 +182,10 @@ Route::prefix('wiki')->name('wiki.')->middleware(['auth', 'verified', 'wiki.secu
         Route::patch('/{article:slug}/feature', [ArticleController::class, 'toggleFeatured'])->name('feature');
         
         // Article Revisions
-        Route::get('/{article:slug}/revisions', [ArticleController::class, 'revisions'])->name('revisions');
-        Route::get('/{article:slug}/revisions/{revision}', [ArticleController::class, 'showRevision'])->name('revisions.show');
-        Route::post('/{article:slug}/revisions/{revision}/restore', [ArticleController::class, 'restoreRevision'])->name('revisions.restore');
+        Route::get('/{article:slug}/revisions', [ArticleController::class, 'history'])->name('revisions');
+        Route::get('/{article:slug}/revisions/compare', [ArticleController::class, 'compare'])->name('revisions.compare');
+        Route::get('/{article:slug}/revisions/{revision}', [ArticleController::class, 'revision'])->name('revisions.show');
+        Route::post('/{article:slug}/revisions/{revision}/restore', [ArticleController::class, 'restore'])->name('revisions.restore');
     });
     
     // Tag Search API

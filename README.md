@@ -17,8 +17,8 @@
 
 ### ✨ Hauptfeatures
 
-- 🔐 **Fortgeschrittenes Rollen-System** - 5-stufige Hierarchie mit 80+ granularen Permissions
-- 📝 **Professionelles Wiki-System** - Markdown-Editor, Versionshistorie, Featured Articles
+- 🔐 **Fortgeschrittenes Rollen-System** - 5-stufige Hierarchie mit 51 granularen Permissions
+- 📝 **Professionelles Wiki-System** - Markdown-Editor, Versionshistorie mit MediaWiki-Style Diff, Featured Articles
 - 🛡️ **Security-First Design** - XSS-Schutz, CSRF-Protection, Content Security Policy, RFC 9116 Security.txt
 - 👥 **Community-Features** - Kommentare, Likes, Real-time Notifications, Moderation
 - 🎨 **Modernes Design** - Logo-basierte Farbpalette, Glassmorphism, Responsive Design
@@ -196,7 +196,7 @@ Strict-Transport-Security: max-age=31536000
 ### Content-Management
 
 - **📄 Markdown-Editor**: WYSIWYG mit Live-Preview
-- **📚 Revision-System**: Vollständige Versionshistorie
+- **📚 Revision-System**: Vollständige Versionshistorie mit MediaWiki-Style Diff-Vergleich
 - **⭐ Featured Articles**: Redaktionelle Empfehlungen
 - **🗂️ Kategorien**: Hierarchische Organisation
 - **🏷️ Tag-System**: Flexible Kategorisierung
@@ -204,7 +204,7 @@ Strict-Transport-Security: max-age=31536000
 
 ### Community-Funktionen
 
-- **💬 Comment-System**: Nested Comments mit Moderation
+- **💬 Comment-System**: 6-Level Nested Comments mit Moderation
 - **👍 Like-System**: Artikel und Kommentar-Likes
 - **🔔 Push-Notifications**: Real-time Benachrichtigungen für Artikel-Interaktionen
 - **📌 Bookmark-System**: Artikel zur späteren Lektüre markieren
@@ -229,11 +229,8 @@ Strict-Transport-Security: max-age=31536000
 
 | Methode | Endpunkt | Beschreibung | Permission |
 |---------|----------|--------------|------------|
-| `GET` | `/api/user` | Authentifizierte User-Informationen | `use api` |
-| `POST` | `/api/v1/articles` | Artikel erstellen | `create articles` + `use api` |
-| `GET` | `/api/v1/articles` | Artikel auflisten | `view articles` + `use api` |
-| `PUT` | `/api/v1/articles/{id}` | Artikel bearbeiten | `edit articles` + `use api` |
-| `DELETE` | `/api/v1/articles/{id}` | Artikel löschen | `delete articles` + `use api` |
+| `GET` | `/api/user` | Authentifizierte User-Informationen | - |
+| `POST` | `/api/v1/articles` | Artikel erstellen | `create articles` |
 
 ### Beispiel-Request
 
@@ -459,17 +456,17 @@ services:
 ## 📊 Projekt-Statistiken
 
 ```
-📁 Codebase Size:    ~55,000+ Zeilen
-🧩 Components:       85+ Blade Components  
-🎯 Features:         30+ Hauptfeatures
-🔐 Permissions:      80+ Granulare Rechte (ONLY role-based)
-🎨 UI Components:    45+ Wiederverwendbare UI-Elemente
-📝 Database Tables:  27+ Optimierte Tabellen
-🧪 Test Suite:       13 Test Files (PHPUnit 12.2.7)
+📁 Codebase Size:    ~59,300 Zeilen (PHP: 37,196 | Blade: 17,536 | JS: 1,458 | CSS: 3,111)
+🧩 Components:       90 Blade Components  
+🎯 Features:         25+ Hauptfeatures
+🔐 Permissions:      51 Granulare Rechte (ONLY role-based)
+🎨 UI Components:    90 Blade Templates
+📝 Database Tables:  39 Migrations
+🧪 Test Suite:       50 Tests in 13 Test Files (PHPUnit 12.2.7)
 ⚡ Performance:      < 200ms Average Response
 🚀 Framework:        Laravel 12.21.0 + PHP 8.4
 🔔 Notifications:    Real-time Push System
-🤖 API Endpoints:    RESTful API v1
+🤖 API Endpoints:    RESTful API v1 (Article Creation)
 🔒 Security:         RFC 9116 compliant
 ```
 

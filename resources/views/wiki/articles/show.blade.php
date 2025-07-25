@@ -33,9 +33,14 @@
         <div class="p-4 sm:p-6">
             <!-- Category and Date Row -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
                     <span class="badge badge-secondary">{{ $article->category->name ?? 'Allgemein' }}</span>
                     <span class="text-sm text-gray-500">{{ $article->published_at ? $article->published_at->format('d.m.Y') : 'Unveröffentlicht' }}</span>
+                    @if($article->revisions()->count() > 0)
+                        <span class="text-xs text-gray-400">
+                            • Version {{ $article->revisions()->max('version_number') ?? 1 }}
+                        </span>
+                    @endif
                 </div>
                 
                 <!-- User Actions - Desktop -->
@@ -250,6 +255,14 @@
                     </a>
                 @endcan
 
+                <!-- Versionshistorie Button - für alle die den Artikel sehen können -->
+                <a href="{{ route('wiki.articles.revisions', $article->slug) }}" class="btn-ki-outline-sm" title="Versionshistorie">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Historie
+                </a>
+
                 @auth
                     <button class="btn-ki-outline-sm text-red-600 hover:text-red-800" title="Melden" onclick="reportArticle('{{ $article->slug }}')">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -305,7 +318,8 @@
                                 'replies.replies.user', 
                                 'replies.replies.replies.user',
                                 'replies.replies.replies.replies.user',
-                                'replies.replies.replies.replies.replies.user'
+                                'replies.replies.replies.replies.replies.user',
+                                'replies.replies.replies.replies.replies.replies.user'
                             ])
                             ->orderBy('created_at', 'desc')
                             ->get();

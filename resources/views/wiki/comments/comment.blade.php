@@ -9,7 +9,8 @@
         2 => 28,  // 1.75rem
         3 => 36,  // 2.25rem
         4 => 44,  // 2.75rem
-        default => 48  // 3rem max
+        5 => 52,  // 3.25rem
+        default => 56  // 3.5rem max
     };
     
     // Moderne Akzent-Linien statt Borders
@@ -19,6 +20,7 @@
         2 => 'border-l-2 border-purple-200',
         3 => 'border-l-2 border-amber-200',
         4 => 'border-l-2 border-green-200',
+        5 => 'border-l-2 border-pink-200',
         default => 'border-l-2 border-gray-200'
     };
     
@@ -183,13 +185,13 @@
 </div>
 
 <!-- Replies mit modernen Verbindungslinien -->
-@if($comment->replies && $comment->replies->count() > 0 && $depth < $maxDepth)
+@if($comment->replies && $comment->replies->count() > 0 && $depth <= $maxDepth)
     <div class="replies mt-2 space-y-2">
         @foreach($comment->replies->where('status', 'approved')->sortBy('created_at') as $reply)
             @include('wiki.comments.comment', ['comment' => $reply, 'depth' => $depth + 1])
         @endforeach
     </div>
-@elseif($comment->replies && $comment->replies->count() > 0 && $depth >= $maxDepth)
+@elseif($comment->replies && $comment->replies->count() > 0 && $depth > $maxDepth)
     <!-- Hinweis auf weitere Antworten -->
     <div class="mt-2" style="margin-left: {{ $indentPixels + 16 }}px;">
         <div class="bg-blue-50 border border-blue-200 rounded-md p-2">
