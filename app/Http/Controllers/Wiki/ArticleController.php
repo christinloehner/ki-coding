@@ -875,7 +875,7 @@ class ArticleController extends Controller
 
         // Generiere Diffs für verschiedene Felder
         $titleDiff = $diffService->generateDiff($oldRevision->title, $newRevision->title, 'title');
-        $contentDiff = $diffService->generateDiff($oldRevision->content, $newRevision->content, 'content');
+        $contentDiff = $diffService->generateSynchronizedLineDiff($oldRevision->content, $newRevision->content);
         $excerptDiff = $diffService->generateDiff($oldRevision->excerpt ?? '', $newRevision->excerpt ?? '', 'excerpt');
         
         // Generiere Statistiken

@@ -77,6 +77,112 @@ class DiffService
     }
     
     /**
+     * Generiere ein synchronisiertes linienbasiertes Diff mit Zeilennummern.
+     * 
+     * @param string $oldText
+     * @param string $newText
+     * @return array
+     */
+    public function generateSynchronizedLineDiff(string $oldText, string $newText): array
+    {
+        $oldLines = explode("\n", $oldText);
+        $newLines = explode("\n", $newText);
+        
+        // Ermittle die längste Zeile in beiden Texten (in Zeichen)
+        $maxLength = 0;
+        foreach ($oldLines as $line) {
+            $maxLength = max($maxLength, mb_strlen($line));
+        }
+        foreach ($newLines as $line) {
+            $maxLength = max($maxLength, mb_strlen($line));
+        }
+        
+        // Einfachster Ansatz: Mache beide Arrays gleich lang
+        $maxLines = max(count($oldLines), count($newLines));
+        
+        $synchronizedLines = [];
+        
+        for ($i = 0; $i < $maxLines; $i++) {
+            $oldExists = isset($oldLines[$i]);
+            $newExists = isset($newLines[$i]);
+            
+            if ($oldExists && $newExists) {
+                // Beide Zeilen existieren - vergleiche sie
+                $oldContent = htmlspecialchars($oldLines[$i]);
+                $newContent = htmlspecialchars($newLines[$i]);
+                
+                if ($oldContent === $newContent) {
+                    // Gleich
+                    $synchronizedLines[] = [
+                        'old' => [
+                            'number' => $i + 1,
+                            'content' => $oldContent,
+                            'type' => 'equal',
+                            'maxLength' => $maxLength
+                        ],
+                        'new' => [
+                            'number' => $i + 1,
+                            'content' => $newContent,
+                            'type' => 'equal',
+                            'maxLength' => $maxLength
+                        ]
+                    ];
+                } else {
+                    // Geändert
+                    $synchronizedLines[] = [
+                        'old' => [
+                            'number' => $i + 1,
+                            'content' => $oldContent,
+                            'type' => 'deleted',
+                            'maxLength' => $maxLength
+                        ],
+                        'new' => [
+                            'number' => $i + 1,
+                            'content' => $newContent,
+                            'type' => 'added',
+                            'maxLength' => $maxLength
+                        ]
+                    ];
+                }
+            } elseif ($oldExists) {
+                // Nur alte Zeile existiert
+                $synchronizedLines[] = [
+                    'old' => [
+                        'number' => $i + 1,
+                        'content' => htmlspecialchars($oldLines[$i]),
+                        'type' => 'deleted',
+                        'maxLength' => $maxLength
+                    ],
+                    'new' => [
+                        'number' => $i + 1,
+                        'content' => '',
+                        'type' => 'empty',
+                        'maxLength' => $maxLength
+                    ]
+                ];
+            } elseif ($newExists) {
+                // Nur neue Zeile existiert
+                $synchronizedLines[] = [
+                    'old' => [
+                        'number' => $i + 1,
+                        'content' => '',
+                        'type' => 'empty',
+                        'maxLength' => $maxLength
+                    ],
+                    'new' => [
+                        'number' => $i + 1,
+                        'content' => htmlspecialchars($newLines[$i]),
+                        'type' => 'added',
+                        'maxLength' => $maxLength
+                    ]
+                ];
+            }
+        }
+        
+        return $synchronizedLines;
+    }
+    
+    /**
      * Generiere ein wortbasiertes Diff für kürzere Texte wie Titel.
      * 
      * @param string $oldText

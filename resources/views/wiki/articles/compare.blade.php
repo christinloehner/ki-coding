@@ -5,34 +5,125 @@
 
 @push('styles')
 <style>
+/* Simple Side-by-Side Diff */
 .diff-container {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+    max-height: 600px;
+}
+
+.diff-headers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: #f8f9fa;
+}
+
+.diff-header-left, .diff-header-right {
+    padding: 8px 12px;
+    font-weight: 600;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.diff-header-left {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-right: 1px solid #dee2e6;
+}
+
+.diff-header-right {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.diff-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: calc(600px - 45px);
+    overflow: hidden;
+}
+
+.diff-side {
+    overflow: auto;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 13px;
     line-height: 1.4;
 }
 
+.diff-left {
+    border-right: 1px solid #dee2e6;
+}
+
 .diff-line {
-    padding: 2px 8px;
-    margin: 1px 0;
-    min-height: 18px;
-    border-left: 3px solid transparent;
+    display: flex;
+    height: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
 
-.diff-equal {
+.line-number {
+    width: 40px;
+    padding: 2px 6px;
     background-color: #f8f9fa;
-    border-left-color: #e9ecef;
+    border-right: 1px solid #e9ecef;
+    text-align: right;
+    font-size: 11px;
+    color: #6c757d;
+    user-select: none;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
-.diff-added {
+.line-content {
+    flex: 1;
+    padding: 2px 6px;
+    white-space: pre;
+    overflow: visible;
+    line-height: 16px;
+    min-height: 16px;
+    position: relative;
+}
+
+.diff-line.line-equal {
+    background-color: #f8f9fa;
+    border-left: 3px solid #e9ecef;
+}
+
+.diff-line.line-equal .line-content {
+    background-color: #f8f9fa;
+}
+
+.diff-line.line-added {
     background-color: #d4edda;
-    border-left-color: #28a745;
+    border-left: 3px solid #28a745;
+}
+
+.diff-line.line-added .line-content {
+    background-color: #d4edda;
     color: #155724;
 }
 
-.diff-deleted {
+.diff-line.line-deleted {
     background-color: #f8d7da;
-    border-left-color: #dc3545;
+    border-left: 3px solid #dc3545;
+}
+
+.diff-line.line-deleted .line-content {
+    background-color: #f8d7da;
     color: #721c24;
+}
+
+.diff-line.line-empty {
+    background-color: #ffffff;
+    border-left: 3px solid transparent;
+}
+
+.diff-line.line-empty .line-content {
+    background-color: #ffffff;
 }
 
 .diff-word .diff-added {
@@ -68,7 +159,151 @@
 .stat-removed { background-color: #f8d7da; color: #721c24; }
 .stat-changed { background-color: #fff3cd; color: #856404; }
 .stat-unchanged { background-color: #f8f9fa; color: #6c757d; }
+
+/* Dark Mode Styles (nur für data-theme="dark") mit !important */
+/* Dark Mode Container */
+.dark .diff-container {
+    border-color: #4b5563 !important;
+    background-color: #1f2937 !important;
+}
+
+/* Dark Mode Headers */
+.dark .diff-headers {
+    background-color: #111827 !important;
+}
+
+.dark .diff-header-left, .dark .diff-header-right {
+    border-bottom-color: #4b5563 !important;
+}
+
+.dark .diff-header-left {
+    background-color: #7f1d1d !important;
+    color: #fca5a5 !important;
+    border-right-color: #4b5563 !important;
+}
+
+.dark .diff-header-right {
+    background-color: #14532d !important;
+    color: #86efac !important;
+}
+
+/* Dark Mode Content */
+.dark .diff-left {
+    border-right-color: #4b5563 !important;
+}
+
+.dark .line-number {
+    background-color: #374151 !important;
+    border-right-color: #4b5563 !important;
+    color: #9ca3af !important;
+}
+
+/* Dark Mode Line Styles */
+.dark .diff-line.line-equal {
+    background-color: #374151 !important;
+    border-left-color: #6b7280 !important;
+}
+
+.dark .diff-line.line-equal .line-content {
+    background-color: #374151 !important;
+    color: #e5e7eb !important;
+}
+
+.dark .diff-line.line-added {
+    background-color: #065f46 !important;
+    border-left-color: #10b981 !important;
+}
+
+.dark .diff-line.line-added .line-content {
+    background-color: #065f46 !important;
+    color: #a7f3d0 !important;
+}
+
+.dark .diff-line.line-deleted {
+    background-color: #991b1b !important;
+    border-left-color: #ef4444 !important;
+}
+
+.dark .diff-line.line-deleted .line-content {
+    background-color: #991b1b !important;
+    color: #fca5a5 !important;
+}
+
+.dark .diff-line.line-empty {
+    background-color: #1f2937 !important;
+    border-left-color: transparent !important;
+}
+
+.dark .diff-line.line-empty .line-content {
+    background-color: #1f2937 !important;
+}
+
+/* Dark Mode Word Diff */
+.dark .diff-word .diff-added {
+    background-color: #047857 !important;
+    color: #a7f3d0 !important;
+}
+
+.dark .diff-word .diff-deleted {
+    background-color: #b91c1c !important;
+    color: #fca5a5 !important;
+}
+
+/* Dark Mode Statistics */
+.dark .stat-added { 
+    background-color: #065f46 !important; 
+    color: #a7f3d0 !important; 
+}
+
+.dark .stat-removed { 
+    background-color: #991b1b !important; 
+    color: #fca5a5 !important; 
+}
+
+.dark .stat-changed { 
+    background-color: #92400e !important; 
+    color: #fcd34d !important; 
+}
+
+.dark .stat-unchanged { 
+    background-color: #374151 !important; 
+    color: #d1d5db !important; 
+}
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const leftSide = document.getElementById('diff-left');
+    const rightSide = document.getElementById('diff-right');
+    
+    if (!leftSide || !rightSide) return;
+    
+    let isLeftScrolling = false;
+    let isRightScrolling = false;
+    
+    leftSide.addEventListener('scroll', function() {
+        if (isRightScrolling) return;
+        isLeftScrolling = true;
+        
+        rightSide.scrollTop = leftSide.scrollTop;
+        rightSide.scrollLeft = leftSide.scrollLeft;
+        
+        setTimeout(() => { isLeftScrolling = false; }, 10);
+    });
+    
+    rightSide.addEventListener('scroll', function() {
+        if (isLeftScrolling) return;
+        isRightScrolling = true;
+        
+        leftSide.scrollTop = rightSide.scrollTop;
+        leftSide.scrollLeft = rightSide.scrollLeft;
+        
+        setTimeout(() => { isRightScrolling = false; }, 10);
+    });
+});
+</script>
 @endpush
 
 @section('content')
@@ -207,22 +442,32 @@
     <div class="bg-white rounded-lg p-6 mb-6">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Inhalt-Änderungen</h3>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
-            <div class="border border-red-200 rounded">
-                <div class="bg-red-50 px-4 py-2 border-b border-red-200">
-                    <h4 class="text-sm font-medium text-red-700">Version {{ $oldRevision->version_number }}</h4>
-                </div>
-                <div class="diff-container max-h-96 overflow-y-auto">
-                    {!! $contentDiff['old'] !!}
-                </div>
+        <!-- Simple Side-by-Side Diff -->
+        <div class="diff-container">
+            <!-- Headers -->
+            <div class="diff-headers">
+                <div class="diff-header-left">Version {{ $oldRevision->version_number }}</div>
+                <div class="diff-header-right">Version {{ $newRevision->version_number }}</div>
             </div>
             
-            <div class="border border-green-200 rounded">
-                <div class="bg-green-50 px-4 py-2 border-b border-green-200">
-                    <h4 class="text-sm font-medium text-green-700">Version {{ $newRevision->version_number }}</h4>
+            <!-- Content -->
+            <div class="diff-content">
+                <div class="diff-side diff-left" id="diff-left">
+                    @foreach($contentDiff as $line)
+                    <div class="diff-line line-{{ $line['old']['type'] }}">
+                        <span class="line-number">{{ $line['old']['number'] }}</span>
+                        <span class="line-content" style="min-width: {{ $line['old']['maxLength'] ?? 100 }}ch;">{{ $line['old']['content'] ?: ' ' }}</span>
+                    </div>
+                    @endforeach
                 </div>
-                <div class="diff-container max-h-96 overflow-y-auto">
-                    {!! $contentDiff['new'] !!}
+                
+                <div class="diff-side diff-right" id="diff-right">
+                    @foreach($contentDiff as $line)
+                    <div class="diff-line line-{{ $line['new']['type'] }}">
+                        <span class="line-number">{{ $line['new']['number'] }}</span>
+                        <span class="line-content" style="min-width: {{ $line['new']['maxLength'] ?? 100 }}ch;">{{ $line['new']['content'] ?: ' ' }}</span>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
